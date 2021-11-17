@@ -1,0 +1,8 @@
+setuptools>=57.4.0
+wheel>=0.36.2
+build>=0.5.1
+twine
+devpi-client
+sphinx
+pylint>=2.10.2
+pylint-quotes>=0.2.3

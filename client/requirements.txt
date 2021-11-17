@@ -1,0 +1,4 @@
+aiohttp>=3.7.4
+aiofiles>=0.7.0
+Deprecated
+sty==1.0.0rc1
