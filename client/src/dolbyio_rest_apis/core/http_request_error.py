@@ -23,7 +23,7 @@ class HttpRequestError(Exception):
         self.error_reason = error_reason
         self.error_description = error_description
 
-        super().__init__(self, error_description)
+        super().__init__(error_description)
 
     def __str__(self) -> str:
         return f'''HTTP Request Error!\r

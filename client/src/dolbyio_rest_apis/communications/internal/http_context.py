@@ -10,11 +10,16 @@ from dolbyio_rest_apis.core.http_context import HttpContext
 from dolbyio_rest_apis.core.helpers import get_value_or_default
 from dolbyio_rest_apis.core.http_request_error import HttpRequestError
 import json
-from sty import fg
+import logging
 from typing import Any, Dict, List
 
 class CommunicationsHttpContext(HttpContext):
     """HTTP Context class for Communications APIs"""
+
+    def __init__(self):
+        super().__init__()
+
+        self._logger = logging.getLogger(CommunicationsHttpContext.__name__)
 
     async def requests_post(
             self,
@@ -289,22 +294,12 @@ class CommunicationsHttpContext(HttpContext):
         r"""Raises :class:`HttpRequestError` or :class:`ClientResponseError`, if one occurred."""
 
         if 400 <= http_response.status < 500:
-            if self.log_verbose:
-                if 400 < http_response.status < 404:
-                    print(
-                        f'{fg.red}[error]{fg.rs}',
-                        f'Unauthorized to get data at the url {http_response.url} response code {http_response.status}'
-                    )
-                elif http_response.status == 404:
-                    print(
-                        f'{fg.red}[error]{fg.rs}',
-                        f'Unable to get data from the url {http_response.url} Not found (404)'
-                    )
-                else:
-                    print(
-                        f'{fg.red}[error]{fg.rs}',
-                        f'Did not find data at the url {http_response.url} response code {http_response.status}'
-                    )
+            if 400 < http_response.status < 404:
+                self._logger.error('Unauthorized to get data from the url %s - Response code %i', http_response.url, http_response.status)
+            elif http_response.status == 404:
+                self._logger.error('Unable to get data from the url %s - Not found (404)', http_response.url)
+            else:
+                self._logger.error('Did not find data at the url %s - Response code %i', http_response.url, http_response.status)
 
             try:
                 json_response = await http_response.json()

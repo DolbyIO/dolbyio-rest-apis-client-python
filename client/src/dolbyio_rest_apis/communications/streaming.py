@@ -14,7 +14,6 @@ async def start_rtmp(
         access_token: str,
         conference_id: str,
         rtmp_urls: List[str],
-        log_verbose: bool=False,
     ) -> None:
     r"""
     Starts an RTMP live stream. Once the Dolby Interactivity API service started streaming to the target url,
@@ -27,7 +26,6 @@ async def start_rtmp(
         access_token: Access token to use for authentication.
         conference_id: Identifier of the conference.
         rtmp_urls: List of the RTMP endpoints where to send the RTMP stream to.
-        log_verbose: (Optional) Verbose log level.
 
     Raises:
         HttpRequestError: If a client error one occurred.
@@ -38,7 +36,7 @@ async def start_rtmp(
         'uri': '|'.join(rtmp_urls),
     }
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         await http_context.requests_post(
             access_token=access_token,
             url=f'{get_api_v2_url()}/conferences/mix/{conference_id}/rtmp/start',
@@ -48,7 +46,6 @@ async def start_rtmp(
 async def stop_rtmp(
         access_token: str,
         conference_id: str,
-        log_verbose: bool=False,
     ) -> None:
     r"""
     Stops an RTMP stream. You must use this API if the conference is protected using enhanced conference access control.
@@ -58,14 +55,13 @@ async def stop_rtmp(
     Args:
         access_token: Access token to use for authentication.
         conference_id: Identifier of the conference.
-        log_verbose: (Optional) Verbose log level.
 
     Raises:
         HttpRequestError: If a client error one occurred.
         HTTPError: If one occurred.
     """
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         await http_context.requests_post(
             access_token=access_token,
             url=f'{get_api_v2_url()}/conferences/mix/{conference_id}/rtmp/stop'
@@ -74,7 +70,6 @@ async def stop_rtmp(
 async def start_hls(
         access_token: str,
         conference_id: str,
-        log_verbose: bool=False,
     ) -> None:
     r"""
     Starts an HTTP Live Stream (HLS). The HLS URL is included in the Stream.Hls.InProgress Webhook event.
@@ -85,14 +80,13 @@ async def start_hls(
     Args:
         access_token: Access token to use for authentication.
         conference_id: Identifier of the conference.
-        log_verbose: (Optional) Verbose log level.
 
     Raises:
         HttpRequestError: If a client error one occurred.
         HTTPError: If one occurred.
     """
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         await http_context.requests_post(
             access_token=access_token,
             url=f'{get_api_v2_url()}/conferences/mix/{conference_id}/hls/start'
@@ -101,7 +95,6 @@ async def start_hls(
 async def stop_hls(
         access_token: str,
         conference_id: str,
-        log_verbose: bool=False,
     ) -> None:
     r"""
     Stops an HTTP Live Stream (HLS). You must use this API if the conference is protected
@@ -112,14 +105,13 @@ async def stop_hls(
     Args:
         access_token: Access token to use for authentication.
         conference_id: Identifier of the conference.
-        log_verbose: (Optional) Verbose log level.
 
     Raises:
         HttpRequestError: If a client error one occurred.
         HTTPError: If one occurred.
     """
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         await http_context.requests_post(
             access_token=access_token,
             url=f'{get_api_v2_url()}/conferences/mix/{conference_id}/hls/stop'
@@ -131,7 +123,6 @@ async def start_rtmp_basic_auth(
         consumer_secret: str,
         conference_id: str,
         rtmp_urls: List[str],
-        log_verbose: bool=False,
     ) -> None:
     r"""
     Starts an RTMP live stream. Once the Dolby Interactivity API service started streaming to the target url,
@@ -144,7 +135,6 @@ async def start_rtmp_basic_auth(
         consumer_secret: Your Dolby.io Consumer Secret.
         conference_id: Identifier of the conference.
         rtmp_urls: List of the RTMP endpoints where to send the RTMP stream to.
-        log_verbose: (Optional) Verbose log level.
 
     Raises:
         HttpRequestError: If a client error one occurred.
@@ -155,7 +145,7 @@ async def start_rtmp_basic_auth(
         'uri': '|'.join(rtmp_urls),
     }
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         await http_context.requests_post_basic_auth(
             consumer_key=consumer_key,
             consumer_secret=consumer_secret,
@@ -168,7 +158,6 @@ async def stop_rtmp_basic_auth(
         consumer_key: str,
         consumer_secret: str,
         conference_id: str,
-        log_verbose: bool=False,
     ) -> None:
     r"""
     Stops an RTMP stream.
@@ -179,14 +168,13 @@ async def stop_rtmp_basic_auth(
         consumer_key: Your Dolby.io Consumer Key.
         consumer_secret: Your Dolby.io Consumer Secret.
         conference_id: Identifier of the conference.
-        log_verbose: (Optional) Verbose log level.
 
     Raises:
         HttpRequestError: If a client error one occurred.
         HTTPError: If one occurred.
     """
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         await http_context.requests_post_basic_auth(
             consumer_key=consumer_key,
             consumer_secret=consumer_secret,
@@ -198,7 +186,6 @@ async def start_hls_basic_auth(
         consumer_key: str,
         consumer_secret: str,
         conference_id: str,
-        log_verbose: bool=False,
     ) -> None:
     r"""
     Starts an HTTP Live Stream (HLS). The HLS URL is included in the Stream.Hls.InProgress Webhook event.
@@ -209,14 +196,13 @@ async def start_hls_basic_auth(
         consumer_key: Your Dolby.io Consumer Key.
         consumer_secret: Your Dolby.io Consumer Secret.
         conference_id: Identifier of the conference.
-        log_verbose: (Optional) Verbose log level.
 
     Raises:
         HttpRequestError: If a client error one occurred.
         HTTPError: If one occurred.
     """
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         await http_context.requests_post_basic_auth(
             consumer_key=consumer_key,
             consumer_secret=consumer_secret,
@@ -228,7 +214,6 @@ async def stop_hls_basic_auth(
         consumer_key: str,
         consumer_secret: str,
         conference_id: str,
-        log_verbose: bool=False,
     ) -> None:
     r"""
     Stops an HTTP Live Stream (HLS).
@@ -239,14 +224,13 @@ async def stop_hls_basic_auth(
         consumer_key: Your Dolby.io Consumer Key.
         consumer_secret: Your Dolby.io Consumer Secret.
         conference_id: Identifier of the conference.
-        log_verbose: (Optional) Verbose log level.
 
     Raises:
         HttpRequestError: If a client error one occurred.
         HTTPError: If one occurred.
     """
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         await http_context.requests_post_basic_auth(
             consumer_key=consumer_key,
             consumer_secret=consumer_secret,

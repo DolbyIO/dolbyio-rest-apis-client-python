@@ -20,7 +20,6 @@ async def get_conferences(
         active: bool=False,
         external_id: str=None,
         live_stats: bool=False,
-        log_verbose: bool=False
     ) -> GetConferencesResponse:
     r"""
     Get a list of conferences.
@@ -52,7 +51,6 @@ async def get_conferences(
         active: (Optional) Search for ongoing references (`true`) or all conferences (`false`).
         external_id: (Optional) The external ID of the participant who created the conference.
         live_stats: (Optional) For live conferences, the number of `user`, `listener`, and `pstn` participants.
-        log_verbose: (Optional) Verbose log level.
 
     Returns:
         A :class:`GetConferencesResponse` object.
@@ -78,7 +76,7 @@ async def get_conferences(
     if not external_id is None:
         params['exid'] = external_id
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         json_response = await http_context.requests_get(
             access_token=access_token,
             url=url,
@@ -96,7 +94,6 @@ async def get_all_conferences(
         active: bool=False,
         external_id: str=None,
         live_stats: bool=False,
-        log_verbose: bool=False
     ) -> List[ConferenceSummary]:
     r"""
     Get a list of all conferences.
@@ -124,7 +121,6 @@ async def get_all_conferences(
         active: (Optional) Search for ongoing references (`true`) or all conferences (`false`).
         external_id: (Optional) The external ID of the participant who created the conference.
         live_stats: (Optional) For live conferences, the number of `user`, `listener`, and `pstn` participants.
-        log_verbose: (Optional) Verbose log level.
 
     Returns:
         A list of :class:`Conference` objects.
@@ -148,7 +144,7 @@ async def get_all_conferences(
     if not external_id is None:
         params['exid'] = external_id
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         elements: List[Any] = await http_context.requests_get_all(
             access_token=access_token,
             url=url,
@@ -168,7 +164,6 @@ async def get_conference(
         access_token: str,
         conference_id: str,
         live_stats: bool=False,
-        log_verbose: bool=False
     ) -> ConferenceSummary:
     r"""
     Get a summary of a conference.
@@ -183,7 +178,6 @@ async def get_conference(
         access_token: Access token to use for authentication.
         conference_id: Identifier of the conference.
         live_stats: (Optional) For live conferences, the number of `user`, `listener`, and `pstn` participants.
-        log_verbose: (Optional) Verbose log level.
 
     Returns:
         A :class:`ConferenceSummary` object.
@@ -199,7 +193,7 @@ async def get_conference(
         'livestats': str(live_stats),
     }
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         json_response = await http_context.requests_get(
             access_token=access_token,
             url=url,
@@ -211,7 +205,6 @@ async def get_conference(
 async def get_conference_statistics(
         access_token: str,
         conference_id: str,
-        log_verbose: bool=False
     ) -> ConferenceStatistics:
     r"""
     Get a conference statistics.
@@ -228,7 +221,6 @@ async def get_conference_statistics(
         access_token: Access token to use for authentication.
         conference_id: Identifier of the conference.
         live_stats: For live conferences, the number of `user`, `listener`, and `pstn` participants.
-        log_verbose: (Optional) Verbose log level.
 
     Returns:
         A :class:`ConferenceStatistics` object.
@@ -240,7 +232,7 @@ async def get_conference_statistics(
 
     url = f'{get_monitor_url()}/conferences/{conference_id}/statistics'
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         json_response = await http_context.requests_get(
             access_token=access_token,
             url=url,
@@ -256,7 +248,6 @@ async def get_conference_participants(
         tr_to: int=9999999999999,
         maximum: int=100,
         start: str=None,
-        log_verbose: bool=False
     ) -> ConferenceParticipants:
     r"""
     Get information about conference participants.
@@ -281,7 +272,6 @@ async def get_conference_participants(
         start: (Optional) When the results span multiple pages, use this option to navigate through pages.
             By default, only the max number of results is displayed. To see the next results,
             set the start parameter to the value of the next key returned in the previous response.
-        log_verbose: (Optional) Verbose log level.
 
     Returns:
         A :class:`ConferenceParticipants` object.
@@ -302,7 +292,7 @@ async def get_conference_participants(
     if not start is None:
         params['start'] = start
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         json_response = await http_context.requests_get(
             access_token=access_token,
             url=url,
@@ -318,7 +308,6 @@ async def get_all_conference_participants(
         tr_from: int=0,
         tr_to: int=9999999999999,
         page_size: int=100,
-        log_verbose: bool=False
     ) -> Dict[str, ConferenceParticipant]:
     r"""
     Get information about all conference participants.
@@ -339,7 +328,6 @@ async def get_all_conference_participants(
         tr_from: (Optional) The beginning of the time range (in milliseconds that have elapsed since epoch).
         tr_to: (Optional) The end of the time range (in milliseconds that have elapsed since epoch).
         page_size: (Optional) Number of elements to return per page.
-        log_verbose: (Optional) Verbose log level.
 
     Returns:
         A list of :class:`ConferenceParticipant` objects.
@@ -360,7 +348,7 @@ async def get_all_conference_participants(
 
     participants: Dict[str, ConferenceParticipant] = {}
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         while True:
             json_response = await http_context.requests_get(
                 access_token=access_token,
