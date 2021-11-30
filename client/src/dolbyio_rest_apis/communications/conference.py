@@ -23,7 +23,6 @@ async def create_conference(
         ttl: int=None,
         video_codec: VideoCodec=None,
         participants: List[Participant]=None,
-        log_verbose: bool=False,
     ) -> Conference:
     r"""
     Creates a conference.
@@ -43,7 +42,6 @@ async def create_conference(
             (in seconds) and terminating empty conferences.
         video_codec: (Optional) Specifies video codecs (VP8 or H264) for a specific conference.
         participants: List of the :class:`Participant` object to update the permissions.
-        log_verbose: (Optional) Verbose log level.
 
     Returns:
         A :class:`Conference` object.
@@ -84,7 +82,7 @@ async def create_conference(
 
         payload['participants'] = obj_participants
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         json_response = await http_context.requests_post(
             access_token=access_token,
             url=f'{get_api_v2_url()}/conferences/create',
@@ -97,7 +95,6 @@ async def invite(
         access_token: str,
         conference_id: str,
         participants: List[Participant],
-        log_verbose: bool=False,
     ) -> List[UserToken]:
     r"""
     Invites participants to an ongoing conference. This API can also be used to generate new conference access tokens
@@ -110,7 +107,6 @@ async def invite(
         access_token: Access token to use for authentication.
         conference_id: Identifier of the conference.
         participants: List of the :class:`Participant` object to invite to the conference.
-        log_verbose: (Optional) Verbose log level.
 
     Returns:
         A list of :class:`UserToken` objects.
@@ -136,7 +132,7 @@ async def invite(
         'participants': obj_participants,
     }
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         json_response = await http_context.requests_post(
             access_token=access_token,
             url=f'{get_api_v2_url()}/conferences/{conference_id}/invite',
@@ -154,7 +150,6 @@ async def kick(
         access_token: str,
         conference_id: str,
         external_ids: List[str],
-        log_verbose: bool=False,
     ) -> None:
     r"""
     Kicks participants from an ongoing conference.
@@ -165,7 +160,6 @@ async def kick(
         access_token: Access token to use for authentication.
         conference_id: Identifier of the conference.
         external_ids: List external IDs of the participants to kick out of the conference.
-        log_verbose: (Optional) Verbose log level.
 
     Raises:
         HttpRequestError: If a client error one occurred.
@@ -176,7 +170,7 @@ async def kick(
         'externalIds': external_ids,
     }
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         await http_context.requests_post(
             access_token=access_token,
             url=f'{get_api_v2_url()}/conferences/{conference_id}/kick',
@@ -187,7 +181,6 @@ async def update_permissions(
         access_token: str,
         conference_id: str,
         participants: List[Participant],
-        log_verbose: bool=False,
     ) -> None:
     r"""
     Update permissions for participants in a conference. When a participant's permissions are updated, the new token
@@ -200,7 +193,6 @@ async def update_permissions(
         access_token: Access token to use for authentication.
         conference_id: Identifier of the conference.
         participants: List of the :class:`Participant` object to update the permissions.
-        log_verbose: (Optional) Verbose log level.
 
     Raises:
         HttpRequestError: If a client error one occurred.
@@ -222,7 +214,7 @@ async def update_permissions(
         'participants': obj_participants,
     }
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         await http_context.requests_post(
             access_token=access_token,
             url=f'{get_api_v2_url()}/conferences/{conference_id}/permissions',
@@ -232,7 +224,6 @@ async def update_permissions(
 async def terminate(
         access_token: str,
         conference_id: str,
-        log_verbose: bool=False,
     ) -> None:
     r"""
     Terminates an ongoing conference and removes all remaining participants from the conference.
@@ -242,14 +233,13 @@ async def terminate(
     Args:
         access_token: Access token to use for authentication.
         conference_id: Identifier of the conference.
-        log_verbose: (Optional) Verbose log level.
 
     Raises:
         HttpRequestError: If a client error one occurred.
         HTTPError: If one occurred.
     """
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         await http_context.requests_delete(
             access_token=access_token,
             url=f'{get_api_v2_url()}/conferences/{conference_id}',
@@ -260,7 +250,6 @@ async def destroy(
         consumer_key: str,
         consumer_secret: str,
         conference_id: str,
-        log_verbose: bool=False,
     ) -> None:
     r"""
     Destroys an ongoing conference and removes all remaining participants from the conference.
@@ -271,14 +260,13 @@ async def destroy(
         consumer_key: Your Dolby.io Consumer Key.
         consumer_secret: Your Dolby.io Consumer Secret.
         conference_id: Identifier of the conference.
-        log_verbose: (Optional) Verbose log level.
 
     Raises:
         HttpRequestError: If a client error one occurred.
         HTTPError: If one occurred.
     """
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         await http_context.requests_post_basic_auth(
             consumer_key=consumer_key,
             consumer_secret=consumer_secret,

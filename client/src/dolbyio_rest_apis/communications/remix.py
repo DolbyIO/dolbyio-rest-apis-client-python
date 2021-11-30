@@ -13,7 +13,6 @@ from .models import RemixStatus
 async def start(
         access_token: str,
         conference_id: str,
-        log_verbose: bool=False,
     ) -> RemixStatus:
     r"""
     Remix a conference.
@@ -27,7 +26,6 @@ async def start(
     Args:
         access_token: Access token to use for authentication.
         conference_id: Identifier of the conference.
-        log_verbose: (Optional) Verbose log level.
 
     Returns:
         A :class:`RemixStatus` object that represents the status of the remix.
@@ -38,7 +36,7 @@ async def start(
     """
     url = f'{get_api_v2_url()}/conferences/mix/{conference_id}/remix/start'
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         json_response = await http_context.requests_post(
             access_token=access_token,
             url=url,
@@ -49,7 +47,6 @@ async def start(
 async def get_status(
         access_token: str,
         conference_id: str,
-        log_verbose: bool=False,
     ) -> RemixStatus:
     r"""
     Get the status of a current mixing job. You must use this API if the conference is protected
@@ -60,7 +57,6 @@ async def get_status(
     Args:
         access_token: Access token to use for authentication.
         conference_id: Identifier of the conference.
-        log_verbose: (Optional) Verbose log level.
 
     Returns:
         A :class:`RemixStatus` object that represents the status of the remix.
@@ -71,7 +67,7 @@ async def get_status(
     """
     url = f'{get_api_v2_url()}/conferences/mix/{conference_id}/remix/status'
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         json_response = await http_context.requests_get(
             access_token=access_token,
             url=url,
@@ -84,7 +80,6 @@ async def start_basic_auth(
         consumer_key: str,
         consumer_secret: str,
         conference_id: str,
-        log_verbose: bool=False,
     ) -> RemixStatus:
     r"""
     Remix a conference.
@@ -99,7 +94,6 @@ async def start_basic_auth(
         consumer_key: Your Dolby.io Consumer Key.
         consumer_secret: Your Dolby.io Consumer Secret.
         conference_id: Identifier of the conference.
-        log_verbose: (Optional) Verbose log level.
 
     Returns:
         A :class:`RemixStatus` object that represents the status of the remix.
@@ -110,7 +104,7 @@ async def start_basic_auth(
     """
     url = f'{get_session_url()}/api/conferences/mix/{conference_id}/record'
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         json_response = await http_context.requests_post_basic_auth(
             consumer_key=consumer_key,
             consumer_secret=consumer_secret,
@@ -124,7 +118,6 @@ async def get_status_basic_auth(
         consumer_key: str,
         consumer_secret: str,
         conference_id: str,
-        log_verbose: bool=False,
     ) -> RemixStatus:
     r"""
     Get the status of a current mixing job.
@@ -135,7 +128,6 @@ async def get_status_basic_auth(
         consumer_key: Your Dolby.io Consumer Key.
         consumer_secret: Your Dolby.io Consumer Secret.
         conference_id: Identifier of the conference.
-        log_verbose: (Optional) Verbose log level.
 
     Returns:
         A :class:`RemixStatus` object that represents the status of the remix.
@@ -146,7 +138,7 @@ async def get_status_basic_auth(
     """
     url = f'{get_session_url()}/api/conferences/mix/{conference_id}/status'
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         json_response = await http_context.requests_get_basic_auth(
             consumer_key=consumer_key,
             consumer_secret=consumer_secret,

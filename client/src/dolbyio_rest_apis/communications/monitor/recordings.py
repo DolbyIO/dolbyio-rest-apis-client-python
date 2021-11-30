@@ -16,7 +16,6 @@ async def get_recordings(
         tr_to: int=9999999999999,
         maximum: int=100,
         start: str=None,
-        log_verbose: bool=False
     ) -> GetRecordingsResponse:
     r"""
     Get recording details
@@ -36,7 +35,6 @@ async def get_recordings(
         start: When the results span multiple pages, use this option to navigate through pages.
             By default, only the max number of results is displayed. To see the next results,
             set the start parameter to the value of the next key returned in the previous response.
-        log_verbose: (Optional) Verbose log level.
 
     Returns:
         A :class:`GetRecordingsResponse` object.
@@ -56,7 +54,7 @@ async def get_recordings(
     if not start is None:
         params['start'] = start
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         json_response = await http_context.requests_get(
             access_token=access_token,
             url=url,
@@ -70,7 +68,6 @@ async def get_all_recordings(
         tr_from: int=0,
         tr_to: int=9999999999999,
         page_size: int=100,
-        log_verbose: bool=False
     ) -> List[Recording]:
     r"""
     Get all recording details
@@ -86,7 +83,6 @@ async def get_all_recordings(
         tr_from: The beginning of the time range (in milliseconds that have elapsed since epoch).
         tr_to: The end of the time range (in milliseconds that have elapsed since epoch).
         page_size: (Optional) Number of elements to return per page.
-        log_verbose: (Optional) Verbose log level.
 
     Returns:
         A list of :class:`Recording` objects.
@@ -105,7 +101,7 @@ async def get_all_recordings(
 
     recordings = []
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         elements: List[Any] = await http_context.requests_get_all(
             access_token=access_token,
             url=url,
@@ -127,7 +123,6 @@ async def get_recording(
         tr_from: int=0,
         tr_to: int=9999999999999,
         page_size: int=100,
-        log_verbose: bool=False
     ) -> GetRecordingsResponse:
     r"""
     Get the recording of a specific conference
@@ -144,7 +139,6 @@ async def get_recording(
         tr_from: The beginning of the time range (in milliseconds that have elapsed since epoch).
         tr_to: The end of the time range (in milliseconds that have elapsed since epoch).
         page_size: (Optional) Number of elements to return per page.
-        log_verbose: (Optional) Verbose log level.
 
     Returns:
         A :class:`GetRecordingsResponse` object.
@@ -163,7 +157,7 @@ async def get_recording(
 
     recordings = []
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         elements: List[Any] = await http_context.requests_get_all(
             access_token=access_token,
             url=url,
@@ -182,7 +176,6 @@ async def get_recording(
 async def delete_recording(
         access_token: str,
         conference_id: str,
-        log_verbose: bool=False
     ) -> None:
     r"""
     Delete recordings
@@ -196,7 +189,6 @@ async def delete_recording(
     Args:
         access_token: Access token to use for authentication.
         conference_id: Identifier of the conference.
-        log_verbose: (Optional) Verbose log level.
 
     Raises:
         HttpRequestError: If a client error one occurred.
@@ -205,7 +197,7 @@ async def delete_recording(
 
     url = f'{get_monitor_url()}/conferences/{conference_id}/recordings'
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         await http_context.requests_delete(
             access_token=access_token,
             url=url,
@@ -214,7 +206,6 @@ async def delete_recording(
 async def get_dolby_voice_recordings(
         access_token: str,
         conference_id: str,
-        log_verbose: bool=False
     ) -> DolbyVoiceRecording:
     r"""
     Get Dolby Voice audio recordings of a conference
@@ -227,7 +218,6 @@ async def get_dolby_voice_recordings(
     Args:
         access_token: Access token to use for authentication.
         conference_id: Identifier of the conference.
-        log_verbose: (Optional) Verbose log level.
 
     Returns:
         A :class:`DolbyVoiceRecording` object.
@@ -239,7 +229,7 @@ async def get_dolby_voice_recordings(
 
     url = f'{get_monitor_url()}/conferences/{conference_id}/recordings/audio'
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         json_response = await http_context.requests_get(
             access_token=access_token,
             url=url,
@@ -251,7 +241,6 @@ async def download_mp4_recording(
         access_token: str,
         conference_id: str,
         file_path: str,
-        log_verbose: bool=False
     ) -> None:
     r"""
     Download the conference recording in MP4 format
@@ -265,7 +254,6 @@ async def download_mp4_recording(
         access_token: Access token to use for authentication.
         conference_id: Identifier of the conference.
         file_path: Where to save the file.
-        log_verbose: (Optional) Verbose log level.
 
     Raises:
         HttpRequestError: If a client error one occurred.
@@ -274,7 +262,7 @@ async def download_mp4_recording(
 
     url = f'{get_monitor_url()}/conferences/{conference_id}/recordings/mp4'
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         await http_context.download(
             access_token=access_token,
             url=url,
@@ -286,7 +274,6 @@ async def download_mp3_recording(
         access_token: str,
         conference_id: str,
         file_path: str,
-        log_verbose: bool=False
     ) -> None:
     r"""
     Download the conference recording in MP3 format
@@ -300,7 +287,6 @@ async def download_mp3_recording(
         access_token: Access token to use for authentication.
         conference_id: Identifier of the conference.
         file_path: Where to save the file.
-        log_verbose: (Optional) Verbose log level.
 
     Raises:
         HttpRequestError: If a client error one occurred.
@@ -309,7 +295,7 @@ async def download_mp3_recording(
 
     url = f'{get_monitor_url()}/conferences/{conference_id}/recordings/mp3'
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         await http_context.download(
             access_token=access_token,
             url=url,

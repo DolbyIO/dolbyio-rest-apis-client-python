@@ -6,24 +6,41 @@ This module contains the HTTP Context class.
 """
 
 import aiofiles
-import aiohttp
 from aiohttp import BasicAuth, ClientResponse, ClientTimeout, ServerTimeoutError, ContentTypeError
+from aiohttp_retry import RetryClient, JitterRetry
 import datetime
-from sty import fg
+import logging
+from .rate_limiter import RATE_LIMITER
 from typing import Any, Mapping, Optional, Type
 from types import TracebackType
 
-TOTAL_REQUEST_TIMEOUT = 60 # seconds
-CONNECT_REQUEST_TIMEOUT = 25 # seconds
+TOTAL_REQUEST_TIMEOUT: int = 60 # seconds
+TOTAL_REQUEST_DOWNLOAD_FILE_TIMEOUT: int = 30 * 60 # 30 minutes
+CONNECT_REQUEST_TIMEOUT: int = 25 # seconds
+
+RETRY_MAX_ATTEMPTS: int = 3
+RETRY_START_TIMEOUT: float = 1.0
 
 class HttpContext:
     """
     HTTP Context used to send HTTP requests.
     """
 
-    def __init__(self, log_verbose: bool=False):
-        self.log_verbose = log_verbose
-        self._session = aiohttp.ClientSession()
+    def __init__(self):
+        self._logger = logging.getLogger(HttpContext.__name__)
+
+        retry_options = JitterRetry(
+            attempts=RETRY_MAX_ATTEMPTS,
+            start_timeout=RETRY_START_TIMEOUT,
+            random_interval_size=1.0,
+            statuses=[ 502, 503 ],
+            exceptions=[ ServerTimeoutError ],
+        )
+
+        self._session = RetryClient(
+            raise_for_status=False,
+            retry_options=retry_options,
+        )
 
     async def close(self):
         if not self._session is None:
@@ -60,8 +77,7 @@ class HttpContext:
             file_path: str,
             params: Mapping[str, str]=None,
         ):
-        if self.log_verbose:
-            print(f'{fg.li_yellow}[http]{fg.rs} GET {url}')
+        self._logger.debug('GET %s', url)
 
         async with self._session.get(
             url,
@@ -70,28 +86,28 @@ class HttpContext:
             # By default aiohttp uses strict checks for HTTPS protocol.
             # Certification checks can be relaxed by setting ssl to False.
             ssl=False,
+            timeout=ClientTimeout(total=TOTAL_REQUEST_DOWNLOAD_FILE_TIMEOUT, connect=CONNECT_REQUEST_TIMEOUT),
         ) as http_response:
             await self._raise_for_status(http_response)
 
-            total_bits = 0
+            total_kb = 0
 
             async with aiofiles.open(file_path, mode='wb') as output_file:
                 async for chunk in http_response.content.iter_chunked(1024):
-                    if self.log_verbose:
-                        total_bits += 1
-                        print(f'{fg.yellow}Downloading{fg.rs} {file_path} [{total_bits / 1024:0.1f}]MB\r', end='')
+                    total_kb += 1
+                    if total_kb % 10240 == 0:
+                        # Only print every 10 MB
+                        self._logger.debug('Downloading %s - %.1f MB', file_path, total_kb / 1024)
                     await output_file.write(chunk)
 
-            if self.log_verbose:
-                print(f'{fg.green}Downloaded{fg.rs} {file_path} - {total_bits / 1024:0.1f} MB ')
+            self._logger.debug('Downloaded %s - %.1f MB', file_path, total_kb / 1024)
 
     async def _upload_file(
             self,
             url: str,
             file_path: str,
         ):
-        if self.log_verbose:
-            print(f'{fg.li_yellow}[http]{fg.rs} PUT {url}')
+        self._logger.debug('PUT %s', url)
 
         with open(file_path, 'rb') as input_file:
             await self._session.put(
@@ -111,14 +127,16 @@ class HttpContext:
             auth: BasicAuth=None,
             data: Any=None,
         ) -> Any or None:
-        if self.log_verbose:
-            if params is None:
-                print(f'{fg.li_yellow}[http]{fg.rs} {method} {url}')
-            else:
-                print(f'{fg.li_yellow}[http]{fg.rs} {method} {url}', params)
-            start = datetime.datetime.now()
+        if params is None:
+            self._logger.debug('%s %s', method, url)
+        else:
+            self._logger.debug('%s %s %s', method, url, params)
+        start = datetime.datetime.now()
 
         try:
+            # Use the rate limited to let request going through
+            await RATE_LIMITER.wait_until_allowed()
+
             async with self._session.request(
                 method=method,
                 url=url,
@@ -131,10 +149,9 @@ class HttpContext:
                 ssl=False,
                 timeout=ClientTimeout(total=TOTAL_REQUEST_TIMEOUT, connect=CONNECT_REQUEST_TIMEOUT),
             ) as http_response:
-                if self.log_verbose:
-                    end = datetime.datetime.now()
-                    span = end - start
-                    print(f'{fg.li_yellow}[http]{fg.rs} Elapsed {span.total_seconds():.3f} seconds')
+                end = datetime.datetime.now()
+                span = end - start
+                self._logger.debug('Elapsed %.3f seconds', span.total_seconds())
 
                 await self._raise_for_status(http_response)
 
@@ -142,8 +159,8 @@ class HttpContext:
         except ContentTypeError:
             return None # No JSON content
         except ServerTimeoutError:
-            print(f'{fg.red}[error]{fg.rs} Unable to get data from the url {url} because of a timeout.')
-            print(f'{fg.red}[error]{fg.rs} Timeout is set to {TOTAL_REQUEST_TIMEOUT} seconds.')
+            self._logger.error('Unable to get data from the url %s because of a timeout.', url)
+            self._logger.error('Timeout is set to %i seconds.', TOTAL_REQUEST_TIMEOUT)
             raise
 
     async def _raise_for_status(self, http_response: ClientResponse):

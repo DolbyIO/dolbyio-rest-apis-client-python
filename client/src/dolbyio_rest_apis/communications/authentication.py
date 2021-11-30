@@ -16,7 +16,6 @@ async def _get_access_token(
         consumer_key: str,
         consumer_secret: str,
         expires_in: int=None,
-        log_verbose: bool=False,
     ) -> AccessToken:
 
     data = {
@@ -24,7 +23,7 @@ async def _get_access_token(
     }
     add_if_not_none(data, 'expires_in', expires_in)
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         json_response = await http_context.requests_post_basic_auth(
             consumer_key=consumer_key,
             consumer_secret=consumer_secret,
@@ -38,7 +37,6 @@ async def get_api_access_token(
         consumer_key: str,
         consumer_secret: str,
         expires_in: int=None,
-        log_verbose: bool=False,
     ) -> AccessToken:
     r"""
     Gets an access token to authenticate for API calls.
@@ -51,7 +49,6 @@ async def get_api_access_token(
         expires_in: (Optional) Access token expiration time in seconds.
             The maximum value is 2,592,000, indicating 30 days. If no value is specified, the default is 600,
             indicating ten minutes.
-        log_verbose: (Optional) Verbose log level.
 
     Returns:
         An :class:`AccessToken` object.
@@ -61,13 +58,12 @@ async def get_api_access_token(
         HTTPError: If one occurred.
     """
 
-    return await _get_access_token(f'{get_api_v1_url()}/auth/token', consumer_key, consumer_secret, expires_in, log_verbose)
+    return await _get_access_token(f'{get_api_v1_url()}/auth/token', consumer_key, consumer_secret, expires_in)
 
 async def get_client_access_token(
         consumer_key: str,
         consumer_secret: str,
         expires_in: int=None,
-        log_verbose: bool=False,
     ) -> AccessToken:
     r"""
     Gets a client access token to authenticate a session.
@@ -80,7 +76,6 @@ async def get_client_access_token(
         expires_in: (Optional) Access token expiration time in seconds.
             The maximum value is 2,592,000, indicating 30 days. If no value is specified, the default is 600,
             indicating ten minutes.
-        log_verbose: (Optional) Verbose log level.
 
     Returns:
         An :class:`AccessToken` object.
@@ -90,14 +85,13 @@ async def get_client_access_token(
         HTTPError: If one occurred.
     """
 
-    return await _get_access_token(f'{get_session_url()}/oauth2/token', consumer_key, consumer_secret, expires_in, log_verbose)
+    return await _get_access_token(f'{get_session_url()}/oauth2/token', consumer_key, consumer_secret, expires_in)
 
 @deprecated(reason='This API is no longer applicable for applications on the new Dolby.io Communications APIs platform.')
 async def revoke_access_token(
         consumer_key: str,
         consumer_secret: str,
         access_token: str,
-        log_verbose: bool=False,
     ) -> None:
     r"""
     Revokes the authentication token.
@@ -108,7 +102,6 @@ async def revoke_access_token(
         consumer_key: Your Dolby.io Consumer Key.
         consumer_secret: Your Dolby.io Consumer Secret.
         access_token: The access token to revoke.
-        log_verbose: (Optional) Verbose log level.
 
     Raises:
         HttpRequestError: If a client error one occurred.
@@ -119,7 +112,7 @@ async def revoke_access_token(
         'access_token': access_token,
     }
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         await http_context.requests_post_basic_auth(
             consumer_key=consumer_key,
             consumer_secret=consumer_secret,

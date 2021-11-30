@@ -16,6 +16,16 @@ Upgrade your package to the latest version:
 python3 -m pip install --upgrade dolbyio-rest-apis
 ```
 
+## Logging
+
+You can change the log level by using the Python (logging)[https://docs.python.org/3/library/logging.html] library.
+
+```python
+import logging
+
+logging.basicConfig(level="DEBUG")
+```
+
 ## Communications Examples
 
 ### Authenticate

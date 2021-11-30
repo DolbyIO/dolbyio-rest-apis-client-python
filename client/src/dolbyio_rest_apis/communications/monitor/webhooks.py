@@ -18,7 +18,6 @@ async def get_events(
         maximum: int=100,
         start: str=None,
         filter_type: str=None,
-        log_verbose: bool=False,
     ) -> GetWebHookResponse:
     r"""
     Get a list of Webhook events sent, during a specific time range.
@@ -38,7 +37,6 @@ async def get_events(
             set the start parameter to the value of the next key returned in the previous response.
         filter_type: (Optional) The Webhook event type or an expression of its type (for example `Recording.Live.InProgress` or `Rec.*`).
             The default value of the type parameter returns all types of Webhooks.
-        log_verbose: (Optional) Verbose log level.
 
     Returns:
         A :class:`GetWebHookResponse` object.
@@ -63,7 +61,7 @@ async def get_events(
     if not start is None:
         params['start'] = start
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         json_response = await http_context.requests_get(
             access_token=access_token,
             url=url,
@@ -79,7 +77,6 @@ async def get_all_events(
         tr_to: int=9999999999999,
         page_size: int=100,
         filter_type: str=None,
-        log_verbose: bool=False,
     ) -> List[WebHook]:
     r"""
     Get a list of all Webhook events sent, during a specific time range.
@@ -95,7 +92,6 @@ async def get_all_events(
         page_size: (Optional) Number of elements to return per page.
         filter_type: (Optional) The Webhook event type or an expression of its type (for example `Recording.Live.InProgress` or `Rec.*`).
             The default value of the type parameter returns all types of Webhooks.
-        log_verbose: (Optional) Verbose log level.
 
     Returns:
         A list of :class:`WebHook` objects.
@@ -118,7 +114,7 @@ async def get_all_events(
     if not filter_type is None:
         params['type'] = filter_type
 
-    async with CommunicationsHttpContext(log_verbose) as http_context:
+    async with CommunicationsHttpContext() as http_context:
         elements: List[Any] = await http_context.requests_get_all(
             access_token=access_token,
             url=url,
