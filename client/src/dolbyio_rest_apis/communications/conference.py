@@ -181,7 +181,7 @@ async def update_permissions(
         access_token: str,
         conference_id: str,
         participants: List[Participant],
-    ) -> None:
+    ) -> List[UserToken]:
     r"""
     Update permissions for participants in a conference. When a participant's permissions are updated, the new token
     is sent directly to the SDK. The SDK automatically receives, stores, and manages the new token
@@ -193,6 +193,9 @@ async def update_permissions(
         access_token: Access token to use for authentication.
         conference_id: Identifier of the conference.
         participants: List of the :class:`Participant` object to update the permissions.
+
+    Returns:
+        A list of :class:`UserToken` objects.
 
     Raises:
         HttpRequestError: If a client error one occurred.
@@ -215,11 +218,18 @@ async def update_permissions(
     }
 
     async with CommunicationsHttpContext() as http_context:
-        await http_context.requests_post(
+        json_response = await http_context.requests_post(
             access_token=access_token,
             url=f'{get_api_v2_url()}/conferences/{conference_id}/permissions',
             payload=payload
         )
+
+    user_tokens = []
+    for key in json_response.keys():
+        user_token = UserToken(key, json_response[key])
+        user_tokens.append(user_token)
+
+    return user_tokens
 
 async def terminate(
         access_token: str,
