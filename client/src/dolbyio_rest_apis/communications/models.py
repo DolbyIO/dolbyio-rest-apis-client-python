@@ -7,6 +7,7 @@ This module contains the models used by the Dolby.io APIs.
 
 from dolbyio_rest_apis.core.helpers import get_value_or_default, in_and_not_none
 from enum import Enum
+from dataclasses import dataclass
 from typing import List
 
 class AccessToken(dict):
@@ -85,12 +86,11 @@ class Permission(str, Enum):
     UPDATE_PERMISSIONS = 'UPDATE_PERMISSIONS'
     '''Allows a participant to update other participants' permissions.'''
 
+@dataclass
 class UserToken:
     """Representation of a User access token."""
-
-    def __init__(self, external_id, token):
-        self.external_id = external_id
-        self.token = token
+    external_id: str
+    token: str
 
 class Conference(dict):
     """Representation of a newly created Conference."""
