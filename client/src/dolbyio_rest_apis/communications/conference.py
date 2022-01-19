@@ -27,7 +27,7 @@ async def create_conference(
     r"""
     Creates a conference.
 
-    See: https://docs.dolby.io/interactivity/reference/postconferencecreate
+    See: https://docs.dolby.io/communications-apis/reference/postconferencecreate
 
     Args:
         access_token: Access token to use for authentication.
@@ -101,7 +101,7 @@ async def invite(
     for an ongoing conference. If the invite request includes participants that are already in the conference, a new
     conference access token is not generated and an invitation is not sent.
 
-    See: https://docs.dolby.io/interactivity/reference/postconferenceinvite
+    See: https://docs.dolby.io/communications-apis/reference/postconferenceinvite
 
     Args:
         access_token: Access token to use for authentication.
@@ -154,7 +154,7 @@ async def kick(
     r"""
     Kicks participants from an ongoing conference.
 
-    See: https://docs.dolby.io/interactivity/reference/postconferencekick
+    See: https://docs.dolby.io/communications-apis/reference/postconferencekick
 
     Args:
         access_token: Access token to use for authentication.
@@ -187,7 +187,7 @@ async def update_permissions(
     is sent directly to the SDK. The SDK automatically receives, stores, and manages the new token
     and a permissionsUpdated event is sent.
 
-    See: https://docs.dolby.io/interactivity/reference/postconferencepermissions
+    See: https://docs.dolby.io/communications-apis/reference/postconferencepermissions
 
     Args:
         access_token: Access token to use for authentication.
@@ -238,7 +238,7 @@ async def terminate(
     r"""
     Terminates an ongoing conference and removes all remaining participants from the conference.
 
-    See: https://docs.dolby.io/interactivity/reference/deleteconference
+    See: https://docs.dolby.io/communications-apis/reference/deleteconference
 
     Args:
         access_token: Access token to use for authentication.
@@ -264,7 +264,7 @@ async def destroy(
     r"""
     Destroys an ongoing conference and removes all remaining participants from the conference.
 
-    See: https://docs.dolby.io/interactivity/reference/postconferencedestroy
+    See: https://docs.dolby.io/communications-apis/reference/postconferencedestroy
 
     Args:
         consumer_key: Your Dolby.io Consumer Key.

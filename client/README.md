@@ -1,6 +1,6 @@
 # Dolby.io REST APIs
 
-Python wrapper for the dolby.io REST APIs [Communications](https://docs.dolby.io/interactivity/reference/authentication-api). All the functions are using the async pattern.
+Python wrapper for the dolby.io REST APIs [Communications](https://docs.dolby.io/communications-apis/reference/authentication-api). All the functions are using the async pattern.
 
 ## Install this project
 

@@ -1,6 +1,6 @@
 # Dolby.io REST APIs CLI
 
-Command Line Interface utility for the dolby.io REST [Communications](https://docs.dolby.io/interactivity/reference/authentication-api) APIs.
+Command Line Interface utility for the dolby.io REST [Communications](https://docs.dolby.io/communications-apis/reference/authentication-api) APIs.
 
 ## Install this project
 

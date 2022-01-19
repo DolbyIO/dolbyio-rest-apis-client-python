@@ -21,7 +21,7 @@ async def start(
     the current mixer layout. The `Recording.MP4.Available` event is sent if the customer has configured
     the webhook in the developer portal.
 
-    See: https://docs.dolby.io/interactivity/reference/postconferencemixstart
+    See: https://docs.dolby.io/communications-apis/reference/postconferencemixstart
 
     Args:
         access_token: Access token to use for authentication.
@@ -52,7 +52,7 @@ async def get_status(
     Get the status of a current mixing job. You must use this API if the conference is protected
     using enhanced conference access control.
 
-    See: https://docs.dolby.io/interactivity/reference/postconferenceremixstatus
+    See: https://docs.dolby.io/communications-apis/reference/postconferenceremixstatus
 
     Args:
         access_token: Access token to use for authentication.
@@ -88,7 +88,7 @@ async def start_basic_auth(
     the current mixer layout. The `Recording.MP4.Available` event is sent if the customer has configured
     the webhook in the developer portal.
 
-    See: https://docs.dolby.io/interactivity/reference/postconferencemixcreate
+    See: https://docs.dolby.io/communications-apis/reference/postconferencemixcreate
 
     Args:
         consumer_key: Your Dolby.io Consumer Key.
@@ -122,7 +122,7 @@ async def get_status_basic_auth(
     r"""
     Get the status of a current mixing job.
 
-    See: https://docs.dolby.io/interactivity/reference/postconferencemixstatus
+    See: https://docs.dolby.io/communications-apis/reference/postconferencemixstatus
 
     Args:
         consumer_key: Your Dolby.io Consumer Key.

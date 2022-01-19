@@ -41,7 +41,7 @@ async def get_api_access_token(
     r"""
     Gets an access token to authenticate for API calls.
 
-    See: https://docs.dolby.io/interactivity/reference/jwt
+    See: https://docs.dolby.io/communications-apis/reference/jwt
 
     Args:
         consumer_key: Your Dolby.io Consumer Key.
@@ -68,7 +68,7 @@ async def get_client_access_token(
     r"""
     Gets a client access token to authenticate a session.
 
-    See: https://docs.dolby.io/interactivity/reference/postoauthtoken-1
+    See: https://docs.dolby.io/communications-apis/reference/postoauthtoken
 
     Args:
         consumer_key: Your Dolby.io Consumer Key.
@@ -96,7 +96,7 @@ async def revoke_access_token(
     r"""
     Revokes the authentication token.
 
-    See: https://docs.dolby.io/interactivity/reference/postoauthtokenrevoke-1
+    See: https://docs.dolby.io/communications-apis/reference/postoauthtokenrevoke
 
     Args:
         consumer_key: Your Dolby.io Consumer Key.

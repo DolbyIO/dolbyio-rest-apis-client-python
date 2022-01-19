@@ -1,6 +1,6 @@
 # Dolby.io REST APIs
 
-This repo contains projects for the dolby.io REST [Communications](https://docs.dolby.io/interactivity/reference/authentication-api) APIs:
+This repo contains projects for the dolby.io REST [Communications](https://docs.dolby.io/communications-apis/reference/authentication-api) APIs:
 - Python wrapper for both Communications and Media APIs.
 - Command Line Interface utility.
 
