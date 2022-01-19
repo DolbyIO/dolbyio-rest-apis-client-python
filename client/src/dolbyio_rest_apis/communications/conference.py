@@ -5,11 +5,12 @@ dolbyio_rest_apis.communications.conference
 This module contains the functions to work with the conference API.
 """
 
+from dataclasses import asdict
 from deprecated import deprecated
 from dolbyio_rest_apis.core.helpers import get_value, add_if_not_none
 from dolbyio_rest_apis.communications.internal.http_context import CommunicationsHttpContext
 from dolbyio_rest_apis.communications.internal.urls import get_api_v2_url, get_session_url
-from .models import UserToken, Conference, RTCPMode, Participant, VideoCodec
+from .models import UserToken, Conference, SpatialAudioEnvironment, SpatialAudioListener, SpatialAudioUser, RTCPMode, Participant, VideoCodec
 from typing import List
 
 async def create_conference(
@@ -176,6 +177,53 @@ async def kick(
             url=f'{get_api_v2_url()}/conferences/{conference_id}/kick',
             payload=payload
         )
+
+async def set_spatial_listeners_audio(
+        access_token: str,
+        conference_id: str,
+        environment: SpatialAudioEnvironment,
+        listener: SpatialAudioListener,
+        users: List[SpatialAudioUser],
+    ) -> None:
+    r"""
+    Sets the spatial audio scene for all listeners in an ongoing conference.
+    This sets the spatial audio environment, the position and direction for all listeners with the spatialAudio flag enabled.
+    The calls are not cumulative, and each call sets all the spatial listener values.
+    Participants who do not have a position set are muted.
+
+    See: https://docs.dolby.io/communications-apis/reference/putspatiallistenersaudio
+
+    Args:
+        access_token: Access token to use for authentication.
+        conference_id: Identifier of the conference.
+        environment: The spatial environment of an application,
+            so the audio renderer understands which directions the application considers
+            forward, up, and right and which units it uses for distance.
+        listener: The listener's audio position and direction, defined using Cartesian coordinates.
+        users: The users' audio positions, defined using Cartesian coordinates.
+
+    Raises:
+        HttpRequestError: If a client error one occurred.
+        HTTPError: If one occurred.
+    """
+
+    obj_users = { }
+    for user in users:
+        obj_users[user.external_id] = asdict(user.position)
+
+    payload = {
+        'environment': asdict(environment),
+        'listener': asdict(listener),
+        'users': obj_users,
+    }
+
+    async with CommunicationsHttpContext() as http_context:
+        await http_context.requests_put(
+            access_token=access_token,
+            url=f'{get_api_v2_url()}/conferences/{conference_id}/spatial-listeners-audio',
+            payload=payload
+        )
+
 
 async def update_permissions(
         access_token: str,
