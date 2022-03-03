@@ -20,7 +20,7 @@ async def start_rtmp(
     streaming to the target url, a `Stream.Rtmp.InProgress` Webhook event will be sent.
     You must use this API if the conference is protected using enhanced conference access control.
 
-    See: https://docs.dolby.io/communications-apis/reference/postrtmpstart
+    See: https://docs.dolby.io/communications-apis/reference/start-rtmp
 
     Args:
         access_token: Access token to use for authentication.
@@ -51,7 +51,7 @@ async def stop_rtmp(
     Stops an RTMP stream.
     You must use this API if the conference is protected using enhanced conference access control.
 
-    See: https://docs.dolby.io/communications-apis/reference/postrtmpstop
+    See: https://docs.dolby.io/communications-apis/reference/stop-rtmp
 
     Args:
         access_token: Access token to use for authentication.
@@ -77,7 +77,7 @@ async def start_hls(
     Starts an HTTP Live Stream (HLS). The HLS URL is included in the `Stream.Hls.InProgress` Webhook event.
     You must use this API if the conference is protected using enhanced conference access control.
 
-    See: https://docs.dolby.io/communications-apis/reference/posthlsstart
+    See: https://docs.dolby.io/communications-apis/reference/start-hls
 
     Args:
         access_token: Access token to use for authentication.
@@ -103,7 +103,7 @@ async def stop_hls(
     Stops an HTTP Live Stream (HLS). You must use this API if the conference is protected
     using enhanced conference access control.
 
-    See: https://docs.dolby.io/communications-apis/reference/posthlsstop
+    See: https://docs.dolby.io/communications-apis/reference/stop-hls
 
     Args:
         access_token: Access token to use for authentication.
@@ -131,7 +131,7 @@ async def start_rtmp_basic_auth(
     Starts an RTMP live stream. Once the Dolby.io Communications APIs service starts
     streaming to the target url, a `Stream.Rtmp.InProgress` Webhook event will be sent.
 
-    See: https://docs.dolby.io/communications-apis/reference/postrtmpstartv1
+    See: https://docs.dolby.io/communications-apis/reference/start-rtmp-v1
 
     Args:
         consumer_key: Your Dolby.io Consumer Key.
@@ -165,7 +165,7 @@ async def stop_rtmp_basic_auth(
     r"""
     Stops an RTMP stream.
 
-    See: https://docs.dolby.io/communications-apis/reference/postrtmpstopv1
+    See: https://docs.dolby.io/communications-apis/reference/stop-rtmp-v1
 
     Args:
         consumer_key: Your Dolby.io Consumer Key.
@@ -193,7 +193,7 @@ async def start_hls_basic_auth(
     r"""
     Starts an HTTP Live Stream (HLS). The HLS URL is included in the Stream.Hls.InProgress Webhook event.
 
-    See: https://docs.dolby.io/communications-apis/reference/posthlsstartv1
+    See: https://docs.dolby.io/communications-apis/reference/start-hls-v1
 
     Args:
         consumer_key: Your Dolby.io Consumer Key.
@@ -221,7 +221,7 @@ async def stop_hls_basic_auth(
     r"""
     Stops an HTTP Live Stream (HLS).
 
-    See: https://docs.dolby.io/communications-apis/reference/posthlsstopv1
+    See: https://docs.dolby.io/communications-apis/reference/stop-hls-v1
 
     Args:
         consumer_key: Your Dolby.io Consumer Key.

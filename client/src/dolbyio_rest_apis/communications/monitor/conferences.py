@@ -30,7 +30,7 @@ async def get_conferences(
     The summary of ongoing conferences includes the following fields in the response:
     `confId`, `alias`, `region`, `dolbyVoice`, `start`, `live`, `owner`.
 
-    See: https://docs.dolby.io/communications-apis/reference/getconferences
+    See: https://docs.dolby.io/communications-apis/reference/get-conferences
 
     Args:
         access_token: Access token to use for authentication.
@@ -104,7 +104,7 @@ async def get_all_conferences(
     The summary of ongoing conferences includes the following fields in the response:
     `confId`, `alias`, `region`, `dolbyVoice`, `start`, `live`, `owner`.
 
-    See: https://docs.dolby.io/communications-apis/reference/getconferences
+    See: https://docs.dolby.io/communications-apis/reference/get-conferences
 
     Args:
         access_token: Access token to use for authentication.
@@ -172,7 +172,7 @@ async def get_conference(
     The summary of ongoing conferences includes the following fields in the response:
     `confId`, `alias`, `region`, `dolbyVoice`, `start`, `live`, `owner`.
 
-    See: https://docs.dolby.io/communications-apis/reference/getconferencesummary
+    See: https://docs.dolby.io/communications-apis/reference/get-conference-summary
 
     Args:
         access_token: Access token to use for authentication.
@@ -215,7 +215,7 @@ async def get_conference_statistics(
 
     Note: The statistics are available only for terminated conferences.
 
-    See: https://docs.dolby.io/communications-apis/reference/getconferencestatistics
+    See: https://docs.dolby.io/communications-apis/reference/get-conference-statistics
 
     Args:
         access_token: Access token to use for authentication.
@@ -255,7 +255,7 @@ async def get_conference_participants(
     Get statistics and connection details of all participants in a conference.
     Optionally limit the search result with a specific time range.
 
-    See: https://docs.dolby.io/communications-apis/reference/getconferenceparticipants
+    See: https://docs.dolby.io/communications-apis/reference/get-info-conference-participants
 
     Args:
         access_token: Access token to use for authentication.
@@ -315,7 +315,7 @@ async def get_all_conference_participants(
     Get statistics and connection details of all participants in a conference.
     Optionally limit the search result with a specific time range.
 
-    See: https://docs.dolby.io/communications-apis/reference/getconferenceparticipants
+    See: https://docs.dolby.io/communications-apis/reference/get-info-conference-participants
 
     Args:
         access_token: Access token to use for authentication.
@@ -373,3 +373,66 @@ async def get_all_conference_participants(
                 break
 
     return participants
+
+async def get_conference_participant(
+        access_token: str,
+        conference_id: str,
+        participant_id: str,
+        participant_type: str=None,
+        tr_from: int=0,
+        tr_to: int=9999999999999,
+        maximum: int=100,
+        start: str=None,
+    ) -> ConferenceParticipant:
+    r"""
+    Get information about a specific conference participant.
+
+    Gets the statistics and connection details of a conference participant, during a specific time range.
+
+    See: https://docs.dolby.io/communications-apis/reference/get-info-conference-participant
+
+    Args:
+        access_token: Access token to use for authentication.
+        conference_id: Identifier of the conference.
+        participant_id: Identifier of the participant.
+        participant_type: (Optional) The conference participant type.
+            - `user` - a participant who can send and receive video/audio stream to/from the conference.
+            - `listener` - a participant who can only receive video/audio stream from the conference.
+            - `pstn` - a participant who connected to the conference using PSTN (telephony network).
+            - `mixer` - an internal type indicating a mixer connection to the conference.
+        tr_from: (Optional) The beginning of the time range (in milliseconds that have elapsed since epoch).
+        tr_to: (Optional) The end of the time range (in milliseconds that have elapsed since epoch).
+        maximum: (Optional) The maximum number of displayed results.
+            We recommend setting the proper value of this parameter to shorten the response time.
+        start: (Optional) When the results span multiple pages, use this option to navigate through pages.
+            By default, only the max number of results is displayed. To see the next results,
+            set the start parameter to the value of the next key returned in the previous response.
+
+    Returns:
+        A :class:`ConferenceParticipant` object.
+
+    Raises:
+        HttpRequestError: If a client error one occurred.
+        HTTPError: If one occurred.
+    """
+    url = f'{get_monitor_url()}/conferences/{conference_id}/participants/{participant_id}'
+
+    params = {
+        'from': tr_from,
+        'to': tr_to,
+        'max': maximum,
+    }
+    if not participant_type is None:
+        params['type'] = participant_type
+    if not start is None:
+        params['start'] = start
+
+    async with CommunicationsHttpContext() as http_context:
+        json_response = await http_context.requests_get(
+            access_token=access_token,
+            url=url,
+            params=params,
+        )
+
+        participants = ConferenceParticipants(json_response)
+        return participants[participant_id]
