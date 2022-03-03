@@ -39,9 +39,12 @@ async def get_api_access_token(
         expires_in: int=None,
     ) -> AccessToken:
     r"""
-    Gets an access token to authenticate for API calls.
+    To make any API call, you must acquire a JWT (JSON Web Token) format access token.
+    Make sure to use this API against https://api.voxeet.com/v1.
 
-    See: https://docs.dolby.io/communications-apis/reference/jwt
+    Note: Even though the OAuth terminology is used in the following APIs, they are not OAuth compliant.
+
+    See: https://docs.dolby.io/communications-apis/reference/get-bearer-token
 
     Args:
         consumer_key: Your Dolby.io Consumer Key.
@@ -66,9 +69,12 @@ async def get_client_access_token(
         expires_in: int=None,
     ) -> AccessToken:
     r"""
-    Gets a client access token to authenticate a session.
+    This API returns an access token that your backend can request on behalf of a client to initialize
+    the Dolby.io SDK in a secure way. Make sure to use this API against https://session.voxeet.com.
 
-    See: https://docs.dolby.io/communications-apis/reference/postoauthtoken
+    Note: Even though the OAuth2 terminology is used in the following APIs, they are not OAuth2 compliant.
+
+    See: https://docs.dolby.io/communications-apis/reference/get-client-access-token
 
     Args:
         consumer_key: Your Dolby.io Consumer Key.
@@ -96,7 +102,7 @@ async def revoke_access_token(
     r"""
     Revokes the authentication token.
 
-    See: https://docs.dolby.io/communications-apis/reference/postoauthtokenrevoke
+    See: https://docs.dolby.io/communications-apis/reference/revoke-token
 
     Args:
         consumer_key: Your Dolby.io Consumer Key.

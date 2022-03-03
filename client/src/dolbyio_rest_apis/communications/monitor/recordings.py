@@ -24,7 +24,7 @@ async def get_recordings(
     This API checks only the recordings that have ended during a specific time range.
     Recordings are indexed based on the ending time.
 
-    See: https://docs.dolby.io/communications-apis/reference/getrecordings
+    See: https://docs.dolby.io/communications-apis/reference/get-recordings
 
     Args:
         access_token: Access token to use for authentication.
@@ -76,7 +76,7 @@ async def get_all_recordings(
     This API checks only the recordings that have ended during a specific time range.
     Recordings are indexed based on the ending time.
 
-    See: https://docs.dolby.io/communications-apis/reference/getrecordings
+    See: https://docs.dolby.io/communications-apis/reference/get-recordings
 
     Args:
         access_token: Access token to use for authentication.
@@ -131,7 +131,7 @@ async def get_recording(
     This API checks the recordings that have ended during a specific time range.
     Recordings are indexed based on the ending time.
 
-    See: https://docs.dolby.io/communications-apis/reference/getconferencerecordings
+    See: https://docs.dolby.io/communications-apis/reference/get-conference-recordings
 
     Args:
         access_token: Access token to use for authentication.
@@ -184,7 +184,7 @@ async def delete_recording(
 
     Warning: After deleting the recording, it is not possible to restore the recording data.
 
-    See: https://docs.dolby.io/communications-apis/reference/deleteconferencerecordings
+    See: https://docs.dolby.io/communications-apis/reference/delete-conference-recordings
 
     Args:
         access_token: Access token to use for authentication.
@@ -213,7 +213,7 @@ async def get_dolby_voice_recordings(
     Get details of all Dolby Voice-based audio recordings, and associated split recordings,
     for a given conference and download the conference recording in the MP3 audio format.
 
-    See: https://docs.dolby.io/communications-apis/reference/getconferenceaudiorecording
+    See: https://docs.dolby.io/communications-apis/reference/get-dolby-voice-audio-recordings
 
     Args:
         access_token: Access token to use for authentication.
@@ -248,7 +248,7 @@ async def download_mp4_recording(
     Download the conference recording in the MP4 video format.
     For more information, see the [Recording](https://docs.dolby.io/communications-apis/docs/guides-recording-mechanisms) document.
 
-    See: https://docs.dolby.io/communications-apis/reference/getconferencemp4recording
+    See: https://docs.dolby.io/communications-apis/reference/get-mp4-recording
 
     Args:
         access_token: Access token to use for authentication.
@@ -281,7 +281,7 @@ async def download_mp3_recording(
     Download the conference recording in the MP3 audio format. This API is available only for non-Dolby Voice conferences.
     For more information, see the [Recording](https://docs.dolby.io/communications-apis/docs/guides-recording-mechanisms) document.
 
-    See: https://docs.dolby.io/communications-apis/reference/getconferencemp3recording
+    See: https://docs.dolby.io/communications-apis/reference/get-mp3-recording
 
     Args:
         access_token: Access token to use for authentication.

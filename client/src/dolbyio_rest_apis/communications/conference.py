@@ -28,7 +28,7 @@ async def create_conference(
     r"""
     Creates a conference.
 
-    See: https://docs.dolby.io/communications-apis/reference/postconferencecreate
+    See: https://docs.dolby.io/communications-apis/reference/create-conference
 
     Args:
         access_token: Access token to use for authentication.
@@ -102,7 +102,7 @@ async def invite(
     for an ongoing conference. If the invite request includes participants that are already in the conference, a new
     conference access token is not generated and an invitation is not sent.
 
-    See: https://docs.dolby.io/communications-apis/reference/postconferenceinvite
+    See: https://docs.dolby.io/communications-apis/reference/invite-to-conference
 
     Args:
         access_token: Access token to use for authentication.
@@ -155,7 +155,7 @@ async def kick(
     r"""
     Kicks participants from an ongoing conference.
 
-    See: https://docs.dolby.io/communications-apis/reference/postconferencekick
+    See: https://docs.dolby.io/communications-apis/reference/kick-from-conference
 
     Args:
         access_token: Access token to use for authentication.
@@ -191,7 +191,7 @@ async def set_spatial_listeners_audio(
     The calls are not cumulative, and each call sets all the spatial listener values.
     Participants who do not have a position set are muted.
 
-    See: https://docs.dolby.io/communications-apis/reference/putspatiallistenersaudio
+    See: https://docs.dolby.io/communications-apis/reference/set-spatial-listeners-audio
 
     Args:
         access_token: Access token to use for authentication.
@@ -235,7 +235,7 @@ async def update_permissions(
     is sent directly to the SDK. The SDK automatically receives, stores, and manages the new token
     and a permissionsUpdated event is sent.
 
-    See: https://docs.dolby.io/communications-apis/reference/postconferencepermissions
+    See: https://docs.dolby.io/communications-apis/reference/update-permissions
 
     Args:
         access_token: Access token to use for authentication.
@@ -286,7 +286,7 @@ async def terminate(
     r"""
     Terminates an ongoing conference and removes all remaining participants from the conference.
 
-    See: https://docs.dolby.io/communications-apis/reference/deleteconference
+    See: https://docs.dolby.io/communications-apis/reference/terminate-conference
 
     Args:
         access_token: Access token to use for authentication.
@@ -312,7 +312,7 @@ async def destroy(
     r"""
     Destroys an ongoing conference and removes all remaining participants from the conference.
 
-    See: https://docs.dolby.io/communications-apis/reference/postconferencedestroy
+    See: https://docs.dolby.io/communications-apis/reference/destroy-conference
 
     Args:
         consumer_key: Your Dolby.io Consumer Key.

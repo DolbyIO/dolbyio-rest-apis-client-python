@@ -23,7 +23,7 @@ async def get_events(
     Get a list of Webhook events sent, during a specific time range.
     The list includes associated endpoint response codes and headers.
 
-    See: https://docs.dolby.io/communications-apis/reference/getwebhooks
+    See: https://docs.dolby.io/communications-apis/reference/get-webhooks
 
     Args:
         access_token: Access token to use for authentication.
@@ -82,7 +82,7 @@ async def get_all_events(
     Get a list of all Webhook events sent, during a specific time range.
     The list includes associated endpoint response codes and headers.
 
-    See: https://docs.dolby.io/communications-apis/reference/getwebhooks
+    See: https://docs.dolby.io/communications-apis/reference/get-webhooks
 
     Args:
         access_token: Access token to use for authentication.
