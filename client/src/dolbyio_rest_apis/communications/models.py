@@ -119,3 +119,34 @@ class RemixStatus(dict):
         self.status = get_value_or_default(self, 'status', None)
         self.region = get_value_or_default(self, 'region', None)
         self.alias = get_value_or_default(self, 'alias', None)
+
+@dataclass
+class Coordinates:
+    """Representation of a Coordinate object."""
+    x: int
+    y: int
+    z: int
+
+@dataclass
+class SpatialAudioEnvironment:
+    """
+    The spatial environment of an application,
+    so the audio renderer understands which directions the application considers
+    forward, up, and right and which units it uses for distance.
+    """
+    scale: Coordinates
+    forward: Coordinates
+    up: Coordinates
+    right: Coordinates
+
+@dataclass
+class SpatialAudioListener:
+    """Representation of the listener's audio position and direction, defined using Cartesian coordinates."""
+    position: Coordinates
+    direction: Coordinates
+
+@dataclass
+class SpatialAudioUser:
+    """Representation of the user's position, defined using Cartesian coordinates."""
+    external_id: str
+    position: Coordinates

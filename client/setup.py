@@ -24,7 +24,7 @@ setuptools.setup(
     license='CC0 1.0 Universal',
     url='https://github.com/dolbyio-samples/dolbyio-rest-apis-client-python',
     project_urls={
-        'Documentation': 'https://docs.dolby.io/interactivity/reference',
+        'Documentation': 'https://docs.dolby.io/communications-apis/reference',
         'Source': 'https://github.com/dolbyio-samples/dolbyio-rest-apis-client-python',
         'Bug Tracker': 'https://github.com/dolbyio-samples/dolbyio-rest-apis-client-python/issues',
     },

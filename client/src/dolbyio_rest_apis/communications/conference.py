@@ -5,11 +5,12 @@ dolbyio_rest_apis.communications.conference
 This module contains the functions to work with the conference API.
 """
 
+from dataclasses import asdict
 from deprecated import deprecated
 from dolbyio_rest_apis.core.helpers import get_value, add_if_not_none
 from dolbyio_rest_apis.communications.internal.http_context import CommunicationsHttpContext
 from dolbyio_rest_apis.communications.internal.urls import get_api_v2_url, get_session_url
-from .models import UserToken, Conference, RTCPMode, Participant, VideoCodec
+from .models import UserToken, Conference, SpatialAudioEnvironment, SpatialAudioListener, SpatialAudioUser, RTCPMode, Participant, VideoCodec
 from typing import List
 
 async def create_conference(
@@ -27,7 +28,7 @@ async def create_conference(
     r"""
     Creates a conference.
 
-    See: https://docs.dolby.io/interactivity/reference/postconferencecreate
+    See: https://docs.dolby.io/communications-apis/reference/postconferencecreate
 
     Args:
         access_token: Access token to use for authentication.
@@ -101,7 +102,7 @@ async def invite(
     for an ongoing conference. If the invite request includes participants that are already in the conference, a new
     conference access token is not generated and an invitation is not sent.
 
-    See: https://docs.dolby.io/interactivity/reference/postconferenceinvite
+    See: https://docs.dolby.io/communications-apis/reference/postconferenceinvite
 
     Args:
         access_token: Access token to use for authentication.
@@ -154,7 +155,7 @@ async def kick(
     r"""
     Kicks participants from an ongoing conference.
 
-    See: https://docs.dolby.io/interactivity/reference/postconferencekick
+    See: https://docs.dolby.io/communications-apis/reference/postconferencekick
 
     Args:
         access_token: Access token to use for authentication.
@@ -177,6 +178,53 @@ async def kick(
             payload=payload
         )
 
+async def set_spatial_listeners_audio(
+        access_token: str,
+        conference_id: str,
+        environment: SpatialAudioEnvironment,
+        listener: SpatialAudioListener,
+        users: List[SpatialAudioUser],
+    ) -> None:
+    r"""
+    Sets the spatial audio scene for all listeners in an ongoing conference.
+    This sets the spatial audio environment, the position and direction for all listeners with the spatialAudio flag enabled.
+    The calls are not cumulative, and each call sets all the spatial listener values.
+    Participants who do not have a position set are muted.
+
+    See: https://docs.dolby.io/communications-apis/reference/putspatiallistenersaudio
+
+    Args:
+        access_token: Access token to use for authentication.
+        conference_id: Identifier of the conference.
+        environment: The spatial environment of an application,
+            so the audio renderer understands which directions the application considers
+            forward, up, and right and which units it uses for distance.
+        listener: The listener's audio position and direction, defined using Cartesian coordinates.
+        users: The users' audio positions, defined using Cartesian coordinates.
+
+    Raises:
+        HttpRequestError: If a client error one occurred.
+        HTTPError: If one occurred.
+    """
+
+    obj_users = { }
+    for user in users:
+        obj_users[user.external_id] = asdict(user.position)
+
+    payload = {
+        'environment': asdict(environment),
+        'listener': asdict(listener),
+        'users': obj_users,
+    }
+
+    async with CommunicationsHttpContext() as http_context:
+        await http_context.requests_put(
+            access_token=access_token,
+            url=f'{get_api_v2_url()}/conferences/{conference_id}/spatial-listeners-audio',
+            payload=payload
+        )
+
+
 async def update_permissions(
         access_token: str,
         conference_id: str,
@@ -187,7 +235,7 @@ async def update_permissions(
     is sent directly to the SDK. The SDK automatically receives, stores, and manages the new token
     and a permissionsUpdated event is sent.
 
-    See: https://docs.dolby.io/interactivity/reference/postconferencepermissions
+    See: https://docs.dolby.io/communications-apis/reference/postconferencepermissions
 
     Args:
         access_token: Access token to use for authentication.
@@ -238,7 +286,7 @@ async def terminate(
     r"""
     Terminates an ongoing conference and removes all remaining participants from the conference.
 
-    See: https://docs.dolby.io/interactivity/reference/deleteconference
+    See: https://docs.dolby.io/communications-apis/reference/deleteconference
 
     Args:
         access_token: Access token to use for authentication.
@@ -264,7 +312,7 @@ async def destroy(
     r"""
     Destroys an ongoing conference and removes all remaining participants from the conference.
 
-    See: https://docs.dolby.io/interactivity/reference/postconferencedestroy
+    See: https://docs.dolby.io/communications-apis/reference/postconferencedestroy
 
     Args:
         consumer_key: Your Dolby.io Consumer Key.

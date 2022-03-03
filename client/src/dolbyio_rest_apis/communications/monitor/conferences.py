@@ -30,7 +30,7 @@ async def get_conferences(
     The summary of ongoing conferences includes the following fields in the response:
     `confId`, `alias`, `region`, `dolbyVoice`, `start`, `live`, `owner`.
 
-    See: https://docs.dolby.io/interactivity/reference/getconferences
+    See: https://docs.dolby.io/communications-apis/reference/getconferences
 
     Args:
         access_token: Access token to use for authentication.
@@ -104,7 +104,7 @@ async def get_all_conferences(
     The summary of ongoing conferences includes the following fields in the response:
     `confId`, `alias`, `region`, `dolbyVoice`, `start`, `live`, `owner`.
 
-    See: https://docs.dolby.io/interactivity/reference/getconferences
+    See: https://docs.dolby.io/communications-apis/reference/getconferences
 
     Args:
         access_token: Access token to use for authentication.
@@ -172,7 +172,7 @@ async def get_conference(
     The summary of ongoing conferences includes the following fields in the response:
     `confId`, `alias`, `region`, `dolbyVoice`, `start`, `live`, `owner`.
 
-    See: https://docs.dolby.io/interactivity/reference/getconferencesummary
+    See: https://docs.dolby.io/communications-apis/reference/getconferencesummary
 
     Args:
         access_token: Access token to use for authentication.
@@ -215,7 +215,7 @@ async def get_conference_statistics(
 
     Note: The statistics are available only for terminated conferences.
 
-    See: https://docs.dolby.io/interactivity/reference/getconferencestatistics
+    See: https://docs.dolby.io/communications-apis/reference/getconferencestatistics
 
     Args:
         access_token: Access token to use for authentication.
@@ -255,7 +255,7 @@ async def get_conference_participants(
     Get statistics and connection details of all participants in a conference.
     Optionally limit the search result with a specific time range.
 
-    See: https://docs.dolby.io/interactivity/reference/getconferenceparticipants
+    See: https://docs.dolby.io/communications-apis/reference/getconferenceparticipants
 
     Args:
         access_token: Access token to use for authentication.
@@ -315,7 +315,7 @@ async def get_all_conference_participants(
     Get statistics and connection details of all participants in a conference.
     Optionally limit the search result with a specific time range.
 
-    See: https://docs.dolby.io/interactivity/reference/getconferenceparticipants
+    See: https://docs.dolby.io/communications-apis/reference/getconferenceparticipants
 
     Args:
         access_token: Access token to use for authentication.

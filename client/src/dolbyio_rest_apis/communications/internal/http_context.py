@@ -21,18 +21,20 @@ class CommunicationsHttpContext(HttpContext):
 
         self._logger = logging.getLogger(CommunicationsHttpContext.__name__)
 
-    async def requests_post(
+    async def _requests_post_put(
             self,
             access_token: str,
             url: str,
+            method: str,
             payload: Any=None,
         ) -> Any or None:
         r"""
-        Sends a POST request.
+        Sends a POST or PUT request.
 
         Args:
             access_token: The Access Token to use for authentication.
             url: Where to send the request to.
+            method: HTTP method, POST or PUT.
             payload: (Optional) Content of the request.
 
         Returns:
@@ -55,10 +57,68 @@ class CommunicationsHttpContext(HttpContext):
             payload = json.dumps(payload, indent=4)
 
         return await self._send_request(
-            method='POST',
+            method=method,
             url=url,
             headers=headers,
             data=payload,
+        )
+
+    async def requests_put(
+            self,
+            access_token: str,
+            url: str,
+            payload: Any=None,
+        ) -> Any or None:
+        r"""
+        Sends a PUT request.
+
+        Args:
+            access_token: The Access Token to use for authentication.
+            url: Where to send the request to.
+            payload: (Optional) Content of the request.
+
+        Returns:
+            The JSON response if any or None.
+
+        Raises:
+            HttpRequestError: If a client error one occurred.
+            HTTPError: If one occurred.
+        """
+
+        return await self._requests_post_put(
+            access_token=access_token,
+            url=url,
+            method='PUT',
+            payload=payload
+        )
+
+    async def requests_post(
+            self,
+            access_token: str,
+            url: str,
+            payload: Any=None,
+        ) -> Any or None:
+        r"""
+        Sends a POST request.
+
+        Args:
+            access_token: The Access Token to use for authentication.
+            url: Where to send the request to.
+            payload: (Optional) Content of the request.
+
+        Returns:
+            The JSON response if any or None.
+
+        Raises:
+            HttpRequestError: If a client error one occurred.
+            HTTPError: If one occurred.
+        """
+
+        return await self._requests_post_put(
+            access_token=access_token,
+            url=url,
+            method='POST',
+            payload=payload
         )
 
     async def requests_post_basic_auth(
