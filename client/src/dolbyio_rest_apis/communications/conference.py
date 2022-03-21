@@ -178,6 +178,46 @@ async def kick(
             payload=payload
         )
 
+async def send_message(
+        access_token: str,
+        conference_id: str,
+        from_external_id: str,
+        to_external_ids: List[str],
+        message: str
+    ) -> None:
+    r"""
+    Sends a message to some or all participants in a conference.
+
+    See: https://docs.dolby.io/communications-apis/reference/send-message
+
+    Args:
+        access_token: Access token to use for authentication.
+        conference_id: Identifier of the conference.
+        from_external_id: The external ID of the author of the message.
+        to_external_ids: A list of external IDs that will receive the message.
+            If empty, the message will be broadcasted to all participants in the conference.
+        message: The message to send.
+
+    Raises:
+        HttpRequestError: If a client error one occurred.
+        HTTPError: If one occurred.
+    """
+
+    payload = {
+        'from': from_external_id,
+        'message': message,
+    }
+
+    if to_external_ids is not None and len(to_external_ids) > 0:
+        payload['to'] = to_external_ids
+
+    async with CommunicationsHttpContext() as http_context:
+        await http_context.requests_post(
+            access_token=access_token,
+            url=f'{get_api_v2_url()}/conferences/{conference_id}/message',
+            payload=payload
+        )
+
 async def set_spatial_listeners_audio(
         access_token: str,
         conference_id: str,
