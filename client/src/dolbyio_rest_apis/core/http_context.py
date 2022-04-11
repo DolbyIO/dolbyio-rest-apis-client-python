@@ -8,9 +8,11 @@ This module contains the HTTP Context class.
 import aiofiles
 from aiohttp import BasicAuth, ClientResponse, ClientTimeout, ServerTimeoutError, ContentTypeError
 from aiohttp_retry import RetryClient, JitterRetry
+import certifi
 import datetime
 import logging
 from .rate_limiter import RATE_LIMITER
+import ssl
 from typing import Any, Mapping, Optional, Type
 from types import TracebackType
 
@@ -79,13 +81,13 @@ class HttpContext:
         ):
         self._logger.debug('GET %s', url)
 
+        sslcontext = ssl.create_default_context(cafile=certifi.where())
+
         async with self._session.get(
             url,
             params=params,
             headers=headers,
-            # By default aiohttp uses strict checks for HTTPS protocol.
-            # Certification checks can be relaxed by setting ssl to False.
-            ssl=False,
+            ssl=sslcontext,
             timeout=ClientTimeout(total=TOTAL_REQUEST_DOWNLOAD_FILE_TIMEOUT, connect=CONNECT_REQUEST_TIMEOUT),
         ) as http_response:
             await self._raise_for_status(http_response)
@@ -110,11 +112,10 @@ class HttpContext:
         self._logger.debug('PUT %s', url)
 
         with open(file_path, 'rb') as input_file:
+            sslcontext = ssl.create_default_context(cafile=certifi.where())
             await self._session.put(
                 url,
-                # By default aiohttp uses strict checks for HTTPS protocol.
-                # Certification checks can be relaxed by setting ssl to False.
-                ssl=False,
+                ssl=sslcontext,
                 data=input_file,
             )
 
@@ -137,6 +138,8 @@ class HttpContext:
             # Use the rate limited to let request going through
             await RATE_LIMITER.wait_until_allowed()
 
+            sslcontext = ssl.create_default_context(cafile=certifi.where())
+
             async with self._session.request(
                 method=method,
                 url=url,
@@ -144,9 +147,7 @@ class HttpContext:
                 params=params,
                 auth=auth,
                 data=data,
-                # By default aiohttp uses strict checks for HTTPS protocol.
-                # Certification checks can be relaxed by setting ssl to False.
-                ssl=False,
+                ssl=sslcontext,
                 timeout=ClientTimeout(total=TOTAL_REQUEST_TIMEOUT, connect=CONNECT_REQUEST_TIMEOUT),
             ) as http_response:
                 end = datetime.datetime.now()
