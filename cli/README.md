@@ -1,6 +1,6 @@
 # Dolby.io REST APIs CLI
 
-Command Line Interface utility for the dolby.io REST [Communications](https://docs.dolby.io/communications-apis/reference/authentication-api) APIs.
+Command Line Interface utility for the dolby.io REST [Communications](https://docs.dolby.io/communications-apis/reference/authentication-api) and [Media](https://docs.dolby.io/media-processing/reference/media-enhance-overview) APIs.
 
 ## Install this project
 
@@ -85,4 +85,79 @@ communications streaming \
     --action stop \
     --target rtmp \
     --output json
+```
+
+## Media Commands
+
+Display the help and version of the command line:
+
+```bash
+media --help
+media --version
+```
+
+### Input / Output
+
+Upload a file to Dolby.io temporary storage:
+
+```bash
+media io \
+    --api_key "<API_KEY>" \
+    --dlb_url "dlb://in/file.mp4" \
+    --file "/path/to/file.mp4" \
+    upload
+```
+
+Download a file from Dolby.io temporary storage:
+
+```bash
+media io \
+    --api_key "<API_KEY>" \
+    --dlb_url "dlb://out/processed_file.mp4" \
+    --file "/path/to/processed_file.mp4" \
+    download
+```
+
+### Enhance
+
+Start enhancing a media:
+
+```bash
+media enhance
+    --api_key "<API_KEY>" \
+    start \
+    --file "/path/to/job_description.json"
+```
+
+> The result is the job identifier.
+
+Get the result from a enhancement job:
+
+```bash
+media enhance
+    --api_key "<API_KEY>" \
+    result \
+    --job_id "00000000-0000-0000-0000-000000000000"
+```
+
+### Music Mastering
+
+Start mastering a music:
+
+```bash
+media mastering
+    --api_key "<API_KEY>" \
+    start \
+    --file "/path/to/job_description.json"
+```
+
+> The result is the job identifier.
+
+Get the result from a music mastering job:
+
+```bash
+media mastering
+    --api_key "<API_KEY>" \
+    result \
+    --job_id "00000000-0000-0000-0000-000000000000"
 ```
