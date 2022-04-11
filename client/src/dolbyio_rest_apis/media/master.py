@@ -17,7 +17,8 @@ async def start_preview(
 
     The inputs location for your source media file as well as the outputs locations for the processed media files are required.
 
-    A preset applies dynamic EQ processing to shape your music to match a desired sound. There are also additional optional parameters that can be provided to control the mastering output.
+    A preset applies dynamic EQ processing to shape your music to match a desired sound.
+    There are also additional optional parameters that can be provided to control the mastering output.
 
     A segment object specifying preview start may optionally be provided.
 
@@ -95,7 +96,8 @@ async def start(
 
     The inputs location for your source media file as well as the outputs location for the processed media file are required.
 
-    A preset applies dynamic EQ processing to shape your music to match a desired sound. There are also additional optional parameters that can be provided to control the mastering output.
+    A preset applies dynamic EQ processing to shape your music to match a desired sound.
+    There are also additional optional parameters that can be provided to control the mastering output.
 
     This is an asynchronous operation. You receive a job_id that you use to retrieve the results when the mastering is complete.
 
