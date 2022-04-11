@@ -1,6 +1,6 @@
 # Dolby.io REST APIs
 
-Python wrapper for the dolby.io REST APIs [Communications](https://docs.dolby.io/communications-apis/reference/authentication-api). All the functions are using the async pattern.
+Python wrapper for the dolby.io REST [Communications](https://docs.dolby.io/communications-apis/reference/authentication-api) and [Media](https://docs.dolby.io/media-processing/reference/media-enhance-overview) APIs. All the functions are using the async pattern.
 
 ## Install this project
 
@@ -105,4 +105,49 @@ task = conference.create_conference(
 conf = loop.run_until_complete(task)
 
 print(f"Conference created: {conf.id}")
+```
+
+## Media Examples
+
+### Media Input and Output
+
+Upload a media file to the temporary Dolby.io cloud storage for processing:
+
+```python
+import asyncio
+from dolbyio_rest_apis.media import io
+
+API_KEY = "YOUR_API_KEY"
+
+# Get an Upload URL
+task = io.get_upload_url(
+    api_key=API_KEY,
+    dlb_url='dlb://in/file.mp4'
+)
+upload_url = loop.run_until_complete(task)
+
+print(f"Upload URL: {upload_url}")
+
+# Upload the file
+task = io.upload_file(
+    upload_url=upload_url,
+    file_path='/path/to/file.mp4'
+)
+loop.run_until_complete(task)
+```
+
+Download a file that was processed by the API:
+
+```python
+import asyncio
+from dolbyio_rest_apis.media import io
+
+API_KEY = "YOUR_API_KEY"
+
+task = io.download_file(
+    api_key=API_KEY,
+    dlb_url='dlb://out/file.mp4',
+    file_path='/path/to/processed_file.mp4'
+)
+loop.run_until_complete(task)
 ```
