@@ -13,7 +13,7 @@ async def start(
         job_content: str,
     ) -> str or None:
     r"""
-    Starts transcoding to modify the size, bitrates, and formats for your media.
+    Start transcoding to modify the resolutions, bitrates, and formats for your media.
 
     The inputs location and outputs are required to identify the source material and target for results.
 
@@ -53,7 +53,7 @@ async def get_results(
         job_id: str,
     ) -> TranscodeJob:
     r"""
-    Gets Transcode Results
+    Gets Transcode Results.
 
     For a given job_id, this method will check if the transcoding task has completed and return transcoding results.
 
