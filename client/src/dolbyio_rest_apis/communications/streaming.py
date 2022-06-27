@@ -239,3 +239,61 @@ async def stop_hls_basic_auth(
             consumer_secret=consumer_secret,
             url=f'{get_session_url()}/api/conferences/mix/{conference_id}/hls/stop'
         )
+
+async def start_lls(
+        access_token: str,
+        conference_id: str,
+        stream_name: str,
+        publishing_token: str,
+    ) -> None:
+    r"""
+    Starts a Low Latency Stream to Millicast.
+
+    See: https://docs.dolby.io/communications-apis/reference/start-rtmp
+
+    Args:
+        access_token: Access token to use for authentication.
+        conference_id: Identifier of the conference.
+        stream_name: The Millicast stream name to which the conference will broadcasted.
+        publishing_token:The Millicast publishing token used to identify the broadcaster.
+
+    Raises:
+        HttpRequestError: If a client error one occurred.
+        HTTPError: If one occurred.
+    """
+
+    payload = {
+        'stream_name': stream_name,
+        'publishingToken': publishing_token,
+    }
+
+    async with CommunicationsHttpContext() as http_context:
+        await http_context.requests_post(
+            access_token=access_token,
+            url=f'{get_api_v2_url()}/conferences/mix/{conference_id}/lls/start',
+            payload=payload,
+        )
+
+async def stop_lls(
+        access_token: str,
+        conference_id: str,
+    ) -> None:
+    r"""
+    Stops an existing Low Latency Stream to Millicast.
+
+    See: https://docs.dolby.io/communications-apis/reference/stop-lls
+
+    Args:
+        access_token: Access token to use for authentication.
+        conference_id: Identifier of the conference.
+
+    Raises:
+        HttpRequestError: If a client error one occurred.
+        HTTPError: If one occurred.
+    """
+
+    async with CommunicationsHttpContext() as http_context:
+        await http_context.requests_post(
+            access_token=access_token,
+            url=f'{get_api_v2_url()}/conferences/mix/{conference_id}/lls/stop'
+        )
