@@ -13,8 +13,8 @@ def add_arguments(sub_parsers: _SubParsersAction) -> None:
     parser = sub_parsers.add_parser(command_name(), help='Music Mastering API')
 
     parser.add_argument(
-		'--api_key',
-		help='Your API Key.',
+		'-a', '--access_token',
+		help='Your API Access Token.',
 		required=True,
 		type=str
 	)
@@ -58,7 +58,7 @@ def add_arguments(sub_parsers: _SubParsersAction) -> None:
 	)
 
 async def execute_command(args: Namespace) -> None:
-    api_key = args.api_key
+    access_token = args.access_token
 
     if args.sub_command == 'start':
         file_path = args.file
@@ -67,12 +67,12 @@ async def execute_command(args: Namespace) -> None:
 
         if args.preview:
             job_id = await mastering.start_preview(
-                api_key=api_key,
+                access_token=access_token,
                 job_content=job_content
             )
         else:
             job_id = await mastering.start(
-                api_key=api_key,
+                access_token=access_token,
                 job_content=job_content
             )
 
@@ -82,12 +82,12 @@ async def execute_command(args: Namespace) -> None:
 
         if args.preview:
             job_result = await mastering.get_preview_results(
-                api_key=api_key,
+                access_token=access_token,
                 job_id=job_id
             )
         else:
             job_result = await mastering.get_results(
-                api_key=api_key,
+                access_token=access_token,
                 job_id=job_id
             )
 

@@ -12,7 +12,7 @@ from typing import List
 
 async def _list_jobs(
         http_context: MediaHttpContext,
-        api_key: str,
+        access_token: str,
         submitted_after: str=None,
         submitted_before: str=None,
         status: str=None,
@@ -25,7 +25,7 @@ async def _list_jobs(
     add_if_not_none(params, 'next_token', next_token)
 
     json_response = await http_context.requests_get(
-        api_key=api_key,
+        access_token=access_token,
         url='https://api.dolby.com/media/jobs',
         params=params
     )
@@ -33,7 +33,7 @@ async def _list_jobs(
     return JobsResponse(json_response)
 
 async def list_jobs(
-        api_key: str,
+        access_token: str,
         submitted_after: str=None,
         submitted_before: str=None,
         status: str=None,
@@ -47,7 +47,7 @@ async def list_jobs(
     See: https://docs.dolby.io/media-apis/reference/media-jobs-get
 
     Args:
-        api_key: Your Dolby.io Media API Key.
+        access_token: Access token to use for authentication.
         submitted_after: (Optional) Query jobs that were submitted at or after the specified date and time (inclusive).
         submitted_before: (Optional) Query jobs that were submitted at or before the specified date and time (inclusive).
             The `submitted_before` must be the same or later than `submitted_after`.
@@ -64,7 +64,7 @@ async def list_jobs(
     async with MediaHttpContext() as http_context:
         json_response = await _list_jobs(
             http_context=http_context,
-            api_key=api_key,
+            access_token=access_token,
             submitted_after=submitted_after,
             submitted_before=submitted_before,
             status=status,
@@ -74,7 +74,7 @@ async def list_jobs(
     return JobsResponse(json_response)
 
 async def list_all_jobs(
-        api_key: str,
+        access_token: str,
         submitted_after: str=None,
         submitted_before: str=None,
         status: str=None,
@@ -87,7 +87,7 @@ async def list_all_jobs(
     See: https://docs.dolby.io/media-apis/reference/media-jobs-get
 
     Args:
-        api_key: Your Dolby.io Media API Key.
+        access_token: Access token to use for authentication.
         submitted_after: (Optional) Query jobs that were submitted at or after the specified date and time (inclusive).
         submitted_before: (Optional) Query jobs that were submitted at or before the specified date and time (inclusive).
             The `submitted_before` must be the same or later than `submitted_after`.
@@ -107,7 +107,7 @@ async def list_all_jobs(
         while True:
             page: JobsResponse = _list_jobs(
                 http_context=http_context,
-                api_key=api_key,
+                access_token=access_token,
                 submitted_after=submitted_after,
                 submitted_before=submitted_before,
                 status=status,
@@ -124,7 +124,7 @@ async def list_all_jobs(
     return jobs
 
 async def cancel(
-        api_key: str,
+        access_token: str,
         job_id: str,
     ) -> None:
     r"""
@@ -133,7 +133,7 @@ async def cancel(
     See: https://docs.dolby.io/media-apis/reference/media-jobs-cancel-post
 
     Args:
-        api_key: Your Dolby.io Media API Key.
+        access_token: Access token to use for authentication.
         job_id: Identifier of the job to cancel.
 
     Raises:
@@ -146,7 +146,7 @@ async def cancel(
 
     async with MediaHttpContext() as http_context:
         await http_context.requests_post(
-            api_key=api_key,
+            access_token=access_token,
             url='https://api.dolby.com/media/jobs/cancel',
             params=params,
         )

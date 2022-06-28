@@ -13,8 +13,8 @@ def add_arguments(sub_parsers: _SubParsersAction) -> None:
     parser = sub_parsers.add_parser(command_name(), help='Jobs')
 
     parser.add_argument(
-		'--api_key',
-		help='Your API Key.',
+		'-a', '--access_token',
+		help='Your API Access Token.',
 		required=True,
 		type=str
 	)
@@ -52,13 +52,13 @@ def add_arguments(sub_parsers: _SubParsersAction) -> None:
 	)
 
 async def execute_command(args: Namespace) -> None:
-    api_key = args.api_key
+    access_token = args.access_token
     after = args.after
     before = args.before
     status = args.status
 
     all_jobs = await jobs.list_all_jobs(
-        api_key=api_key,
+        access_token=access_token,
         submitted_after=after,
         submitted_before=before,
         status=status,

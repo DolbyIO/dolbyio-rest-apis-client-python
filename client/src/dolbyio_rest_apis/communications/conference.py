@@ -6,10 +6,9 @@ This module contains the functions to work with the conference API.
 """
 
 from dataclasses import asdict
-from deprecated import deprecated
 from dolbyio_rest_apis.core.helpers import get_value, add_if_not_none
 from dolbyio_rest_apis.communications.internal.http_context import CommunicationsHttpContext
-from dolbyio_rest_apis.communications.internal.urls import get_api_v2_url, get_session_url
+from dolbyio_rest_apis.communications.internal.urls import get_comms_url_v2
 from .models import UserToken, Conference, SpatialAudioEnvironment, SpatialAudioListener, SpatialAudioUser, RTCPMode, Participant, VideoCodec
 from typing import List
 
@@ -86,7 +85,7 @@ async def create_conference(
     async with CommunicationsHttpContext() as http_context:
         json_response = await http_context.requests_post(
             access_token=access_token,
-            url=f'{get_api_v2_url()}/conferences/create',
+            url=f'{get_comms_url_v2()}/conferences/create',
             payload=payload
         )
 
@@ -136,7 +135,7 @@ async def invite(
     async with CommunicationsHttpContext() as http_context:
         json_response = await http_context.requests_post(
             access_token=access_token,
-            url=f'{get_api_v2_url()}/conferences/{conference_id}/invite',
+            url=f'{get_comms_url_v2()}/conferences/{conference_id}/invite',
             payload=payload
         )
 
@@ -174,7 +173,7 @@ async def kick(
     async with CommunicationsHttpContext() as http_context:
         await http_context.requests_post(
             access_token=access_token,
-            url=f'{get_api_v2_url()}/conferences/{conference_id}/kick',
+            url=f'{get_comms_url_v2()}/conferences/{conference_id}/kick',
             payload=payload
         )
 
@@ -214,7 +213,7 @@ async def send_message(
     async with CommunicationsHttpContext() as http_context:
         await http_context.requests_post(
             access_token=access_token,
-            url=f'{get_api_v2_url()}/conferences/{conference_id}/message',
+            url=f'{get_comms_url_v2()}/conferences/{conference_id}/message',
             payload=payload
         )
 
@@ -260,10 +259,9 @@ async def set_spatial_listeners_audio(
     async with CommunicationsHttpContext() as http_context:
         await http_context.requests_put(
             access_token=access_token,
-            url=f'{get_api_v2_url()}/conferences/{conference_id}/spatial-listeners-audio',
+            url=f'{get_comms_url_v2()}/conferences/{conference_id}/spatial-listeners-audio',
             payload=payload
         )
-
 
 async def update_permissions(
         access_token: str,
@@ -308,7 +306,7 @@ async def update_permissions(
     async with CommunicationsHttpContext() as http_context:
         json_response = await http_context.requests_post(
             access_token=access_token,
-            url=f'{get_api_v2_url()}/conferences/{conference_id}/permissions',
+            url=f'{get_comms_url_v2()}/conferences/{conference_id}/permissions',
             payload=payload
         )
 
@@ -340,33 +338,5 @@ async def terminate(
     async with CommunicationsHttpContext() as http_context:
         await http_context.requests_delete(
             access_token=access_token,
-            url=f'{get_api_v2_url()}/conferences/{conference_id}',
-        )
-
-@deprecated(reason='This API is no longer applicable for applications on the new Dolby.io Communications APIs platform.')
-async def destroy(
-        consumer_key: str,
-        consumer_secret: str,
-        conference_id: str,
-    ) -> None:
-    r"""
-    Destroys an ongoing conference and removes all remaining participants from the conference.
-
-    See: https://docs.dolby.io/communications-apis/reference/destroy-conference
-
-    Args:
-        consumer_key: Your Dolby.io Consumer Key.
-        consumer_secret: Your Dolby.io Consumer Secret.
-        conference_id: Identifier of the conference.
-
-    Raises:
-        HttpRequestError: If a client error one occurred.
-        HTTPError: If one occurred.
-    """
-
-    async with CommunicationsHttpContext() as http_context:
-        await http_context.requests_post_basic_auth(
-            consumer_key=consumer_key,
-            consumer_secret=consumer_secret,
-            url=f'{get_session_url()}/conferences/{conference_id}/destroy',
+            url=f'{get_comms_url_v2()}/conferences/{conference_id}',
         )

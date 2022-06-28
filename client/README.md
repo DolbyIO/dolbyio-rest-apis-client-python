@@ -36,11 +36,11 @@ To get an access token that will be used by the client SDK for an end user to op
 import asyncio
 from dolbyio_rest_apis.communications import authentication
 
-CONSUMER_KEY = "YOUR_CONSUMER_KEY"
-CONSUMER_SECRET = "YOUR_CONSUMER_SECRET"
+APP_KEY = "YOUR_APP_KEY"
+APP_SECRET = "YOUR_APP_SECRET"
 
 loop = asyncio.get_event_loop()
-task = authentication.get_client_access_token(CONSUMER_KEY, CONSUMER_SECRET)
+task = authentication.get_api_token(APP_KEY, APP_SECRET)
 at = loop.run_until_complete(task)
 
 print(f"Access Token: {at.access_token}")
@@ -51,11 +51,11 @@ You can write an async function like that:
 ```python
 from dolbyio_rest_apis.communications import authentication
 
-CONSUMER_KEY = "YOUR_CONSUMER_KEY"
-CONSUMER_SECRET = "YOUR_CONSUMER_SECRET"
+APP_KEY = "YOUR_APP_KEY"
+APP_SECRET = "YOUR_APP_SECRET"
 
 async def get_client_access_token():
-    at = await authentication.get_client_access_token(CONSUMER_KEY, CONSUMER_SECRET)
+    at = await authentication.get_client_access_token(APP_KEY, APP_SECRET)
     print(f"Access Token: {at.access_token}")
 
 ```
@@ -66,11 +66,11 @@ To get an access token that will be used by your server to perform backend opera
 import asyncio
 from dolbyio_rest_apis.communications import authentication
 
-CONSUMER_KEY = "YOUR_CONSUMER_KEY"
-CONSUMER_SECRET = "YOUR_CONSUMER_SECRET"
+APP_KEY = "YOUR_APP_KEY"
+APP_SECRET = "YOUR_APP_SECRET"
 
 loop = asyncio.get_event_loop()
-task = authentication.get_api_access_token(CONSUMER_KEY, CONSUMER_SECRET)
+task = authentication.get_api_access_token(APP_KEY, APP_SECRET)
 at = loop.run_until_complete(task)
 
 print(f"Access Token: {at.access_token}")
@@ -117,11 +117,11 @@ Upload a media file to the temporary Dolby.io cloud storage for processing:
 import asyncio
 from dolbyio_rest_apis.media import io
 
-API_KEY = "YOUR_API_KEY"
+ACCESS_TOKEN = "YOUR_API_TOKEN"
 
 # Get an Upload URL
 task = io.get_upload_url(
-    api_key=API_KEY,
+    access_token=ACCESS_TOKEN,
     dlb_url='dlb://in/file.mp4'
 )
 upload_url = loop.run_until_complete(task)
@@ -142,10 +142,10 @@ Download a file that was processed by the API:
 import asyncio
 from dolbyio_rest_apis.media import io
 
-API_KEY = "YOUR_API_KEY"
+ACCESS_TOKEN = "YOUR_API_TOKEN"
 
 task = io.download_file(
-    api_key=API_KEY,
+    access_token=ACCESS_TOKEN,
     dlb_url='dlb://out/file.mp4',
     file_path='/path/to/processed_file.mp4'
 )

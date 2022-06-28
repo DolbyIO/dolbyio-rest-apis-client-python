@@ -13,15 +13,15 @@ def add_arguments(sub_parsers: _SubParsersAction) -> None:
     parser = sub_parsers.add_parser(command_name(), help='Authentication')
 
     parser.add_argument(
-		'-k', '--api_key',
-		help='Your Dolby.io API Key',
+		'-k', '--app_key',
+		help='Your Dolby.io App Key',
 		default='',
 		type=str
 	)
 
     parser.add_argument(
-		'-s', '--api_secret',
-		help='Your Dolby.io API Secret',
+		'-s', '--app_secret',
+		help='Your Dolby.io App Secret',
 		default='',
 		type=str
 	)
@@ -35,13 +35,13 @@ def add_arguments(sub_parsers: _SubParsersAction) -> None:
 	)
 
 async def execute_command(args: Namespace) -> None:
-    api_key = args.api_key
-    api_secret = args.api_secret
+    app_key = args.app_key
+    app_secret = args.app_secret
     output_format = args.output_format
 
-    access_token = await platform.get_access_token(
-        api_key=api_key,
-        api_secret=api_secret,
+    access_token = await platform.get_api_token(
+        app_key=app_key,
+        app_secret=app_secret,
     )
 
     if output_format == 'json':

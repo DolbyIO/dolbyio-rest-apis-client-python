@@ -9,7 +9,7 @@ from dolbyio_rest_apis.media.internal.http_context import MediaHttpContext
 from dolbyio_rest_apis.media.models.analyze_response import AnalyzeJobResponse
 
 async def start(
-        api_key: str,
+        access_token: str,
         job_content: str,
     ) -> str or None:
     r"""
@@ -36,7 +36,7 @@ async def start(
     Media content with duration less than 2 seconds will not be processed. The API will return an ERROR in this case.
 
     Args:
-        api_key: Your Dolby.io Media API Key.
+        access_token: Access token to use for authentication.
         job_content: Content of the job description as a JSON payload.
             You can find the definition at this URL: https://docs.dolby.io/media-apis/reference/media-analyze-post
 
@@ -54,7 +54,7 @@ async def start(
 
     async with MediaHttpContext() as http_context:
         json_response = await http_context.requests_post(
-            api_key=api_key,
+            access_token=access_token,
             url='https://api.dolby.com/media/analyze',
             payload=job_content,
         )
@@ -63,7 +63,7 @@ async def start(
         return json_response['job_id']
 
 async def get_results(
-        api_key: str,
+        access_token: str,
         job_id: str,
     ) -> AnalyzeJobResponse:
     r"""
@@ -74,7 +74,7 @@ async def get_results(
     See: https://docs.dolby.io/media-apis/reference/media-analyze-get
 
     Args:
-        api_key: Your Dolby.io Media API Key.
+        access_token: Access token to use for authentication.
         job_id: The job identifier.
 
     Returns:
@@ -90,7 +90,7 @@ async def get_results(
 
     async with MediaHttpContext() as http_context:
         json_response = await http_context.requests_get(
-            api_key=api_key,
+            access_token=access_token,
             url='https://api.dolby.com/media/analyze',
             params=params
         )
