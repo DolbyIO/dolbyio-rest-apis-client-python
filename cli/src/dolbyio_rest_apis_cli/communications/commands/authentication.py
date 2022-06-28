@@ -13,15 +13,15 @@ def add_arguments(sub_parsers: _SubParsersAction) -> None:
     parser = sub_parsers.add_parser(command_name(), help='Authentication')
 
     parser.add_argument(
-		'-k', '--consumer_key',
-		help='Your Dolby.io Consumer Key',
+		'-k', '--app_key',
+		help='Your Dolby.io App Key',
 		default='',
 		type=str
 	)
 
     parser.add_argument(
-		'-s', '--consumer_secret',
-		help='Your Dolby.io Consumer Secret',
+		'-s', '--app_secret',
+		help='Your Dolby.io App Secret',
 		default='',
 		type=str
 	)
@@ -39,7 +39,7 @@ def add_arguments(sub_parsers: _SubParsersAction) -> None:
 
     parser.add_argument(
 		'--api',
-		help='Request an API Access Token otherwise a Client Access Token will be returned.',
+		help='Request an API Token otherwise a Client Access Token will be returned.',
 		action='store_true',
 		dest='api',
 		default=False
@@ -54,22 +54,22 @@ def add_arguments(sub_parsers: _SubParsersAction) -> None:
 	)
 
 async def execute_command(args: Namespace) -> None:
-    consumer_key = args.consumer_key
-    consumer_secret = args.consumer_secret
+    app_key = args.app_key
+    app_secret = args.app_secret
     expires_in = args.expires_in
     api = args.api
     output_format = args.output_format
 
     if api:
-        access_token = await authentication.get_api_access_token(
-            consumer_key=consumer_key,
-            consumer_secret=consumer_secret,
+        access_token = await authentication.get_api_token(
+            app_key=app_key,
+            app_secret=app_secret,
             expires_in=expires_in
         )
     else:
         access_token = await authentication.get_client_access_token(
-            consumer_key=consumer_key,
-            consumer_secret=consumer_secret,
+            app_key=app_key,
+            app_secret=app_secret,
             expires_in=expires_in
         )
 

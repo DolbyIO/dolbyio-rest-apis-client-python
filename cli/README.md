@@ -27,10 +27,10 @@ communications --version
 
 ### Authentication
 
-Get your consumer key and secret from the dolby.io dashboard and run the following command to get the access token as a json payload:
+Get your app key and secret from the dolby.io dashboard and run the following command to get the access token as a json payload:
 
 ```bash
-communications auth -k "CONSUMER_KEY" -s "CONSUMER_SECRET" --output json
+communications auth -k "APP_KEY" -s "APP_SECRET" --output json
 ```
 
 Add the flag `--api` to get an access token that you can use to query the REST APIs.  
@@ -38,7 +38,7 @@ Change the output to `--output text` to get a text format for the output.
 Use `--output access_token` to retrieve only the access token so you can easily assign it to a variable:
 
 ```bash
-ACCESS_TOKEN=$(communications auth -k "CONSUMER_KEY" -s "CONSUMER_SECRET" --api --output access_token 2> /dev/null)
+ACCESS_TOKEN=$(communications auth -k "APP_KEY" -s "APP_SECRET" --api --output access_token 2> /dev/null)
 ```
 
 ### Remix
@@ -96,13 +96,28 @@ media --help
 media --version
 ```
 
+### Authentication
+
+Get your app key and secret from the dolby.io dashboard and run the following command to get the access token as a json payload:
+
+```bash
+media auth -k "APP_KEY" -s "APP_SECRET" --output json
+```
+  
+Change the output to `--output text` to get a text format for the output.  
+Use `--output access_token` to retrieve only the access token so you can easily assign it to a variable:
+
+```bash
+ACCESS_TOKEN=$(media auth -k "APP_KEY" -s "APP_SECRET" --output access_token 2> /dev/null)
+```
+
 ### Input / Output
 
 Upload a file to Dolby.io temporary storage:
 
 ```bash
 media io \
-    --api_key "<API_KEY>" \
+    --access_token "<ACCESS_TOKEN>" \
     --dlb_url "dlb://in/file.mp4" \
     --file "/path/to/file.mp4" \
     upload
@@ -112,7 +127,7 @@ Download a file from Dolby.io temporary storage:
 
 ```bash
 media io \
-    --api_key "<API_KEY>" \
+    --access_token "<ACCESS_TOKEN>" \
     --dlb_url "dlb://out/processed_file.mp4" \
     --file "/path/to/processed_file.mp4" \
     download
@@ -124,7 +139,7 @@ Start enhancing a media:
 
 ```bash
 media enhance
-    --api_key "<API_KEY>" \
+    --access_token "<ACCESS_TOKEN>" \
     start \
     --file "/path/to/job_description.json"
 ```
@@ -135,7 +150,7 @@ Get the result from a enhancement job:
 
 ```bash
 media enhance
-    --api_key "<API_KEY>" \
+    --access_token "<ACCESS_TOKEN>" \
     result \
     --job_id "00000000-0000-0000-0000-000000000000"
 ```
@@ -146,7 +161,7 @@ Start mastering a music:
 
 ```bash
 media mastering
-    --api_key "<API_KEY>" \
+    --access_token "<ACCESS_TOKEN>" \
     start \
     --file "/path/to/job_description.json"
 ```
@@ -157,7 +172,7 @@ Get the result from a music mastering job:
 
 ```bash
 media mastering
-    --api_key "<API_KEY>" \
+    --access_token "<ACCESS_TOKEN>" \
     result \
     --job_id "00000000-0000-0000-0000-000000000000"
 ```

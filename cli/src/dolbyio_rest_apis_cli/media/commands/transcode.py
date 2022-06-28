@@ -13,8 +13,8 @@ def add_arguments(sub_parsers: _SubParsersAction) -> None:
     parser = sub_parsers.add_parser(command_name(), help='Transcode API')
 
     parser.add_argument(
-		'--api_key',
-		help='Your API Key.',
+		'-a', '--access_token',
+		help='Your API Access Token.',
 		required=True,
 		type=str
 	)
@@ -54,7 +54,7 @@ def add_arguments(sub_parsers: _SubParsersAction) -> None:
 	)
 
 async def execute_command(args: Namespace) -> None:
-    api_key = args.api_key
+    access_token = args.access_token
 
     if args.sub_command == 'start':
         file_path = args.file
@@ -62,7 +62,7 @@ async def execute_command(args: Namespace) -> None:
             job_content = f.read()
 
         job_id = await transcode.start(
-            api_key=api_key,
+            access_token=access_token,
             job_content=job_content
         )
 
@@ -70,7 +70,7 @@ async def execute_command(args: Namespace) -> None:
     elif args.sub_command == 'result':
         job_id = args.job_id
         job_result = await transcode.get_results(
-            api_key=api_key,
+            access_token=access_token,
             job_id=job_id
         )
 

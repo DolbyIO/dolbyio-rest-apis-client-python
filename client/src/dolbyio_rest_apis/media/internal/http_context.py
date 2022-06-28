@@ -23,7 +23,7 @@ class MediaHttpContext(HttpContext):
 
     async def _requests_post_put(
             self,
-            api_key: str,
+            access_token: str,
             url: str,
             method: str,
             payload: Any=None,
@@ -33,7 +33,7 @@ class MediaHttpContext(HttpContext):
         Sends a POST or PUT request.
 
         Args:
-            api_key: Your Dolby.io Media API Key.
+            access_token: Access token to use for authentication.
             url: Where to send the request to.
             method: HTTP method, POST or PUT.
             payload: (Optional) Content of the request.
@@ -50,7 +50,7 @@ class MediaHttpContext(HttpContext):
         headers = {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'x-api-key': api_key,
+            'Authorization': f'Bearer {access_token}',
         }
 
         if payload is None:
@@ -68,7 +68,7 @@ class MediaHttpContext(HttpContext):
 
     async def requests_post(
             self,
-            api_key: str,
+            access_token: str,
             url: str,
             payload: Any=None,
             params: Mapping[str, str]=None,
@@ -77,7 +77,7 @@ class MediaHttpContext(HttpContext):
         Sends a POST request.
 
         Args:
-            api_key: Your Dolby.io Media API Key.
+            access_token: Access token to use for authentication.
             url: Where to send the request to.
             payload: (Optional) Content of the request.
             params: (Optional) URL query parameters.
@@ -91,7 +91,7 @@ class MediaHttpContext(HttpContext):
         """
 
         return await self._requests_post_put(
-            api_key=api_key,
+            access_token=access_token,
             url=url,
             method='POST',
             payload=payload,
@@ -100,8 +100,8 @@ class MediaHttpContext(HttpContext):
 
     async def requests_post_basic_auth(
             self,
-            api_key: str,
-            api_secret: str,
+            app_key: str,
+            app_secret: str,
             url: str,
             data: Dict[str, Any],
         ) -> Any or None:
@@ -109,8 +109,8 @@ class MediaHttpContext(HttpContext):
         Sends a POST request with Basic authentication.
 
         Args:
-            api_key: Your Dolby.io API Key.
-            api_secret: Your Dolby.io API Secret.
+            app_key: Your Dolby.io App Key.
+            app_secret: Your Dolby.io App Secret.
             url: Where to send the request to.
             data: Content of the request.
 
@@ -130,13 +130,13 @@ class MediaHttpContext(HttpContext):
             method='POST',
             url=url,
             headers=headers,
-            auth=BasicAuth(api_key, api_secret),
+            auth=BasicAuth(app_key, app_secret),
             data=data,
         )
 
     async def requests_put(
             self,
-            api_key: str,
+            access_token: str,
             url: str,
             payload: Any=None,
             params: Mapping[str, str]=None,
@@ -145,7 +145,7 @@ class MediaHttpContext(HttpContext):
         Sends a PUT request.
 
         Args:
-            api_key: Your Dolby.io Media API Key.
+            access_token: Access token to use for authentication.
             url: Where to send the request to.
             payload: (Optional) Content of the request.
             params: (Optional) URL query parameters.
@@ -159,7 +159,7 @@ class MediaHttpContext(HttpContext):
         """
 
         return await self._requests_post_put(
-            api_key=api_key,
+            access_token=access_token,
             url=url,
             method='PUT',
             payload=payload,
@@ -168,7 +168,7 @@ class MediaHttpContext(HttpContext):
 
     async def requests_get(
             self,
-            api_key: str,
+            access_token: str,
             url: str,
             params: Mapping[str, str]=None,
         ) -> Any or None:
@@ -176,7 +176,7 @@ class MediaHttpContext(HttpContext):
         Sends a GET request.
 
         Args:
-            api_key: Your Dolby.io Media API Key.
+            access_token: Access token to use for authentication.
             url: Where to send the request to.
             params: (Optional) URL query parameters.
 
@@ -190,7 +190,7 @@ class MediaHttpContext(HttpContext):
 
         headers = {
             'Accept': 'application/json',
-            'x-api-key': api_key,
+            'Authorization': f'Bearer {access_token}',
         }
 
         return await self._send_request(
@@ -202,7 +202,7 @@ class MediaHttpContext(HttpContext):
 
     async def requests_delete(
             self,
-            api_key: str,
+            access_token: str,
             url: str,
             params: Mapping[str, str]=None,
         ) -> None:
@@ -210,7 +210,7 @@ class MediaHttpContext(HttpContext):
         Sends a DELETE request.
 
         Args:
-            api_key: Your Dolby.io Media API Key.
+            access_token: Access token to use for authentication.
             url: Where to send the request to.
             params: (Optional) URL query parameters.
 
@@ -221,7 +221,7 @@ class MediaHttpContext(HttpContext):
 
         headers = {
             'Accept': 'application/json',
-            'x-api-key': api_key,
+            'Authorization': f'Bearer {access_token}',
         }
 
         return await self._send_request(
@@ -233,7 +233,7 @@ class MediaHttpContext(HttpContext):
 
     async def download(
             self,
-            api_key: str,
+            access_token: str,
             url: str,
             file_path: str,
             params: Mapping[str, str]=None,
@@ -242,7 +242,7 @@ class MediaHttpContext(HttpContext):
         Downloads a file.
 
         Args:
-            api_key: Your Dolby.io Media API Key.
+            access_token: Access token to use for authentication.
             url: Where to send the request to.
             file_path: Where to save the file.
             params: (Optional) URL query parameters.
@@ -254,7 +254,7 @@ class MediaHttpContext(HttpContext):
 
         headers = {
             'Accept': 'application/octet-stream',
-            'x-api-key': api_key,
+            'Authorization': f'Bearer {access_token}',
         }
 
         await self._download_file(

@@ -123,8 +123,8 @@ class CommunicationsHttpContext(HttpContext):
 
     async def requests_post_basic_auth(
             self,
-            consumer_key: str,
-            consumer_secret: str,
+            app_key: str,
+            app_secret: str,
             url: str,
             json_payload: str=None,
             data: Dict[str, Any]=None,
@@ -133,8 +133,8 @@ class CommunicationsHttpContext(HttpContext):
         Sends a POST request with Basic authentication.
 
         Args:
-            consumer_key: The Dolby.io Consumer Key.
-            consumer_secret: The Dolby.io Consumer Secret.
+            app_key: The Dolby.io App Key.
+            app_secret: The Dolby.io App Secret.
             url: Where to send the request to.
             json_payload: (Optional) Content of the request as JSON payload.
             data: (Optional) Content of the request.
@@ -165,7 +165,7 @@ class CommunicationsHttpContext(HttpContext):
             method='POST',
             url=url,
             headers=headers,
-            auth=BasicAuth(consumer_key, consumer_secret),
+            auth=BasicAuth(app_key, app_secret),
             data=payload,
         )
 
@@ -287,16 +287,16 @@ class CommunicationsHttpContext(HttpContext):
 
     async def requests_get_basic_auth(
             self,
-            consumer_key: str,
-            consumer_secret: str,
+            app_key: str,
+            app_secret: str,
             url: str,
         ) -> Any or None:
         r"""
         Sends a GET request with Basic authentication.
 
         Args:
-            consumer_key: The Dolby.io Consumer Key.
-            consumer_secret: The Dolby.io Consumer Secret.
+            app_key: The Dolby.io App Key.
+            app_secret: The Dolby.io App Secret.
             url: Where to send the request to.
 
         Returns:
@@ -316,7 +316,7 @@ class CommunicationsHttpContext(HttpContext):
             method='GET',
             url=url,
             headers=headers,
-            auth=BasicAuth(consumer_key, consumer_secret),
+            auth=BasicAuth(app_key, app_secret),
         )
 
     async def download(

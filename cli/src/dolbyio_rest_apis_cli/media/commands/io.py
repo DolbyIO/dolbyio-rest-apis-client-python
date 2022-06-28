@@ -12,8 +12,8 @@ def add_arguments(sub_parsers: _SubParsersAction) -> None:
     parser = sub_parsers.add_parser(command_name(), help='Input / Output')
 
     parser.add_argument(
-		'--api_key',
-		help='Your API Key.',
+		'-a', '--access_token',
+		help='Your API Access Token.',
 		required=True,
 		type=str
 	)
@@ -40,13 +40,13 @@ def add_arguments(sub_parsers: _SubParsersAction) -> None:
     sub_parsers_io.add_parser('download', help='Download a file')
 
 async def execute_command(args: Namespace) -> None:
-    api_key = args.api_key
+    access_token = args.access_token
     dlb_url = args.dlb_url
     file = args.file
 
     if args.sub_command == 'upload':
         upload_url = await io.get_upload_url(
-            api_key=api_key,
+            access_token=access_token,
             dlb_url=dlb_url
         )
 
@@ -60,7 +60,7 @@ async def execute_command(args: Namespace) -> None:
         print(f'File uploaded to {dlb_url}')
     elif args.sub_command == 'download':
         await io.download_file(
-            api_key=api_key,
+            access_token=access_token,
             dlb_url=dlb_url,
             file_path=file
         )

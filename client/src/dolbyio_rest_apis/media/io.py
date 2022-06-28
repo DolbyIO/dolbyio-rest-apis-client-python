@@ -8,7 +8,7 @@ This module contains the functions to work with the IO APIs.
 from dolbyio_rest_apis.media.internal.http_context import MediaHttpContext
 
 async def get_upload_url(
-        api_key: str,
+        access_token: str,
         dlb_url: str,
     ) -> str or None:
     r"""
@@ -26,7 +26,7 @@ async def get_upload_url(
     See: https://docs.dolby.io/media-apis/reference/media-input-post
 
     Args:
-        api_key: Your Dolby.io Media API Key.
+        access_token: Access token to use for authentication.
         dlb_url: The `url` should be in the form `dlb://object-key` where the object-key can be any alpha-numeric string.
             The object-key is unique to your account API Key so there is no risk of collision with other users.
 
@@ -40,7 +40,7 @@ async def get_upload_url(
 
     async with MediaHttpContext() as http_context:
         json_response = await http_context.requests_post(
-            api_key=api_key,
+            access_token=access_token,
             url='https://api.dolby.com/media/input',
             payload=payload
         )
@@ -69,7 +69,7 @@ async def upload_file(
         )
 
 async def download_file(
-        api_key: str,
+        access_token: str,
         dlb_url: str,
         file_path: str,
     ) -> None:
@@ -83,7 +83,7 @@ async def download_file(
     See: https://docs.dolby.io/media-apis/reference/media-output-get
 
     Args:
-        api_key: Your Dolby.io Media API Key.
+        access_token: Access token to use for authentication.
         dlb_url: The `url` should be in the form `dlb://object-key` where the object-key can be any alpha-numeric string.
             The object-key is unique to your account API Key so there is no risk of collision with other users.
         file_path: Local file path where to download the file to.
@@ -97,7 +97,7 @@ async def download_file(
 
     async with MediaHttpContext() as http_context:
         await http_context.download(
-            api_key=api_key,
+            access_token=access_token,
             url='https://api.dolby.com/media/output',
             file_path=file_path,
             params=params,

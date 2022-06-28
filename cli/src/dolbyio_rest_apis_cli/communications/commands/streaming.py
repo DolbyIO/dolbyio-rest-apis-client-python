@@ -36,9 +36,9 @@ def add_arguments(sub_parsers: _SubParsersAction) -> None:
 
     parser.add_argument(
 		'--target',
-		help='Perform the operation for RTMP or HLS.',
+		help='Perform the operation for RTMP.',
 		required=True,
-        choices=[ 'rtmp', 'hls' ],
+        choices=[ 'rtmp' ],
 		type=str
 	)
 
@@ -72,21 +72,6 @@ async def execute_command(args: Namespace) -> None:
             print(f'Stop the streaming to RTMP for the conference "{cid}".')
 
             await streaming.stop_rtmp(
-                access_token=access_token,
-                conference_id=cid
-            )
-    elif target == 'hls':
-        if action == 'start':
-            print(f'Start the streaming to HLS for the conference "{cid}".')
-
-            await streaming.start_hls(
-                access_token=access_token,
-                conference_id=cid
-            )
-        elif action == 'stop':
-            print(f'Start the streaming to HLS for the conference "{cid}".')
-
-            await streaming.stop_hls(
                 access_token=access_token,
                 conference_id=cid
             )

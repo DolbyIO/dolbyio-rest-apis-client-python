@@ -11,7 +11,7 @@ from dolbyio_rest_apis.media.models.webhook import Webhook
 from typing import Any, Dict
 
 async def register_webhook(
-        api_key: str,
+        access_token: str,
         url: str,
         headers: Dict[str, Any]=None,
     ) -> str or None:
@@ -21,7 +21,7 @@ async def register_webhook(
     See: https://docs.dolby.io/media-apis/reference/media-webhook-post
 
     Args:
-        api_key: Your Dolby.io API Key.
+        access_token: Access token to use for authentication.
         url: The callback url that will be called when job execution completes.
         headers: (Optional) Headers to include in the webhook call.
 
@@ -43,7 +43,7 @@ async def register_webhook(
 
     async with MediaHttpContext() as http_context:
         json_response = await http_context.requests_post(
-            api_key=api_key,
+            access_token=access_token,
             url=request_url,
             payload=payload,
         )
@@ -52,7 +52,7 @@ async def register_webhook(
         return json_response['webhook_id']
 
 async def update_webhook(
-        api_key: str,
+        access_token: str,
         webhook_id: str,
         url: str,
         headers: Dict[str, Any]=None,
@@ -63,7 +63,7 @@ async def update_webhook(
     See: https://docs.dolby.io/media-apis/reference/media-webhook-put
 
     Args:
-        api_key: Your Dolby.io API Key.
+        access_token: Access token to use for authentication.
         webhook_id: Use the `webhook_id` returned from a previous GET, POST
             or PUT response to retrieve the webhook configuration.
         url: The callback url that will be called when job execution completes.
@@ -88,14 +88,14 @@ async def update_webhook(
 
     async with MediaHttpContext() as http_context:
         await http_context.requests_put(
-            api_key=api_key,
+            access_token=access_token,
             url=request_url,
             params=params,
             payload=payload,
         )
 
 async def retrieve_webhook(
-        api_key: str,
+        access_token: str,
         webhook_id: str,
     ) -> Webhook:
     r"""
@@ -104,7 +104,7 @@ async def retrieve_webhook(
     See: https://docs.dolby.io/media-apis/reference/media-webhook-get
 
     Args:
-        api_key: Your Dolby.io API Key.
+        access_token: Access token to use for authentication.
         url: The callback url that will be called when job execution completes.
         headers: (Optional) Headers to include in the webhook call.
 
@@ -121,7 +121,7 @@ async def retrieve_webhook(
 
     async with MediaHttpContext() as http_context:
         json_response = await http_context.requests_get(
-            api_key=api_key,
+            access_token=access_token,
             url='https://api.dolby.com/media/webhooks',
             params=params,
         )
@@ -129,7 +129,7 @@ async def retrieve_webhook(
     return Webhook(json_response)
 
 async def delete_webhook(
-        api_key: str,
+        access_token: str,
         webhook_id: str,
     ) -> str or None:
     r"""
@@ -138,7 +138,7 @@ async def delete_webhook(
     See: https://docs.dolby.io/media-apis/reference/media-webhook-delete
 
     Args:
-        api_key: Your Dolby.io API Key.
+        access_token: Access token to use for authentication.
         webhook_id: Use the `webhook_id` returned from a previous GET, POST
             or PUT response to retrieve the webhook configuration.
 
@@ -155,7 +155,7 @@ async def delete_webhook(
 
     async with MediaHttpContext() as http_context:
         json_response = await http_context.requests_delete(
-            api_key=api_key,
+            access_token=access_token,
             url='https://api.dolby.com/media/webhooks',
             params=params,
         )
