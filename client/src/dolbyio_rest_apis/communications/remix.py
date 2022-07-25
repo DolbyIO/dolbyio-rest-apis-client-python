@@ -7,11 +7,13 @@ This module contains the functions to work with the remix API.
 
 from dolbyio_rest_apis.communications.internal.http_context import CommunicationsHttpContext
 from dolbyio_rest_apis.communications.internal.urls import get_comms_url_v2
+from dolbyio_rest_apis.core.helpers import add_if_not_none
 from .models import RemixStatus
 
 async def start(
         access_token: str,
         conference_id: str,
+        layout_url: str=None,
     ) -> RemixStatus:
     r"""
     Remix a conference.
@@ -25,6 +27,11 @@ async def start(
     Args:
         access_token: Access token to use for authentication.
         conference_id: Identifier of the conference.
+        layout_url: Overwrites the layout URL configuration:
+            null: uses the layout URL configured in the dashboard
+                (if no URL is set in the dashboard, then uses the Dolby.io default)
+            default: uses the Dolby.io default layout
+            URL string: uses this layout URL
 
     Returns:
         A :class:`RemixStatus` object that represents the status of the remix.
@@ -35,10 +42,14 @@ async def start(
     """
     url = f'{get_comms_url_v2()}/conferences/mix/{conference_id}/remix/start'
 
+    payload = {}
+    add_if_not_none(payload, 'layoutUrl', layout_url)
+
     async with CommunicationsHttpContext() as http_context:
         json_response = await http_context.requests_post(
             access_token=access_token,
             url=url,
+            payload=payload,
         )
 
     return RemixStatus(json_response)
