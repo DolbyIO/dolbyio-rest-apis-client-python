@@ -23,6 +23,7 @@ async def create_conference(
         ttl: int=None,
         video_codec: VideoCodec=None,
         participants: List[Participant]=None,
+        recording_formats: List[str]=None,
     ) -> Conference:
     r"""
     Creates a conference.
@@ -42,6 +43,8 @@ async def create_conference(
             (in seconds) and terminating empty conferences.
         video_codec: (Optional) Specifies video codecs (VP8 or H264) for a specific conference.
         participants: List of the :class:`Participant` object to update the permissions.
+        recording_formats: If specified, the default RecordingConfiguration is overridden.
+            Specifies the recording format. Valid values are 'mp3' and 'mp4'.
 
     Returns:
         A :class:`Conference` object.
@@ -60,13 +63,18 @@ async def create_conference(
     add_if_not_none(parameters, 'ttl', ttl)
     add_if_not_none(parameters, 'videoCodec', video_codec)
 
+    if recording_formats is not None and len(recording_formats) > 0:
+        parameters['recording'] = {
+            'format': recording_formats
+        }
+
     payload = {
         'ownerExternalId': owner_external_id,
         'parameters': parameters,
     }
     add_if_not_none(payload, 'alias', alias)
 
-    if not participants is None and len(participants) > 0:
+    if participants is not None and len(participants) > 0:
         obj_participants = { }
 
         for participant in participants:
