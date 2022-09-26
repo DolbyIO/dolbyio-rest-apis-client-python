@@ -16,6 +16,7 @@ async def get_recordings(
         tr_to: int=9999999999999,
         maximum: int=100,
         start: str=None,
+        perm: bool=False,
     ) -> GetRecordingsResponse:
     r"""
     Get recording details
@@ -35,6 +36,7 @@ async def get_recordings(
         start: When the results span multiple pages, use this option to navigate through pages.
             By default, only the max number of results is displayed. To see the next results,
             set the start parameter to the value of the next key returned in the previous response.
+        perm: When set to true, the URL is replaced with a monitor API signed URL with unlimited validity.
 
     Returns:
         A :class:`GetRecordingsResponse` object.
@@ -49,6 +51,7 @@ async def get_recordings(
         'from': tr_from,
         'to': tr_to,
         'max': maximum,
+        'perm': str(perm),
     }
 
     if not start is None:
@@ -68,6 +71,7 @@ async def get_all_recordings(
         tr_from: int=0,
         tr_to: int=9999999999999,
         page_size: int=100,
+        perm: bool=False,
     ) -> List[Recording]:
     r"""
     Get all recording details
@@ -83,6 +87,7 @@ async def get_all_recordings(
         tr_from: The beginning of the time range (in milliseconds that have elapsed since epoch).
         tr_to: The end of the time range (in milliseconds that have elapsed since epoch).
         page_size: (Optional) Number of elements to return per page.
+        perm: When set to true, the URL is replaced with a monitor API signed URL with unlimited validity.
 
     Returns:
         A list of :class:`Recording` objects.
@@ -97,6 +102,7 @@ async def get_all_recordings(
         'from': tr_from,
         'to': tr_to,
         'max': page_size,
+        'perm': str(perm),
     }
 
     recordings = []
@@ -123,6 +129,7 @@ async def get_recording(
         tr_from: int=0,
         tr_to: int=9999999999999,
         page_size: int=100,
+        perm: bool=False,
     ) -> GetRecordingsResponse:
     r"""
     Get the recording of a specific conference
@@ -139,6 +146,7 @@ async def get_recording(
         tr_from: The beginning of the time range (in milliseconds that have elapsed since epoch).
         tr_to: The end of the time range (in milliseconds that have elapsed since epoch).
         page_size: (Optional) Number of elements to return per page.
+        perm: When set to true, the URL is replaced with a monitor API signed URL with unlimited validity.
 
     Returns:
         A :class:`GetRecordingsResponse` object.
@@ -153,6 +161,7 @@ async def get_recording(
         'from': tr_from,
         'to': tr_to,
         'max': page_size,
+        'perm': str(perm),
     }
 
     recordings = []
