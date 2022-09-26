@@ -5,6 +5,7 @@ dolbyio_rest_apis.communications.monitor.recordings
 This module contains the functions to work with the monitor API related to recordings.
 """
 
+from deprecated import deprecated
 from dolbyio_rest_apis.communications.internal.http_context import CommunicationsHttpContext
 from dolbyio_rest_apis.communications.internal.urls import get_monitor_url
 from dolbyio_rest_apis.communications.monitor.models import GetRecordingsResponse, Recording, DolbyVoiceRecording
@@ -51,7 +52,7 @@ async def get_recordings(
         'from': tr_from,
         'to': tr_to,
         'max': maximum,
-        'perm': str(perm),
+        'perm': str(perm).lower(),
     }
 
     if not start is None:
@@ -102,7 +103,7 @@ async def get_all_recordings(
         'from': tr_from,
         'to': tr_to,
         'max': page_size,
-        'perm': str(perm),
+        'perm': str(perm).lower(),
     }
 
     recordings = []
@@ -161,7 +162,7 @@ async def get_recording(
         'from': tr_from,
         'to': tr_to,
         'max': page_size,
-        'perm': str(perm),
+        'perm': str(perm).lower(),
     }
 
     recordings = []
@@ -246,6 +247,7 @@ async def get_dolby_voice_recordings(
 
     return DolbyVoiceRecording(json_response)
 
+@deprecated(reason='This API is no longer applicable on the Dolby.io Communications APIs platform.')
 async def download_mp4_recording(
         access_token: str,
         conference_id: str,
@@ -279,6 +281,7 @@ async def download_mp4_recording(
             file_path=file_path,
         )
 
+@deprecated(reason='This API is no longer applicable on the Dolby.io Communications APIs platform.')
 async def download_mp3_recording(
         access_token: str,
         conference_id: str,
