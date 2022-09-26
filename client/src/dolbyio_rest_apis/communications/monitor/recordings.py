@@ -5,6 +5,7 @@ dolbyio_rest_apis.communications.monitor.recordings
 This module contains the functions to work with the monitor API related to recordings.
 """
 
+from deprecated import deprecated
 from dolbyio_rest_apis.communications.internal.http_context import CommunicationsHttpContext
 from dolbyio_rest_apis.communications.internal.urls import get_monitor_url
 from dolbyio_rest_apis.communications.monitor.models import GetRecordingsResponse, Recording, DolbyVoiceRecording
@@ -16,6 +17,7 @@ async def get_recordings(
         tr_to: int=9999999999999,
         maximum: int=100,
         start: str=None,
+        perm: bool=False,
     ) -> GetRecordingsResponse:
     r"""
     Get recording details
@@ -35,6 +37,7 @@ async def get_recordings(
         start: When the results span multiple pages, use this option to navigate through pages.
             By default, only the max number of results is displayed. To see the next results,
             set the start parameter to the value of the next key returned in the previous response.
+        perm: When set to true, the URL is replaced with a monitor API signed URL with unlimited validity.
 
     Returns:
         A :class:`GetRecordingsResponse` object.
@@ -49,6 +52,7 @@ async def get_recordings(
         'from': tr_from,
         'to': tr_to,
         'max': maximum,
+        'perm': str(perm).lower(),
     }
 
     if not start is None:
@@ -68,6 +72,7 @@ async def get_all_recordings(
         tr_from: int=0,
         tr_to: int=9999999999999,
         page_size: int=100,
+        perm: bool=False,
     ) -> List[Recording]:
     r"""
     Get all recording details
@@ -83,6 +88,7 @@ async def get_all_recordings(
         tr_from: The beginning of the time range (in milliseconds that have elapsed since epoch).
         tr_to: The end of the time range (in milliseconds that have elapsed since epoch).
         page_size: (Optional) Number of elements to return per page.
+        perm: When set to true, the URL is replaced with a monitor API signed URL with unlimited validity.
 
     Returns:
         A list of :class:`Recording` objects.
@@ -97,6 +103,7 @@ async def get_all_recordings(
         'from': tr_from,
         'to': tr_to,
         'max': page_size,
+        'perm': str(perm).lower(),
     }
 
     recordings = []
@@ -123,6 +130,7 @@ async def get_recording(
         tr_from: int=0,
         tr_to: int=9999999999999,
         page_size: int=100,
+        perm: bool=False,
     ) -> GetRecordingsResponse:
     r"""
     Get the recording of a specific conference
@@ -139,6 +147,7 @@ async def get_recording(
         tr_from: The beginning of the time range (in milliseconds that have elapsed since epoch).
         tr_to: The end of the time range (in milliseconds that have elapsed since epoch).
         page_size: (Optional) Number of elements to return per page.
+        perm: When set to true, the URL is replaced with a monitor API signed URL with unlimited validity.
 
     Returns:
         A :class:`GetRecordingsResponse` object.
@@ -153,6 +162,7 @@ async def get_recording(
         'from': tr_from,
         'to': tr_to,
         'max': page_size,
+        'perm': str(perm).lower(),
     }
 
     recordings = []
@@ -237,6 +247,7 @@ async def get_dolby_voice_recordings(
 
     return DolbyVoiceRecording(json_response)
 
+@deprecated(reason='This API is no longer applicable on the Dolby.io Communications APIs platform.')
 async def download_mp4_recording(
         access_token: str,
         conference_id: str,
@@ -270,6 +281,7 @@ async def download_mp4_recording(
             file_path=file_path,
         )
 
+@deprecated(reason='This API is no longer applicable on the Dolby.io Communications APIs platform.')
 async def download_mp3_recording(
         access_token: str,
         conference_id: str,
