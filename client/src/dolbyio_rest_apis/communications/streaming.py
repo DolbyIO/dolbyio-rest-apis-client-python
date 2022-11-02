@@ -13,12 +13,11 @@ from typing import List
 async def start_rtmp(
         access_token: str,
         conference_id: str,
-        rtmp_urls: List[str],
+        rtmp_url: str,
     ) -> None:
     r"""
     Starts the RTMP live stream for the specified conference. Once the Dolby.io Communications APIs service starts
     streaming to the target url, a `Stream.Rtmp.InProgress` Webhook event will be sent.
-    You must use this API if the conference is protected using enhanced conference access control.
 
     See: https://docs.dolby.io/communications-apis/reference/start-rtmp
 
@@ -33,7 +32,7 @@ async def start_rtmp(
     """
 
     payload = {
-        'uri': '|'.join(rtmp_urls),
+        'uri': rtmp_url,
     }
 
     async with CommunicationsHttpContext() as http_context:
@@ -48,8 +47,7 @@ async def stop_rtmp(
         conference_id: str,
     ) -> None:
     r"""
-    Stops an RTMP stream.
-    You must use this API if the conference is protected using enhanced conference access control.
+    Stops the RTMP stream of the specified conference. 
 
     See: https://docs.dolby.io/communications-apis/reference/stop-rtmp
 
