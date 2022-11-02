@@ -8,7 +8,6 @@ This module contains the functions to work with the streaming API.
 from dolbyio_rest_apis.communications.internal.http_context import CommunicationsHttpContext
 from dolbyio_rest_apis.communications.internal.urls import get_comms_url_v2
 from dolbyio_rest_apis.core.helpers import add_if_not_none
-from typing import List
 
 async def start_rtmp(
         access_token: str,
@@ -24,7 +23,7 @@ async def start_rtmp(
     Args:
         access_token: Access token to use for authentication.
         conference_id: Identifier of the conference.
-        rtmp_urls: List of the RTMP endpoints where to send the RTMP stream to.
+        rtmp_url: The destination URI provided by the RTMP service.
 
     Raises:
         HttpRequestError: If a client error one occurred.
@@ -47,7 +46,7 @@ async def stop_rtmp(
         conference_id: str,
     ) -> None:
     r"""
-    Stops the RTMP stream of the specified conference. 
+    Stops the RTMP stream of the specified conference.
 
     See: https://docs.dolby.io/communications-apis/reference/stop-rtmp
 
