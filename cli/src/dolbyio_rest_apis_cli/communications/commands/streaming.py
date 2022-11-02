@@ -43,8 +43,8 @@ def add_arguments(sub_parsers: _SubParsersAction) -> None:
 	)
 
     parser.add_argument(
-		'-u', '--urls',
-		help='List of RTMP endpoint URLs.',
+		'-u', '--url',
+		help='The destination URI provided by the RTMP service.',
 		nargs='*',
         required='start' in sys.argv and 'rtmp' in sys.argv,
 		type=str
@@ -55,18 +55,17 @@ async def execute_command(args: Namespace) -> None:
     cid = args.cid
     action = args.action
     target = args.target
-    urls = args.urls
+    url = args.url
 
     if target == 'rtmp':
         if action == 'start':
             print(f'Start the streaming to RTMP for the conference "{cid}".')
-            for url in urls:
-                print(f' - {url}')
+            print(f' - {url}')
 
             await streaming.start_rtmp(
                 access_token=access_token,
                 conference_id=cid,
-                rtmp_urls=urls
+                rtmp_url=url
             )
         elif action == 'stop':
             print(f'Stop the streaming to RTMP for the conference "{cid}".')

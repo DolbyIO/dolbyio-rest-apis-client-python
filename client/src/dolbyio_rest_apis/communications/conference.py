@@ -41,7 +41,7 @@ async def create_conference(
         rtcp_mode: (Optional) Specifies the bitrate adaptation mode for the video transmission.
         ttl: (Optional) Specifies the time to live that enables customizing the waiting time
             (in seconds) and terminating empty conferences.
-        video_codec: (Optional) Specifies video codecs (VP8 or H264) for a specific conference.
+        video_codec: (Optional) Specifies the video codec (VP8 or H264) for the conference.
         participants: List of the :class:`Participant` object to update the permissions.
         recording_formats: If specified, the default RecordingConfiguration is overridden.
             Specifies the recording format. Valid values are 'mp3' and 'mp4'.
