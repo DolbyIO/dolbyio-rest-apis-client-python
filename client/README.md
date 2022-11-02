@@ -7,7 +7,7 @@ Python wrapper for the dolby.io REST [Communications](https://docs.dolby.io/comm
 Check the [dolbyio-rest-apis](https://pypi.org/project/dolbyio-rest-apis/) package on PyPI. To install the latest stable python package run the following command: 
 
 ```bash
-python3 -m pip install  dolbyio-rest-apis
+python3 -m pip install dolbyio-rest-apis
 ```
 
 Upgrade your package to the latest version:
