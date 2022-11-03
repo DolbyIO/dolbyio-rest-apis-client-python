@@ -13,6 +13,7 @@ async def start_rtmp(
         access_token: str,
         conference_id: str,
         rtmp_url: str,
+        layout_url: str=None,
     ) -> None:
     r"""
     Starts the RTMP live stream for the specified conference. Once the Dolby.io Communications APIs service starts
@@ -24,6 +25,12 @@ async def start_rtmp(
         access_token: Access token to use for authentication.
         conference_id: Identifier of the conference.
         rtmp_url: The destination URI provided by the RTMP service.
+        layout_url: Overwrites the layout URL configuration.
+            This field is ignored if it is not relevant regarding recording configuration,
+            for example if live_recording set to false or if the recording is MP3 only.
+            - `null`: uses the layout URL configured in the dashboard (if no URL is set in the dashboard, then uses the Dolby.io default);
+            - `default`: uses the Dolby.io default layout;
+            - URL string: uses this layout URL
 
     Raises:
         HttpRequestError: If a client error one occurred.
@@ -33,6 +40,7 @@ async def start_rtmp(
     payload = {
         'uri': rtmp_url,
     }
+    add_if_not_none(payload, 'layoutUrl', layout_url)
 
     async with CommunicationsHttpContext() as http_context:
         await http_context.requests_post(
