@@ -10,7 +10,9 @@ from aiohttp import BasicAuth, ClientResponse, ClientTimeout, ServerTimeoutError
 from aiohttp_retry import RetryClient, JitterRetry
 import certifi
 import datetime
+import importlib
 import logging
+import platform
 from .rate_limiter import RATE_LIMITER
 import ssl
 from typing import Any, Mapping, Optional, Type
@@ -22,6 +24,8 @@ CONNECT_REQUEST_TIMEOUT: int = 25 # seconds
 
 RETRY_MAX_ATTEMPTS: int = 3
 RETRY_START_TIMEOUT: float = 1.0
+
+PACKAGE_NAME = 'dolbyio_rest_apis'
 
 class HttpContext:
     """
@@ -81,6 +85,15 @@ class HttpContext:
         ):
         self._logger.debug('GET %s', url)
 
+        version = importlib.metadata.version(PACKAGE_NAME)
+        user_agent = f'DolbyIoRestApiSdk/{version}; Python/{platform.python_version()}'
+        if headers is None:
+            headers = {
+                'User-Agent': user_agent,
+            }
+        else:
+            headers['User-Agent'] = user_agent
+
         sslcontext = ssl.create_default_context(cafile=certifi.where())
 
         async with self._session.get(
@@ -111,10 +124,16 @@ class HttpContext:
         ):
         self._logger.debug('PUT %s', url)
 
+        version = importlib.metadata.version(PACKAGE_NAME)
+        headers = {
+            'User-Agent': f'DolbyIoRestApiSdk/{version}; Python/{platform.python_version()}',
+        }
+
         with open(file_path, 'rb') as input_file:
             sslcontext = ssl.create_default_context(cafile=certifi.where())
             await self._session.put(
                 url,
+                headers=headers,
                 ssl=sslcontext,
                 data=input_file,
             )
@@ -133,6 +152,15 @@ class HttpContext:
         else:
             self._logger.debug('%s %s %s', method, url, params)
         start = datetime.datetime.now()
+
+        version = importlib.metadata.version(PACKAGE_NAME)
+        user_agent = f'DolbyIoRestApiSdk/{version}; Python/{platform.python_version()}'
+        if headers is None:
+            headers = {
+                'User-Agent': user_agent,
+            }
+        else:
+            headers['User-Agent'] = user_agent
 
         try:
             # Use the rate limited to let request going through
