@@ -14,6 +14,7 @@ async def start(
         access_token: str,
         conference_id: str,
         layout_url: str=None,
+        layout_name: str=None,
     ) -> RemixStatus:
     r"""
     Remix a conference.
@@ -32,6 +33,8 @@ async def start(
                 (if no URL is set in the dashboard, then uses the Dolby.io default)
             default: uses the Dolby.io default layout
             URL string: uses this layout URL
+        layout_name: Defines a name for the given layout URL, which makes layout identification
+            easier for customers especially when the layout URL is not explicit.
 
     Returns:
         A :class:`RemixStatus` object that represents the status of the remix.
@@ -44,6 +47,7 @@ async def start(
 
     payload = {}
     add_if_not_none(payload, 'layoutUrl', layout_url)
+    add_if_not_none(payload, 'layoutName', layout_name)
 
     async with CommunicationsHttpContext() as http_context:
         json_response = await http_context.requests_post(
