@@ -14,6 +14,7 @@ async def start_rtmp(
         conference_id: str,
         rtmp_url: str,
         layout_url: str=None,
+        layout_name: str=None,
     ) -> None:
     r"""
     Starts the RTMP live stream for the specified conference. Once the Dolby.io Communications APIs service starts
@@ -31,6 +32,8 @@ async def start_rtmp(
             - `null`: uses the layout URL configured in the dashboard (if no URL is set in the dashboard, then uses the Dolby.io default);
             - `default`: uses the Dolby.io default layout;
             - URL string: uses this layout URL
+        layout_name: Defines a name for the given layout URL, which makes layout identification
+            easier for customers especially when the layout URL is not explicit.
 
     Raises:
         HttpRequestError: If a client error one occurred.
@@ -41,6 +44,7 @@ async def start_rtmp(
         'uri': rtmp_url,
     }
     add_if_not_none(payload, 'layoutUrl', layout_url)
+    add_if_not_none(payload, 'layoutName', layout_name)
 
     async with CommunicationsHttpContext() as http_context:
         await http_context.requests_post(
@@ -79,6 +83,7 @@ async def start_rts(
         stream_name: str,
         publishing_token: str,
         layout_url: str=None,
+        layout_name: str=None,
     ) -> None:
     r"""
     Starts real-time streaming using Dolby.io Real-time Streaming services (formerly Millicast).
@@ -95,6 +100,8 @@ async def start_rts(
                 (if no URL is set in the dashboard, then uses the Dolby.io default)
             default: uses the Dolby.io default layout
             URL string: uses this layout URL
+        layout_name: Defines a name for the given layout URL, which makes layout identification
+            easier for customers especially when the layout URL is not explicit.
 
     Raises:
         HttpRequestError: If a client error one occurred.
@@ -106,6 +113,7 @@ async def start_rts(
         'publishingToken': publishing_token,
     }
     add_if_not_none(payload, 'layoutUrl', layout_url)
+    add_if_not_none(payload, 'layoutName', layout_name)
 
     async with CommunicationsHttpContext() as http_context:
         await http_context.requests_post(
