@@ -35,7 +35,7 @@ jobs:
 
     - name: Deploy to PyPI 🚀
       if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
-      uses: pypa/gh-action-pypi-publish@release/v1
+      uses: ./.github/actions/gh-action-pypi-publish-1.6.4
       with:
         user: __token__
         password: ${{ secrets.PYPI_API_TOKEN }}
