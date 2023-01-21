@@ -1,5 +1,5 @@
 aiohttp>=3.7.4
 aiofiles>=0.7.0
 aiohttp-retry>=2.4.6
-certifi>=2021.10.8
+certifi>=2022.12.7
 Deprecated

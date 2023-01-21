@@ -5,7 +5,7 @@ dolbyio_rest_apis.communications.internal.urls
 This module contains the URLs to use to call the REST APIs.
 """
 
-API_URL = 'https://api.voxeet.com'
+API_URL = 'https://api.dolby.io'
 COMMS_URL = 'https://comms.api.dolby.io'
 SESSION_URL = 'https://session.voxeet.com/v1'
 

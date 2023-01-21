@@ -22,6 +22,7 @@ async def create_conference(
         rtcp_mode: RTCPMode=RTCPMode.AVERAGE,
         ttl: int=None,
         video_codec: VideoCodec=None,
+        audio_only: bool=False,
         participants: List[Participant]=None,
         recording_formats: List[str]=None,
     ) -> Conference:
@@ -41,6 +42,7 @@ async def create_conference(
         rtcp_mode: (Optional) Specifies the bitrate adaptation mode for the video transmission.
         ttl: (Optional) Specifies the time to live that enables customizing the waiting time
             (in seconds) and terminating empty conferences.
+        audio_only: (Optional) If `True`, the conference does not allow participants to enable video.
         video_codec: (Optional) Specifies the video codec (VP8 or H264) for the conference.
         participants: List of the :class:`Participant` object to update the permissions.
         recording_formats: If specified, the default RecordingConfiguration is overridden.
@@ -61,6 +63,7 @@ async def create_conference(
     }
     add_if_not_none(parameters, 'pincode', pincode)
     add_if_not_none(parameters, 'ttl', ttl)
+    add_if_not_none(parameters, 'audioOnly', audio_only)
     add_if_not_none(parameters, 'videoCodec', video_codec)
 
     if recording_formats is not None and len(recording_formats) > 0:
