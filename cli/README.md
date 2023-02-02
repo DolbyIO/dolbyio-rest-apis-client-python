@@ -1,4 +1,4 @@
-# Dolby.io REST APIs CLI
+# Dolby.io REST APIs Client for Python - CLI
 
 Command Line Interface utility for the dolby.io REST [Communications](https://docs.dolby.io/communications-apis/reference/authentication-api) and [Media](https://docs.dolby.io/media-processing/reference/media-enhance-overview) APIs.
 

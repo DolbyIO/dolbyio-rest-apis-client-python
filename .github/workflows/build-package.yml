@@ -1,11 +1,12 @@
-name: Publish Package
+name: Build Package
 
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - '**'
 
 jobs:
-  publish-package:
+  build-package:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
@@ -30,9 +31,3 @@ jobs:
           # Build the Python packages
           python3 client/setup.py sdist bdist_wheel
           python3 cli/setup.py sdist bdist_wheel
-
-      - name: Deploy to PyPI 🚀
-        uses: ./.github/actions/gh-action-pypi-publish-1.6.4
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}
