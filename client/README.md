@@ -1,6 +1,6 @@
-# Dolby.io REST APIs
+# Dolby.io REST APIs Client for Python
 
-Python wrapper for the dolby.io REST [Communications](https://docs.dolby.io/communications-apis/reference/authentication-api) and [Media](https://docs.dolby.io/media-processing/reference/media-enhance-overview) APIs. All the functions are using the async pattern.
+Python wrapper for the dolby.io REST [Communications](https://docs.dolby.io/communications-apis/reference/authentication-api), [Streaming](https://docs.dolby.io/streaming-apis/reference) and [Media](https://docs.dolby.io/media-processing/reference/media-enhance-overview) APIs.
 
 ## Install this project
 
@@ -105,6 +105,43 @@ task = conference.create_conference(
 conf = loop.run_until_complete(task)
 
 print(f"Conference created: {conf.id}")
+```
+
+## Real-time Streaming Examples
+
+### Create a publish token
+
+```python
+import asyncio
+from dolbyio_rest_apis.streaming import publish_token
+from dolbyio_rest_apis.streaming.models.publish_token import CreatePublishToken, CreateUpdatePublishTokenStream
+
+api_secret = "" # Retrieve your API Secret from the dashboard
+
+create_token = CreatePublishToken('my_token')
+create_token.streams.append(CreateUpdatePublishTokenStream('feed1', False))
+
+loop = asyncio.get_event_loop()
+task = publish_token.create(api_secret, create_token)
+token = loop.run_until_complete(task)
+
+print(token)
+```
+
+### Create a subscribe token
+
+```python
+const dolbyio = require('@dolbyio/dolbyio-rest-apis-client');
+
+const subscribeToken = await dolbyio.streaming.subscribeToken.create('api_secret', {
+    label: 'My token',
+    streams: [
+        {
+            streamName: 'feedA',
+        },
+    ],
+});
+console.log(subscribeToken);
 ```
 
 ## Media Examples

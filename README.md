@@ -1,7 +1,12 @@
-# Dolby.io REST APIs
+[![Build Package](https://github.com/DolbyIO/dolbyio-rest-apis-client-python/actions/workflows/build-package.yml/badge.svg)](https://github.com/DolbyIO/dolbyio-rest-apis-client-python/actions/workflows/build-package.yml)
+[![Publish Package](https://github.com/DolbyIO/dolbyio-rest-apis-client-python/actions/workflows/publish-package-to-pypi.yml/badge.svg)](https://github.com/DolbyIO/dolbyio-rest-apis-client-python/actions/workflows/publish-package-to-pypi.yml)
+![PyPI](https://img.shields.io/pypi/v/dolbyio-rest-apis)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/dolbyio-rest-apis)
+[![License](https://img.shields.io/github/license/DolbyIO/dolbyio-rest-apis-client-python)](LICENSE)
 
-This repo contains projects for the dolby.io REST [Communications](https://docs.dolby.io/communications-apis/reference/authentication-api) and [Media](https://docs.dolby.io/media-processing/reference/media-enhance-overview) APIs.
-- Command Line Interface utility.
+# Dolby.io REST APIs Client for Python
+
+Python wrapper for the dolby.io REST [Communications](https://docs.dolby.io/communications-apis/reference/authentication-api), [Streaming](https://docs.dolby.io/streaming-apis/reference) and [Media](https://docs.dolby.io/media-processing/reference/media-enhance-overview) APIs. It also contains a Command Line Interface utility.
 
 ## Build the builder
 
