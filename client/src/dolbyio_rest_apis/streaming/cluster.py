@@ -5,8 +5,8 @@ dolbyio_rest_apis.streaming.cluster
 This module contains the functions to work with the Cluster APIs.
 """
 
+from dolbyio_rest_apis.core.urls import get_rts_url
 from dolbyio_rest_apis.streaming.internal.http_context import StreamingHttpContext
-from dolbyio_rest_apis.streaming.internal.urls import SAPI_URL
 from dolbyio_rest_apis.streaming.models.cluster import ClusterResponse
 
 async def read(
@@ -15,7 +15,7 @@ async def read(
     async with StreamingHttpContext() as http_context:
         json_response = await http_context.requests_get(
             api_secret=api_secret,
-            url=f'{SAPI_URL}/api/cluster',
+            url=f'{get_rts_url()}/api/cluster',
         )
 
     return ClusterResponse(json_response)
@@ -31,7 +31,7 @@ async def update(
     async with StreamingHttpContext() as http_context:
         json_response = await http_context.requests_put(
             api_secret=api_secret,
-            url=f'{SAPI_URL}/api/cluster',
+            url=f'{get_rts_url()}/api/cluster',
             payload=payload,
         )
 

@@ -6,6 +6,7 @@ This module contains the functions to work with the Platform Webhooks APIs.
 """
 
 from dolbyio_rest_apis.core.helpers import add_if_not_none
+from dolbyio_rest_apis.core.urls import get_mapi_url
 from dolbyio_rest_apis.media.internal.http_context import MediaHttpContext
 from dolbyio_rest_apis.media.models.webhook import Webhook
 from typing import Any, Dict
@@ -32,8 +33,6 @@ async def register_webhook(
         HttpRequestError: If a client error one occurred.
         HTTPError: If one occurred.
     """
-    request_url = 'https://api.dolby.com/media/webhooks'
-
     payload = {
         'callback': {
             'url': url,
@@ -44,7 +43,7 @@ async def register_webhook(
     async with MediaHttpContext() as http_context:
         json_response = await http_context.requests_post(
             access_token=access_token,
-            url=request_url,
+            url=f'{get_mapi_url()}/media/webhooks',
             payload=payload,
         )
 
@@ -73,8 +72,6 @@ async def update_webhook(
         HttpRequestError: If a client error one occurred.
         HTTPError: If one occurred.
     """
-    request_url = 'https://api.dolby.com/media/webhooks'
-
     params = {
         'id': webhook_id
     }
@@ -89,7 +86,7 @@ async def update_webhook(
     async with MediaHttpContext() as http_context:
         await http_context.requests_put(
             access_token=access_token,
-            url=request_url,
+            url=f'{get_mapi_url()}/media/webhooks',
             params=params,
             payload=payload,
         )
@@ -122,7 +119,7 @@ async def retrieve_webhook(
     async with MediaHttpContext() as http_context:
         json_response = await http_context.requests_get(
             access_token=access_token,
-            url='https://api.dolby.com/media/webhooks',
+            url=f'{get_mapi_url()}/media/webhooks',
             params=params,
         )
 
@@ -156,7 +153,7 @@ async def delete_webhook(
     async with MediaHttpContext() as http_context:
         json_response = await http_context.requests_delete(
             access_token=access_token,
-            url='https://api.dolby.com/media/webhooks',
+            url=f'{get_mapi_url()}/media/webhooks',
             params=params,
         )
 

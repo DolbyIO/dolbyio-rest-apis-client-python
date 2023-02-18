@@ -7,8 +7,8 @@ This module contains the functions to work with the Publish Token APIs.
 
 from typing import List
 from dolbyio_rest_apis.core.helpers import add_if_not_none
+from dolbyio_rest_apis.core.urls import get_rts_url
 from dolbyio_rest_apis.streaming.internal.http_context import StreamingHttpContext
-from dolbyio_rest_apis.streaming.internal.urls import SAPI_URL
 from dolbyio_rest_apis.streaming.models.publish_token import PublishToken, UpdatePublishToken, CreatePublishToken, ActivePublishToken, DisablePublishTokenResponse
 
 async def read(
@@ -18,7 +18,7 @@ async def read(
     async with StreamingHttpContext() as http_context:
         json_response = await http_context.requests_get(
             api_secret=api_secret,
-            url=f'{SAPI_URL}/api/publish_token/{token_id}',
+            url=f'{get_rts_url()}/api/publish_token/{token_id}',
         )
 
     return PublishToken(json_response)
@@ -30,7 +30,7 @@ async def delete(
     async with StreamingHttpContext() as http_context:
         await http_context.requests_delete(
             api_secret=api_secret,
-            url=f'{SAPI_URL}/api/publish_token/{token_id}',
+            url=f'{get_rts_url()}/api/publish_token/{token_id}',
         )
 
 async def update(
@@ -71,7 +71,7 @@ async def update(
     async with StreamingHttpContext() as http_context:
         json_response = await http_context.requests_put(
             api_secret=api_secret,
-            url=f'{SAPI_URL}/api/publish_token/{token_id}',
+            url=f'{get_rts_url()}/api/publish_token/{token_id}',
             payload=payload,
         )
 
@@ -94,7 +94,7 @@ async def list_tokens(
     async with StreamingHttpContext() as http_context:
         json_response = await http_context.requests_get(
             api_secret=api_secret,
-            url=f'{SAPI_URL}/api/publish_token/list',
+            url=f'{get_rts_url()}/api/publish_token/list',
             params=params,
         )
 
@@ -131,7 +131,7 @@ async def create(
     async with StreamingHttpContext() as http_context:
         json_response = await http_context.requests_post(
             api_secret=api_secret,
-            url=f'{SAPI_URL}/api/publish_token',
+            url=f'{get_rts_url()}/api/publish_token',
             payload=payload,
         )
 
@@ -148,7 +148,7 @@ async def get_active_publish_token_id(
     async with StreamingHttpContext() as http_context:
         json_response = await http_context.requests_get(
             api_secret=api_secret,
-            url=f'{SAPI_URL}/api/publish_token/active',
+            url=f'{get_rts_url()}/api/publish_token/active',
             params=params,
         )
 
@@ -160,7 +160,7 @@ async def get_all_active_publish_token_id(
     async with StreamingHttpContext() as http_context:
         json_response = await http_context.requests_get(
             api_secret=api_secret,
-            url=f'{SAPI_URL}/api/publish_token/active/all',
+            url=f'{get_rts_url()}/api/publish_token/active/all',
         )
 
     return ActivePublishToken(json_response)
@@ -175,7 +175,7 @@ async def disable(
     async with StreamingHttpContext() as http_context:
         json_response = await http_context.requests_patch(
             api_secret=api_secret,
-            url=f'{SAPI_URL}/api/publish_token/disable',
+            url=f'{get_rts_url()}/api/publish_token/disable',
             payload=payload,
         )
 

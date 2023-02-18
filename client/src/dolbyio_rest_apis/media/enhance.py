@@ -5,6 +5,7 @@ dolbyio_rest_apis.media.enhance
 This module contains the functions to work with the Enhance APIs.
 """
 
+from dolbyio_rest_apis.core.urls import get_mapi_url
 from dolbyio_rest_apis.media.internal.http_context import MediaHttpContext
 from dolbyio_rest_apis.media.models.enhance_response import EnhanceJob
 
@@ -39,7 +40,7 @@ async def start(
     async with MediaHttpContext() as http_context:
         json_response = await http_context.requests_post(
             access_token=access_token,
-            url='https://api.dolby.com/media/enhance',
+            url=f'{get_mapi_url()}/media/enhance',
             payload=job_content,
         )
 
@@ -77,7 +78,7 @@ async def get_results(
     async with MediaHttpContext() as http_context:
         json_response = await http_context.requests_get(
             access_token=access_token,
-            url='https://api.dolby.com/media/enhance',
+            url=f'{get_mapi_url()}/media/enhance',
             params=params
         )
 

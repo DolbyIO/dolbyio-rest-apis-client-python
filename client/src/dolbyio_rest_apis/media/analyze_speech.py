@@ -5,6 +5,7 @@ dolbyio_rest_apis.media.analyze_speech
 This module contains the functions to work with the Speech Analytics APIs.
 """
 
+from dolbyio_rest_apis.core.urls import get_mapi_url
 from dolbyio_rest_apis.media.internal.http_context import MediaHttpContext
 from dolbyio_rest_apis.media.models.analyze_speech_response import AnalyzeSpeechJob
 
@@ -17,7 +18,7 @@ async def start(
 
     The `input` location of your source media file and `output` location of your Analyze JSON results file are required.
 
-    This is an asynchronous operation so you will receive a `job_id` to be used to get the job status and result.
+    This is an asynchronous operation so you will receive a job identifier to be used to get the job status and result.
 
     See: https://docs.dolby.io/media-apis/reference/media-analyze-speech-post
 
@@ -46,7 +47,7 @@ async def start(
     async with MediaHttpContext() as http_context:
         json_response = await http_context.requests_post(
             access_token=access_token,
-            url='https://api.dolby.com/media/analyze/speech',
+            url=f'{get_mapi_url()}/media/analyze/speech',
             payload=job_content,
         )
 
@@ -82,7 +83,7 @@ async def get_results(
     async with MediaHttpContext() as http_context:
         json_response = await http_context.requests_get(
             access_token=access_token,
-            url='https://api.dolby.com/media/analyze/speech',
+            url=f'{get_mapi_url()}/media/analyze/speech',
             params=params
         )
 

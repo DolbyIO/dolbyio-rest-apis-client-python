@@ -6,9 +6,9 @@ This module contains the functions to work with the conference API.
 """
 
 from dataclasses import asdict
-from dolbyio_rest_apis.core.helpers import get_value, add_if_not_none
 from dolbyio_rest_apis.communications.internal.http_context import CommunicationsHttpContext
-from dolbyio_rest_apis.communications.internal.urls import get_comms_url_v2
+from dolbyio_rest_apis.core.helpers import get_value, add_if_not_none
+from dolbyio_rest_apis.core.urls import get_comms_url_v2
 from .models import UserToken, Conference, SpatialAudioEnvironment, SpatialAudioListener, SpatialAudioUser, RTCPMode, Participant, VideoCodec
 from typing import List
 
@@ -36,7 +36,8 @@ async def create_conference(
         access_token: Access token to use for authentication.
         owner_external_id: External ID of the conference owner.
         alias: (Optional) Name of the conference.
-        pincode: (Optional)
+        pincode: (Optional) The PIN code of the conference.
+            This applies to conferences using PSTN (telephony network).
         dolby_voice: (Optional) Indicates if Dolby Voice is enabled for the conference.
             The `True` value creates the conference with Dolby Voice enabled.
         live_recording: (Optional) Indicates if live recording is enabled for the conference.

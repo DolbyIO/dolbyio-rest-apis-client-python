@@ -5,10 +5,9 @@ dolbyio_rest_apis.communications.monitor.recordings
 This module contains the functions to work with the monitor API related to recordings.
 """
 
-from deprecated import deprecated
 from dolbyio_rest_apis.communications.internal.http_context import CommunicationsHttpContext
-from dolbyio_rest_apis.communications.internal.urls import get_monitor_url
 from dolbyio_rest_apis.communications.monitor.models import GetRecordingsResponse, Recording, DolbyVoiceRecording
+from dolbyio_rest_apis.core.urls import get_comms_monitor_url
 from typing import Any, List
 
 async def get_recordings(
@@ -46,7 +45,7 @@ async def get_recordings(
         HttpRequestError: If a client error one occurred.
         HTTPError: If one occurred.
     """
-    url = f'{get_monitor_url()}/recordings'
+    url = f'{get_comms_monitor_url()}/recordings'
 
     params = {
         'from': tr_from,
@@ -97,7 +96,7 @@ async def get_all_recordings(
         HttpRequestError: If a client error one occurred.
         HTTPError: If one occurred.
     """
-    url = f'{get_monitor_url()}/recordings'
+    url = f'{get_comms_monitor_url()}/recordings'
 
     params = {
         'from': tr_from,
@@ -156,7 +155,7 @@ async def get_recording(
         HttpRequestError: If a client error one occurred.
         HTTPError: If one occurred.
     """
-    url = f'{get_monitor_url()}/conferences/{conference_id}/recordings'
+    url = f'{get_comms_monitor_url()}/conferences/{conference_id}/recordings'
 
     params = {
         'from': tr_from,
@@ -205,7 +204,7 @@ async def delete_recording(
         HTTPError: If one occurred.
     """
 
-    url = f'{get_monitor_url()}/conferences/{conference_id}/recordings'
+    url = f'{get_comms_monitor_url()}/conferences/{conference_id}/recordings'
 
     async with CommunicationsHttpContext() as http_context:
         await http_context.requests_delete(
@@ -237,7 +236,7 @@ async def get_dolby_voice_recordings(
         HTTPError: If one occurred.
     """
 
-    url = f'{get_monitor_url()}/conferences/{conference_id}/recordings/audio'
+    url = f'{get_comms_monitor_url()}/conferences/{conference_id}/recordings/audio'
 
     async with CommunicationsHttpContext() as http_context:
         json_response = await http_context.requests_get(
@@ -246,71 +245,3 @@ async def get_dolby_voice_recordings(
         )
 
     return DolbyVoiceRecording(json_response)
-
-@deprecated(reason='This API is no longer applicable on the Dolby.io Communications APIs platform.')
-async def download_mp4_recording(
-        access_token: str,
-        conference_id: str,
-        file_path: str,
-    ) -> None:
-    r"""
-    Download the conference recording in MP4 format
-
-    Download the conference recording in the MP4 video format.
-    For more information, see the [Recording](https://docs.dolby.io/communications-apis/docs/guides-recording-mechanisms) document.
-
-    See: https://docs.dolby.io/communications-apis/reference/get-mp4-recording
-
-    Args:
-        access_token: Access token to use for authentication.
-        conference_id: Identifier of the conference.
-        file_path: Where to save the file.
-
-    Raises:
-        HttpRequestError: If a client error one occurred.
-        HTTPError: If one occurred.
-    """
-
-    url = f'{get_monitor_url()}/conferences/{conference_id}/recordings/mp4'
-
-    async with CommunicationsHttpContext() as http_context:
-        await http_context.download(
-            access_token=access_token,
-            url=url,
-            accept='video/mp4',
-            file_path=file_path,
-        )
-
-@deprecated(reason='This API is no longer applicable on the Dolby.io Communications APIs platform.')
-async def download_mp3_recording(
-        access_token: str,
-        conference_id: str,
-        file_path: str,
-    ) -> None:
-    r"""
-    Download the conference recording in MP3 format
-
-    Download the conference recording in the MP3 audio format. This API is available only for non-Dolby Voice conferences.
-    For more information, see the [Recording](https://docs.dolby.io/communications-apis/docs/guides-recording-mechanisms) document.
-
-    See: https://docs.dolby.io/communications-apis/reference/get-mp3-recording
-
-    Args:
-        access_token: Access token to use for authentication.
-        conference_id: Identifier of the conference.
-        file_path: Where to save the file.
-
-    Raises:
-        HttpRequestError: If a client error one occurred.
-        HTTPError: If one occurred.
-    """
-
-    url = f'{get_monitor_url()}/conferences/{conference_id}/recordings/mp3'
-
-    async with CommunicationsHttpContext() as http_context:
-        await http_context.download(
-            access_token=access_token,
-            url=url,
-            accept='video/mpeg',
-            file_path=file_path,
-        )
