@@ -28,7 +28,6 @@ class SubscribeToken(dict):
         self.token = get_value_or_default(self, 'token', None)
         self.added_on = get_value_or_default(self, 'addedOn', None)
         self.expires_on = get_value_or_default(self, 'expiresOn', None)
-        self.expires_on = get_value_or_default(self, 'expiresOn', None)
         self.is_active = get_value_or_default(self, 'isActive', None)
         self.streams = []
         for stream in self['streams']:

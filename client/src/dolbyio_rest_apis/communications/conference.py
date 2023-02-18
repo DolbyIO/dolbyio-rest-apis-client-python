@@ -25,6 +25,7 @@ async def create_conference(
         audio_only: bool=False,
         participants: List[Participant]=None,
         recording_formats: List[str]=None,
+        region: str=None,
     ) -> Conference:
     r"""
     Creates a conference.
@@ -47,6 +48,12 @@ async def create_conference(
         participants: List of the :class:`Participant` object to update the permissions.
         recording_formats: If specified, the default RecordingConfiguration is overridden.
             Specifies the recording format. Valid values are 'mp3' and 'mp4'.
+        region: Dolby.io region where you want the conference to be hosted. Can be one of:
+            - au: Australia
+            - ca: Canada
+            - eu: Europe
+            - in: India
+            - us: United States
 
     Returns:
         A :class:`Conference` object.
@@ -96,7 +103,7 @@ async def create_conference(
     async with CommunicationsHttpContext() as http_context:
         json_response = await http_context.requests_post(
             access_token=access_token,
-            url=f'{get_comms_url_v2()}/conferences/create',
+            url=f'{get_comms_url_v2(region)}/conferences/create',
             payload=payload
         )
 
