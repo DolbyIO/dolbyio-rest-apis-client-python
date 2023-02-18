@@ -1,5 +1,5 @@
 """
-dolbyio_rest_apis.communications.authentication
+dolbyio_rest_apis.authentication
 ~~~~~~~~~~~~~~~
 
 This module contains the functions to work with the authentication API.
