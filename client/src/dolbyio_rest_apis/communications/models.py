@@ -13,7 +13,7 @@ from dolbyio_rest_apis.core.helpers import get_value_or_default, in_and_not_none
 class Participant:
     """The :class:`Participant` object, which represents a participant's permissions."""
 
-    def __init__(self, external_id, permissions, notify):
+    def __init__(self, external_id: str, permissions, notify: bool):
         self.external_id = external_id
         self.permissions = permissions
         self.notify = notify
