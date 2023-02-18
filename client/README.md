@@ -18,7 +18,7 @@ python3 -m pip install --upgrade dolbyio-rest-apis
 
 ## Logging
 
-You can change the log level by using the Python (logging)[https://docs.python.org/3/library/logging.html] library.
+You can change the log level by using the Python [logging](https://docs.python.org/3/library/logging.html) library.
 
 ```python
 import logging
