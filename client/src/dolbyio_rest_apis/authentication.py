@@ -1,13 +1,14 @@
 """
-dolbyio_rest_apis.media.platform
+dolbyio_rest_apis.authentication
 ~~~~~~~~~~~~~~~
 
-This module contains the functions to work with the Platform APIs.
+This module contains the functions to work with the authentication API.
 """
 
 from dolbyio_rest_apis.core.helpers import add_if_not_none
-from dolbyio_rest_apis.media.internal.http_context import MediaHttpContext
-from dolbyio_rest_apis.media.models.access_token import AccessToken
+from dolbyio_rest_apis.core.urls import get_api_url
+from dolbyio_rest_apis.communications.internal.http_context import CommunicationsHttpContext
+from .models import AccessToken
 
 async def get_api_token(
         app_key: str,
@@ -16,10 +17,9 @@ async def get_api_token(
     ) -> AccessToken:
     r"""
     To make any API call, you must acquire a JWT (JSON Web Token) format API token.
-    Make sure to use this API against https://api.dolby.io/v1.
 
-    Note: Even though the OAuth terminology is used in the following APIs, they are not OAuth compliant.
-
+    See: https://docs.dolby.io/communications-apis/reference/get-api-token
+    
     See: https://docs.dolby.io/media-apis/reference/get-api-token
 
     Args:
@@ -42,11 +42,11 @@ async def get_api_token(
     }
     add_if_not_none(data, 'expires_in', expires_in)
 
-    async with MediaHttpContext() as http_context:
+    async with CommunicationsHttpContext() as http_context:
         json_response = await http_context.requests_post_basic_auth(
             app_key=app_key,
             app_secret=app_secret,
-            url='https://api.dolby.io/v1/auth/token',
+            url=f'{get_api_url()}/auth/token',
             data=data
         )
 

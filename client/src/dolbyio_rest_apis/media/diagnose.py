@@ -5,6 +5,7 @@ dolbyio_rest_apis.media.diagnose
 This module contains the functions to work with the Diagnose APIs.
 """
 
+from dolbyio_rest_apis.core.urls import get_mapi_url
 from dolbyio_rest_apis.media.internal.http_context import MediaHttpContext
 from dolbyio_rest_apis.media.models.diagnose_response import DiagnoseJob
 
@@ -44,7 +45,7 @@ async def start(
     async with MediaHttpContext() as http_context:
         json_response = await http_context.requests_post(
             access_token=access_token,
-            url='https://api.dolby.com/media/diagnose',
+            url=f'{get_mapi_url()}/media/diagnose',
             payload=job_content,
         )
 
@@ -87,7 +88,7 @@ async def get_results(
     async with MediaHttpContext() as http_context:
         json_response = await http_context.requests_get(
             access_token=access_token,
-            url='https://api.dolby.com/media/diagnose',
+            url=f'{get_mapi_url()}/media/diagnose',
             params=params
         )
 

@@ -5,6 +5,7 @@ dolbyio_rest_apis.media.io
 This module contains the functions to work with the IO APIs.
 """
 
+from dolbyio_rest_apis.core.urls import get_mapi_url
 from dolbyio_rest_apis.media.internal.http_context import MediaHttpContext
 
 async def get_upload_url(
@@ -41,7 +42,7 @@ async def get_upload_url(
     async with MediaHttpContext() as http_context:
         json_response = await http_context.requests_post(
             access_token=access_token,
-            url='https://api.dolby.com/media/input',
+            url=f'{get_mapi_url()}/media/input',
             payload=payload
         )
 
@@ -98,7 +99,7 @@ async def download_file(
     async with MediaHttpContext() as http_context:
         await http_context.download(
             access_token=access_token,
-            url='https://api.dolby.com/media/output',
+            url=f'{get_mapi_url()}/media/output',
             file_path=file_path,
             params=params,
         )

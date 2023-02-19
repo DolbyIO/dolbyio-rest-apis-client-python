@@ -5,6 +5,7 @@ dolbyio_rest_apis.media.transcode
 This module contains the functions to work with the Transcode APIs.
 """
 
+from dolbyio_rest_apis.core.urls import get_mapi_url
 from dolbyio_rest_apis.media.internal.http_context import MediaHttpContext
 from dolbyio_rest_apis.media.models.mastering_response import MasteringPreviewJob, MasteringJob
 
@@ -44,7 +45,7 @@ async def start_preview(
     async with MediaHttpContext() as http_context:
         json_response = await http_context.requests_post(
             access_token=access_token,
-            url='https://api.dolby.com/media/master/preview',
+            url=f'{get_mapi_url()}/media/master/preview',
             payload=job_content,
         )
 
@@ -81,7 +82,7 @@ async def get_preview_results(
     async with MediaHttpContext() as http_context:
         json_response = await http_context.requests_get(
             access_token=access_token,
-            url='https://api.dolby.com/media/master/preview',
+            url=f'{get_mapi_url()}/media/master/preview',
             params=params
         )
 
@@ -121,7 +122,7 @@ async def start(
     async with MediaHttpContext() as http_context:
         json_response = await http_context.requests_post(
             access_token=access_token,
-            url='https://api.dolby.com/media/master',
+            url=f'{get_mapi_url()}/media/master',
             payload=job_content,
         )
 
@@ -158,7 +159,7 @@ async def get_results(
     async with MediaHttpContext() as http_context:
         json_response = await http_context.requests_get(
             access_token=access_token,
-            url='https://api.dolby.com/media/master',
+            url=f'{get_mapi_url()}/media/master',
             params=params
         )
 

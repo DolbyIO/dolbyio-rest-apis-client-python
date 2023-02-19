@@ -6,8 +6,8 @@ This module contains the functions to work with the remix API.
 """
 
 from dolbyio_rest_apis.communications.internal.http_context import CommunicationsHttpContext
-from dolbyio_rest_apis.communications.internal.urls import get_comms_url_v2
 from dolbyio_rest_apis.core.helpers import add_if_not_none
+from dolbyio_rest_apis.core.urls import get_comms_url_v2
 from .models import RemixStatus
 
 async def start(

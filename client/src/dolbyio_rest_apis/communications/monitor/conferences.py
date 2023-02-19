@@ -6,8 +6,8 @@ This module contains the functions to work with the monitor API related to confe
 """
 
 from dolbyio_rest_apis.communications.internal.http_context import CommunicationsHttpContext
-from dolbyio_rest_apis.communications.internal.urls import get_monitor_url
 from dolbyio_rest_apis.communications.monitor.models import GetConferencesResponse, ConferenceSummary, ConferenceStatistics, ConferenceParticipants, ConferenceParticipant
+from dolbyio_rest_apis.core.urls import get_comms_monitor_url
 from typing import Any, Dict, List
 
 async def get_conferences(
@@ -59,7 +59,7 @@ async def get_conferences(
         HttpRequestError: If a client error one occurred.
         HTTPError: If one occurred.
     """
-    url = f'{get_monitor_url()}/conferences'
+    url = f'{get_comms_monitor_url()}/conferences'
 
     params = {
         'from': tr_from,
@@ -129,7 +129,7 @@ async def get_all_conferences(
         HttpRequestError: If a client error one occurred.
         HTTPError: If one occurred.
     """
-    url = f'{get_monitor_url()}/conferences'
+    url = f'{get_comms_monitor_url()}/conferences'
 
     params = {
         'from': tr_from,
@@ -187,7 +187,7 @@ async def get_conference(
         HTTPError: If one occurred.
     """
 
-    url = f'{get_monitor_url()}/conferences/{conference_id}'
+    url = f'{get_comms_monitor_url()}/conferences/{conference_id}'
 
     params = {
         'livestats': str(live_stats),
@@ -230,7 +230,7 @@ async def get_conference_statistics(
         HTTPError: If one occurred.
     """
 
-    url = f'{get_monitor_url()}/conferences/{conference_id}/statistics'
+    url = f'{get_comms_monitor_url()}/conferences/{conference_id}/statistics'
 
     async with CommunicationsHttpContext() as http_context:
         json_response = await http_context.requests_get(
@@ -280,7 +280,7 @@ async def get_conference_participants(
         HttpRequestError: If a client error one occurred.
         HTTPError: If one occurred.
     """
-    url = f'{get_monitor_url()}/conferences/{conference_id}/participants'
+    url = f'{get_comms_monitor_url()}/conferences/{conference_id}/participants'
 
     params = {
         'from': tr_from,
@@ -336,7 +336,7 @@ async def get_all_conference_participants(
         HttpRequestError: If a client error one occurred.
         HTTPError: If one occurred.
     """
-    url = f'{get_monitor_url()}/conferences/{conference_id}/participants'
+    url = f'{get_comms_monitor_url()}/conferences/{conference_id}/participants'
 
     params = {
         'from': tr_from,
@@ -415,7 +415,7 @@ async def get_conference_participant(
         HttpRequestError: If a client error one occurred.
         HTTPError: If one occurred.
     """
-    url = f'{get_monitor_url()}/conferences/{conference_id}/participants/{participant_id}'
+    url = f'{get_comms_monitor_url()}/conferences/{conference_id}/participants/{participant_id}'
 
     params = {
         'from': tr_from,

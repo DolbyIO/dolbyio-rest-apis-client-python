@@ -1,8 +1,8 @@
 """
-dolbyio_rest_apis.media.models.access_token
+dolbyio_rest_apis.communications.models
 ~~~~~~~~~~~~~~~
 
-This module contains the models used by the Access Token model.
+This module contains the models used by the Dolby.io APIs.
 """
 
 from dolbyio_rest_apis.core.helpers import get_value_or_default
@@ -15,5 +15,5 @@ class AccessToken(dict):
 
         self.token_type = get_value_or_default(self, 'token_type', None)
         self.access_token = get_value_or_default(self, 'access_token', None)
+        self.refresh_token = get_value_or_default(self, 'refresh_token', None)
         self.expires_in_val = get_value_or_default(self, 'expires_in', 0)
-        self.status = get_value_or_default(self, 'status', None)
