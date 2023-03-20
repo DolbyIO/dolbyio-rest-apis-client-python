@@ -159,7 +159,7 @@ class ConferenceSummary(dict):
             self.statistics = ConferenceStatistics(self['statistics'])
 
         if in_and_not_none(self, 'streamingAPIUsage'):
-            self.streamingAPIUsage = StreamingAPIUsage(self['streamingAPIUsage'])
+            self.streaming_api_usage = StreamingAPIUsage(self['streamingAPIUsage'])
 
 class GetConferencesResponse(PagedResponse):
     """Representation of a Conferences response."""
