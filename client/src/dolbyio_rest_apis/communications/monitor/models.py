@@ -116,6 +116,19 @@ class ConferenceStatistics(dict):
         if in_and_not_none(self, 'network'):
             self.network = ConferenceStatisticsNetwork(self['network'])
 
+class StreamingAPIUsage(dict):
+    """Representation of the Streaming API usage."""
+
+    def __init__(self, dictionary: dict):
+        dict.__init__(self, dictionary)
+
+        self.bytes_in = get_value_or_default(self, 'bytesIn', None)
+        self.bytes_out = get_value_or_default(self, 'bytesOut', None)
+        self.publish_duration_sec = get_value_or_default(self, 'publishDurationSec', None)
+        self.publishes = get_value_or_default(self, 'publishes', None)
+        self.view_duration_sec = get_value_or_default(self, 'viewDurationSec', None)
+        self.views = get_value_or_default(self, 'views', None)
+
 class ConferenceSummary(dict):
     """Representation of a Conference Summary."""
 
@@ -144,6 +157,9 @@ class ConferenceSummary(dict):
 
         if in_and_not_none(self, 'statistics'):
             self.statistics = ConferenceStatistics(self['statistics'])
+
+        if in_and_not_none(self, 'streamingAPIUsage'):
+            self.streamingAPIUsage = StreamingAPIUsage(self['streamingAPIUsage'])
 
 class GetConferencesResponse(PagedResponse):
     """Representation of a Conferences response."""
