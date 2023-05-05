@@ -26,7 +26,7 @@ async def get_api_token(
         app_key: Your Dolby.io App Key.
         app_secret: Your Dolby.io App Secret.
         expires_in: (Optional) API token expiration time in seconds.
-            The maximum value is 2,592,000, indicating 30 days.
+            The maximum value is 86,400, indicating 24 hours.
             If no value is specified, the default is 1800, indicating 30 minutes.
 
     Returns:
