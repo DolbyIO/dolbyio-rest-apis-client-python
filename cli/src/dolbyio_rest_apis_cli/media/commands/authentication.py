@@ -3,7 +3,7 @@ Command: Authentication
 """
 
 from argparse import _SubParsersAction, Namespace
-from dolbyio_rest_apis.media import platform
+from dolbyio_rest_apis import authentication
 import json
 
 def command_name() -> str:
@@ -27,6 +27,17 @@ def add_arguments(sub_parsers: _SubParsersAction) -> None:
 	)
 
     parser.add_argument(
+		'-e', '--expires_in',
+		help='''
+        (Optional) Access token expiration time in seconds.
+        The maximum value is 86,400, indicating 24 hours.
+        If no value is specified, the default is 1800, indicating 30 minutes.
+        ''',
+		default=None,
+		type=int
+	)
+
+    parser.add_argument(
 		'-o', '--output',
 		help='Set the output format.',
 		dest='output_format',
@@ -37,11 +48,13 @@ def add_arguments(sub_parsers: _SubParsersAction) -> None:
 async def execute_command(args: Namespace) -> None:
     app_key = args.app_key
     app_secret = args.app_secret
+    expires_in = args.expires_in
     output_format = args.output_format
 
-    access_token = await platform.get_api_token(
+    access_token = await authentication.get_api_token(
         app_key=app_key,
         app_secret=app_secret,
+        expires_in=expires_in,
     )
 
     if output_format == 'json':
