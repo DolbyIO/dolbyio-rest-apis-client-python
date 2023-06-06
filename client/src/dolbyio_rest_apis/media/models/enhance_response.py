@@ -23,4 +23,4 @@ class EnhanceJob(JobResponse):
         JobResponse.__init__(self, job_id, dictionary)
 
         if 'result' in dictionary:
-            self.result = EnhanceJobResult(dictionary)
+            self.result = EnhanceJobResult(dictionary['result'])
