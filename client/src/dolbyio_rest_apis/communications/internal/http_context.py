@@ -27,6 +27,7 @@ class CommunicationsHttpContext(HttpContext):
             url: str,
             method: str,
             payload: Any=None,
+            extra_headers: Dict[str, str]=None,
         ) -> Any or None:
         r"""
         Sends a POST or PUT request.
@@ -36,6 +37,7 @@ class CommunicationsHttpContext(HttpContext):
             url: Where to send the request to.
             method: HTTP method, POST or PUT.
             payload: (Optional) Content of the request.
+            extra_headers: (Optional) Add extra HTTP headers in the request.
 
         Returns:
             The JSON response if any or None.
@@ -50,6 +52,9 @@ class CommunicationsHttpContext(HttpContext):
             'Content-Type': 'application/json',
             'Authorization': f'Bearer {access_token}',
         }
+
+        if extra_headers is not None:
+            headers.update(extra_headers)
 
         if payload is None:
             payload = '{}' # The REST APIs don't support an empty payload
@@ -97,6 +102,7 @@ class CommunicationsHttpContext(HttpContext):
             access_token: str,
             url: str,
             payload: Any=None,
+            extra_headers: Dict[str, str]=None,
         ) -> Any or None:
         r"""
         Sends a POST request.
@@ -105,6 +111,7 @@ class CommunicationsHttpContext(HttpContext):
             access_token: The Access Token to use for authentication.
             url: Where to send the request to.
             payload: (Optional) Content of the request.
+            extra_headers: (Optional) Add extra HTTP headers in the request.
 
         Returns:
             The JSON response if any or None.
@@ -118,7 +125,8 @@ class CommunicationsHttpContext(HttpContext):
             access_token=access_token,
             url=url,
             method='POST',
-            payload=payload
+            payload=payload,
+            extra_headers=extra_headers,
         )
 
     async def requests_post_basic_auth(
