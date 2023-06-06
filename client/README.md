@@ -45,6 +45,16 @@ at = loop.run_until_complete(task)
 print(f'API Token: {at.access_token}')
 ```
 
+To request a particular scope for this access token:
+
+```python
+task = authentication.get_api_token(APP_KEY, APP_SECRET, scope=['comms:*'])
+at = loop.run_until_complete(task)
+
+print(f'API Token: {at.access_token}')
+print(f'Scope: {at.scope}')
+```
+
 ## Communications Examples
 
 ### Get a client access token
@@ -53,6 +63,7 @@ To get an access token that will be used by the client SDK for an end user to op
 
 ```python
 import asyncio
+from dolbyio_rest_apis import authentication as auth
 from dolbyio_rest_apis.communications import authentication
 
 APP_KEY = 'YOUR_APP_KEY'
@@ -60,23 +71,37 @@ APP_SECRET = 'YOUR_APP_SECRET'
 
 loop = asyncio.get_event_loop()
 
-task = authentication.get_api_token(APP_KEY, APP_SECRET)
-at = loop.run_until_complete(task)
+# Request an API Token
+task = auth.get_api_token(APP_KEY, APP_SECRET, scope=['comms:client_access_token:create'])
+api_token = loop.run_until_complete(task)
 
-print(f'Access Token: {at.access_token}')
+print(f'API Token: {api_token.access_token}')
+
+# Request the Client Access Token
+task = authentication.get_client_access_token_v2(api_token.access_token, ['*'])
+cat = loop.run_until_complete(task)
+
+print(f'Client Access Token: {cat.access_token}')
 ```
 
 Because most of the APIs are asynchronous, you can write an async function like that:
 
 ```python
+from dolbyio_rest_apis import authentication as auth
 from dolbyio_rest_apis.communications import authentication
 
 APP_KEY = 'YOUR_APP_KEY'
 APP_SECRET = 'YOUR_APP_SECRET'
 
 async def get_client_access_token():
-    at = await authentication.get_client_access_token(APP_KEY, APP_SECRET)
-    print(f'Access Token: {at.access_token}')
+    # Request an API Token
+    api_token = await auth.get_api_token(APP_KEY, APP_SECRET, scope=['comms:client_access_token:create'])
+
+    # Request the Client Access Token
+    cat = await authentication.get_client_access_token_v2(api_token.access_token, ['*'])
+    print(f'Client Access Token: {cat.access_token}')
+    
+    return cat.access_token
 
 ```
 
@@ -104,9 +129,10 @@ participants = [
 loop = asyncio.get_event_loop()
 
 # Request an API token
-task = authentication.get_api_token(APP_KEY, APP_SECRET)
+task = authentication.get_api_token(APP_KEY, APP_SECRET, scope=['comms:conf:create'])
 at = loop.run_until_complete(task)
 
+# Create the conference
 task = conference.create_conference(
     at.access_token,
     owner_id,
