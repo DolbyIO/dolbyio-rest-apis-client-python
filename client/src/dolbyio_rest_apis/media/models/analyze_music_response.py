@@ -9,6 +9,8 @@ from dolbyio_rest_apis.core.helpers import get_value_or_default, in_and_not_none
 from .job_response import JobResponse
 
 class AnalyzeMusicJobResultMediaInfoContainer(dict):
+    """The :class:`AnalyzeMusicJobResultMediaInfoContainer` object."""
+
     def __init__(self, dictionary: dict):
         dict.__init__(self, dictionary)
 
@@ -18,6 +20,8 @@ class AnalyzeMusicJobResultMediaInfoContainer(dict):
         self.size = get_value_or_default(dictionary, 'size', None)
 
 class AnalyzeMusicJobResultMediaInfoAudio(dict):
+    """The :class:`AnalyzeMusicJobResultMediaInfoAudio` object."""
+
     def __init__(self, dictionary: dict):
         dict.__init__(self, dictionary)
 
@@ -29,6 +33,8 @@ class AnalyzeMusicJobResultMediaInfoAudio(dict):
         self.bitrate = get_value_or_default(dictionary, 'bitrate', None)
 
 class AnalyzeMusicJobResultMediaInfoVideo(dict):
+    """The :class:`AnalyzeMusicJobResultMediaInfoVideo` object."""
+
     def __init__(self, dictionary: dict):
         dict.__init__(self, dictionary)
 
@@ -40,6 +46,8 @@ class AnalyzeMusicJobResultMediaInfoVideo(dict):
         self.bitrate = get_value_or_default(dictionary, 'bitrate', None)
 
 class AnalyzeMusicJobResultMediaInfo(dict):
+    """The :class:`AnalyzeMusicJobResultMediaInfo` object."""
+
     def __init__(self, dictionary: dict):
         dict.__init__(self, dictionary)
 
@@ -51,6 +59,8 @@ class AnalyzeMusicJobResultMediaInfo(dict):
             self.container = AnalyzeMusicJobResultMediaInfoVideo(dictionary['container'])
 
 class AnalyzeMusicJobResultProcessedRegionAudioMusicSection(dict):
+    """The :class:`AnalyzeMusicJobResultProcessedRegionAudioMusicSection` object."""
+
     def __init__(self, dictionary: dict):
         dict.__init__(self, dictionary)
 
@@ -74,6 +84,8 @@ class AnalyzeMusicJobResultProcessedRegionAudioMusicSection(dict):
                 self.era.append(i)
 
 class AnalyzeMusicJobResultProcessedRegionAudioMusic(dict):
+    """The :class:`AnalyzeMusicJobResultProcessedRegionAudioMusic` object."""
+
     def __init__(self, dictionary: dict):
         dict.__init__(self, dictionary)
 
@@ -85,6 +97,8 @@ class AnalyzeMusicJobResultProcessedRegionAudioMusic(dict):
                 self.sections.append(AnalyzeMusicJobResultProcessedRegionAudioMusicSection(s))
 
 class AnalyzeMusicJobResultProcessedRegionAudio(dict):
+    """The :class:`AnalyzeMusicJobResultProcessedRegionAudio` object."""
+
     def __init__(self, dictionary: dict):
         dict.__init__(self, dictionary)
 
@@ -92,6 +106,8 @@ class AnalyzeMusicJobResultProcessedRegionAudio(dict):
             self.music = AnalyzeMusicJobResultProcessedRegionAudioMusic(dictionary['music'])
 
 class AnalyzeMusicJobResultProcessedRegion(dict):
+    """The :class:`AnalyzeMusicJobResultProcessedRegion` object."""
+
     def __init__(self, dictionary: dict):
         dict.__init__(self, dictionary)
 
