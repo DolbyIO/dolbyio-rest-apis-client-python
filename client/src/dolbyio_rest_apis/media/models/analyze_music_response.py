@@ -98,8 +98,6 @@ class AnalyzeMusicJobResultProcessedRegion(dict):
         self.start = get_value_or_default(dictionary, 'start', None)
         self.end = get_value_or_default(dictionary, 'end', None)
 
-    audio: AnalyzeMusicJobResultProcessedRegionAudio;
-
 class AnalyzeMusicJobResult(dict):
     """The :class:`AnalyzeMusicJobResult` object, which represents the result for an analyze music job."""
 
