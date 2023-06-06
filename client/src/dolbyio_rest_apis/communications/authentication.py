@@ -71,8 +71,7 @@ async def get_client_access_token_v2(
     Args:
         access_token: Access token to use for authentication.
         session_scope: A list of case-sensitive strings allowing you to control
-            what scope of access the client access token should have. If not specified,
-            the token will possess unrestricted access to all resources and actions.
+            what scope of access the client access token should have.
             The API supports the following scopes:
                 - conf:create: Allows creating a new conference.
                 - notifications:set: Allows the client to subscribe to events.
