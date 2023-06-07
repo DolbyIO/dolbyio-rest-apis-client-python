@@ -23,4 +23,4 @@ class TranscodeJob(JobResponse):
         JobResponse.__init__(self, job_id, dictionary)
 
         if 'result' in dictionary:
-            self.result = TranscodeJobResult(dictionary)
+            self.result = TranscodeJobResult(dictionary['result'])

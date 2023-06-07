@@ -23,4 +23,4 @@ class DiagnoseJob(JobResponse):
         JobResponse.__init__(self, job_id, dictionary)
 
         if 'result' in dictionary:
-            self.result = DiagnoseJobResult(dictionary)
+            self.result = DiagnoseJobResult(dictionary['result'])

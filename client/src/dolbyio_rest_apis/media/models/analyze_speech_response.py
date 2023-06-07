@@ -13,11 +13,6 @@ class AnalyzeSpeechJobResult(dict):
     def __init__(self, dictionary: dict):
         dict.__init__(self, dictionary)
 
-        if 'media_info' in dictionary:
-            self.media_info = dictionary['media_info']
-        if 'processed_region' in dictionary:
-            self.media_info = dictionary['processed_region']
-
 class AnalyzeSpeechJob(JobResponse):
     """The :class:`AnalyzeSpeechJob` object, which represents the result for an analyze speech job."""
 
@@ -25,4 +20,4 @@ class AnalyzeSpeechJob(JobResponse):
         JobResponse.__init__(self, job_id, dictionary)
 
         if 'result' in dictionary:
-            self.result = AnalyzeSpeechJobResult(dictionary)
+            self.result = AnalyzeSpeechJobResult(dictionary['result'])

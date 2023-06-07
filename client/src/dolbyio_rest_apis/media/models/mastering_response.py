@@ -23,7 +23,7 @@ class MasteringPreviewJob(JobResponse):
         JobResponse.__init__(self, job_id, dictionary)
 
         if 'result' in dictionary:
-            self.result = MasteringPreviewJobResult(dictionary)
+            self.result = MasteringPreviewJobResult(dictionary['result'])
 
 class MasteringJobResult(MasteringPreviewJobResult):
     """The :class:`MasteringJobResult` object, which represents the result for a mastering job."""
@@ -40,4 +40,4 @@ class MasteringJob(JobResponse):
         JobResponse.__init__(self, job_id, dictionary)
 
         if 'result' in dictionary:
-            self.result = MasteringJobResult(dictionary)
+            self.result = MasteringJobResult(dictionary['result'])
