@@ -10,6 +10,9 @@ in the `dist/` directory to PyPI.
 This text suggests a minimalistic usage overview. For more detailed
 walkthrough check out the [PyPA guide].
 
+If you have any feedback regarding specific action versions, please leave
+comments in the corresponding [per-release announcement discussions].
+
 
 ## 🌇 `master` branch sunset ❗
 
@@ -20,15 +23,42 @@ tag, or a full Git commit SHA.
 
 ## Usage
 
-To use the action add the following step to your workflow file (e.g.
-`.github/workflows/main.yml`)
+### Trusted publishing
 
+> **NOTE**: Trusted publishing is sometimes referred to by its
+> underlying technology -- OpenID Connect, or OIDC for short.
+> If you see references to "OIDC publishing" in the context of PyPI,
+> this is what they're referring to.
 
-```yml
-- name: Publish a Python distribution to PyPI
-  uses: pypa/gh-action-pypi-publish@release/v1
-  with:
-    password: ${{ secrets.PYPI_API_TOKEN }}
+This example jumps right into the current best practice. If you want to
+use API tokens directly or a less secure username and password, check out
+[how to specify username and password].
+
+This action supports PyPI's [trusted publishing]
+implementation, which allows authentication to PyPI without a manually
+configured API token or username/password combination. To perform
+[trusted publishing] with this action, your project's
+publisher must already be configured on PyPI.
+
+To enter the trusted publishing flow, configure this action's job with the
+`id-token: write` permission and **without** an explicit username or password:
+
+```yaml
+# .github/workflows/ci-cd.yml
+jobs:
+  pypi-publish:
+    name: Upload release to PyPI
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/<your-pypi-project-name>
+    permissions:
+      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
+    steps:
+    # retrieve your distributions here
+
+    - name: Publish package distributions to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
 ```
 
 > **Pro tip**: instead of using branch pointers, like `unstable/v1`, pin
@@ -36,30 +66,28 @@ versions of Actions that you use to tagged versions or sha1 commit identifiers.
 This will make your workflows more secure and better reproducible, saving you
 from sudden and unpleasant surprises.
 
-A common use case is to upload packages only on a tagged commit, to do so add a
-filter to the step:
+Other indices that support trusted publishing can also be used, like TestPyPI:
 
-
-```yml
-  if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
-```
-
-So the full step would look like:
-
-
-```yml
-- name: Publish package
-  if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+```yaml
+- name: Publish package distributions to TestPyPI
   uses: pypa/gh-action-pypi-publish@release/v1
   with:
-    password: ${{ secrets.PYPI_API_TOKEN }}
+    repository-url: https://test.pypi.org/legacy/
 ```
+_(don't forget to update the environment name to `testpypi` or similar!)_
 
-The example above uses the new [API token][PyPI API token] feature of
-PyPI, which is recommended to restrict the access the action has.
+> **Pro tip**: only set the `id-token: write` permission in the job that does
+> publishing, not globally. Also, try to separate building from publishing
+> — this makes sure that any scripts maliciously injected into the build
+> or test environment won't be able to elevate privileges while flying under
+> the radar.
 
-The secret used in `${{ secrets.PYPI_API_TOKEN }}` needs to be created on the
-settings page of your project on GitHub. See [Creating & using secrets].
+A common use case is to upload packages only on a tagged commit, to do so add a
+filter to the job:
+
+```yml
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+```
 
 
 ## Non-goals
@@ -96,17 +124,20 @@ by putting them into the `dist/` folder prior to running this Action.
 For best results, figure out what kind of workflow fits your
 project's specific needs.
 
-For example, you could implement a parallel workflow that
+For example, you could implement a parallel job that
 pushes every commit to TestPyPI or your own index server,
 like `devpi`. For this, you'd need to (1) specify a custom
-`repository_url` value and (2) generate a unique version
+`repository-url` value and (2) generate a unique version
 number for each upload so that they'd not create a conflict.
 The latter is possible if you use `setuptools_scm` package but
 you could also invent your own solution based on the distance
 to the latest tagged commit.
 
-You'll need to create another token for a separate host and then
-[save it as a GitHub repo secret][Creating & using secrets].
+You'll need to create another token for a separate host and then [save it as a
+GitHub repo secret][Creating & using secrets] under an environment used in
+your job. Though, passing a password would disable the secretless [trusted
+publishing] so it's better to configure it instead, when publishing to TestPyPI
+and not something custom.
 
 The action invocation in this case would look like:
 ```yml
@@ -114,7 +145,7 @@ The action invocation in this case would look like:
   uses: pypa/gh-action-pypi-publish@release/v1
   with:
     password: ${{ secrets.TEST_PYPI_API_TOKEN }}
-    repository_url: https://test.pypi.org/legacy/
+    repository-url: https://test.pypi.org/legacy/
 ```
 
 ### Customizing target package dists directory
@@ -127,8 +158,7 @@ would now look like:
 - name: Publish package to PyPI
   uses: pypa/gh-action-pypi-publish@release/v1
   with:
-    password: ${{ secrets.PYPI_API_TOKEN }}
-    packages_dir: custom-dir/
+    packages-dir: custom-dir/
 ```
 
 ### Disabling metadata verification
@@ -139,7 +169,7 @@ check with:
 
 ```yml
    with:
-     verify_metadata: false
+     verify-metadata: false
 ```
 
 ### Tolerating release package file duplicates
@@ -149,12 +179,12 @@ may hit race conditions. For example, when publishing from multiple CIs
 or even having workflows with the same steps triggered within GitHub
 Actions CI/CD for different events concerning the same high-level act.
 
-To facilitate this use-case, you may use `skip_existing` (disabled by
+To facilitate this use-case, you may use `skip-existing` (disabled by
 default) setting as follows:
 
 ```yml
    with:
-     skip_existing: true
+     skip-existing: true
 ```
 
 > **Pro tip**: try to avoid enabling this setting where possible. If you
@@ -177,7 +207,7 @@ It will show SHA256, MD5, BLAKE2-256 values of files to be uploaded.
 
 ```yml
   with:
-    print_hash: true
+    print-hash: true
 ```
 
 ### Specifying a different username
@@ -191,6 +221,18 @@ specify a custom username and password pair. This is how it's done.
     user: guido
     password: ${{ secrets.DEVPI_PASSWORD }}
 ```
+
+The secret used in `${{ secrets.DEVPI_PASSWORD }}` needs to be created on the
+environment page under the settings of your project on GitHub.
+See [Creating & using secrets].
+
+In the past, when publishing to PyPI, the most secure way of the access scoping
+for automatic publishing was to use the [API tokens][PyPI API token] feature of
+PyPI. One would make it project-scoped and save as an environment-bound secret
+in their GitHub repository settings, naming it `${{ secrets.PYPI_API_TOKEN }}`,
+for example. See [Creating & using secrets]. While still secure,
+[trusted publishing] is now encouraged over API tokens as a best practice
+on supported platforms (like GitHub).
 
 ## License
 
@@ -208,6 +250,9 @@ https://results.pre-commit.ci/latest/github/pypa/gh-action-pypi-publish/unstable
 [pre-commit.ci status badge]:
 https://results.pre-commit.ci/badge/github/pypa/gh-action-pypi-publish/unstable/v1.svg
 
+[per-release announcement discussions]:
+https://github.com/pypa/gh-action-pypi-publish/discussions/categories/announcements
+
 [Creating & using secrets]:
 https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets
 [has nothing to do with _building package distributions_]:
@@ -221,3 +266,8 @@ https://packaging.python.org/glossary/#term-Distribution-Package
 https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner-direct-single.svg
 [SWUdocs]:
 https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md
+
+[warehouse#12965]: https://github.com/pypi/warehouse/issues/12965
+[trusted publishing]: https://docs.pypi.org/trusted-publishers/
+
+[how to specify username and password]: #specifying-a-different-username
