@@ -24,10 +24,9 @@ jobs:
       - name: Run PyLint 🔧
         run: |
           # Run PyLint
-          python3 -m pylint client/src/dolbyio_rest_apis cli/src/dolbyio_rest_apis_cli
+          python3 -m pylint client/src/dolbyio_rest_apis
 
       - name: Build the packages 🔧
         run: |
           # Build the Python packages
           python3 client/setup.py sdist bdist_wheel
-          python3 cli/setup.py sdist bdist_wheel
