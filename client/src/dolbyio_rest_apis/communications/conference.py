@@ -9,7 +9,7 @@ from dataclasses import asdict
 from dolbyio_rest_apis.communications.internal.http_context import CommunicationsHttpContext
 from dolbyio_rest_apis.core.helpers import get_value, add_if_not_none
 from dolbyio_rest_apis.core.urls import get_comms_url_v2
-from .models import UserToken, Conference, SpatialAudioEnvironment, SpatialAudioListener, SpatialAudioUser, RTCPMode, Participant, VideoCodec
+from .models import UserToken, Conference, SpatialAudioEnvironment, SpatialAudioListener, SpatialAudioUser, RTCPMode, Participant, VideoCodec, GetParticipantsResponse
 from typing import List
 
 async def create_conference(
@@ -335,6 +335,32 @@ async def update_permissions(
         user_tokens.append(user_token)
 
     return user_tokens
+
+async def list_participants(
+        access_token: str,
+        conference_id: str,
+    ) -> GetParticipantsResponse:
+    r"""
+    Returns the current participant list.
+
+    See: https://docs.dolby.io/communications-apis/reference/return-participant-list
+
+    Args:
+        access_token: Access token to use for authentication.
+        conference_id: Identifier of the conference.
+
+    Raises:
+        HttpRequestError: If a client error one occurred.
+        HTTPError: If one occurred.
+    """
+
+    async with CommunicationsHttpContext() as http_context:
+        json_response = await http_context.requests_get(
+            access_token=access_token,
+            url=f'{get_comms_url_v2()}/conferences/{conference_id}/participants',
+        )
+
+    return GetParticipantsResponse(json_response)
 
 async def terminate(
         access_token: str,

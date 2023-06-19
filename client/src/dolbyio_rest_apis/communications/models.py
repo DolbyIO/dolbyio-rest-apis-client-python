@@ -99,6 +99,32 @@ class Conference(dict):
                 user_token = UserToken(key, self['usersTokens'][key])
                 self.user_tokens.append(user_token)
 
+class ConferenceParticipant(dict):
+    """Representation of a participant."""
+
+    def __init__(self, dictionary: dict):
+        dict.__init__(self, dictionary)
+
+        self.user_id = get_value_or_default(self, 'userId', None)
+        self.external_id = get_value_or_default(self, 'externalId', None)
+        self.name = get_value_or_default(self, 'name', None)
+        self.avatar_url = get_value_or_default(self, 'avatarUrl', None)
+        self.ip_address = get_value_or_default(self, 'ipAddress', None)
+        self.user_agent = get_value_or_default(self, 'userAgent', None)
+        self.last_join_timestamp = get_value_or_default(self, 'lastJoinTimestamp', 0)
+        self.nb_session = get_value_or_default(self, 'nbSession', 0)
+
+class GetParticipantsResponse(dict):
+    """Representation of a Participants response."""
+
+    def __init__(self, dictionary: dict):
+        dict.__init__(self, dictionary)
+
+        self.participants: List[ConferenceParticipant] = []
+        if in_and_not_none(self, 'participants'):
+            for participant in self['participants']:
+                self.participants.append(ConferenceParticipant(participant))
+
 class RemixStatus(dict):
     """Representation of a Remix Status."""
 
