@@ -7,7 +7,7 @@ This module contains the functions to work with the monitor API related to webho
 
 from dolbyio_rest_apis.communications.internal.http_context import CommunicationsHttpContext
 from dolbyio_rest_apis.communications.monitor.models import GetWebHookResponse, WebHook
-from dolbyio_rest_apis.core.urls import get_comms_monitor_url
+from dolbyio_rest_apis.core.urls import get_comms_monitor_url_v1
 from typing import Any, List
 
 async def get_events(
@@ -45,7 +45,7 @@ async def get_events(
         HttpRequestError: If a client error one occurred.
         HTTPError: If one occurred.
     """
-    url = f'{get_comms_monitor_url()}/'
+    url = f'{get_comms_monitor_url_v1()}/'
     if not conference_id is None:
         url += f'conferences/{conference_id}/'
     url += 'webhooks'
@@ -100,7 +100,7 @@ async def get_all_events(
         HttpRequestError: If a client error one occurred.
         HTTPError: If one occurred.
     """
-    url = f'{get_comms_monitor_url()}/'
+    url = f'{get_comms_monitor_url_v1()}/'
     if not conference_id is None:
         url += f'conferences/{conference_id}/'
     url += 'webhooks'
