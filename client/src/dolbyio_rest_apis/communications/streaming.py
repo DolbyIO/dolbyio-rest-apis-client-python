@@ -8,6 +8,7 @@ This module contains the functions to work with the streaming API.
 from dolbyio_rest_apis.communications.internal.http_context import CommunicationsHttpContext
 from dolbyio_rest_apis.core.helpers import add_if_not_none
 from dolbyio_rest_apis.core.urls import get_comms_url_v2
+from .models import RtsStream
 
 async def start_rtmp(
         access_token: str,
@@ -97,7 +98,7 @@ async def start_rts(
         width: int=-1,
         height: int=-1,
         mix_id: str=None,
-    ) -> None:
+    ) -> RtsStream:
     r"""
     Starts real-time streaming using Dolby.io Real-time Streaming services (formerly Millicast).
     
@@ -122,6 +123,9 @@ async def start_rts(
         mix_id: (Optional) A unique identifier for you to identify individual mixes.
             You may only start one streaming per mixId.
             Not providing its value results in setting the `default` value.
+
+    Returns:
+        A :class:`RtsStream` object that represents the status of the remix.
 
     Raises:
         HttpRequestError: If a client error one occurred.

@@ -48,7 +48,6 @@ async def start(
             You may only start one streaming per mixId.
             Not providing its value results in setting the `default` value.
 
-
     Returns:
         A :class:`RemixStatus` object that represents the status of the remix.
 
