@@ -1,6 +1,6 @@
 [![Build Package](https://github.com/DolbyIO/dolbyio-rest-apis-client-python/actions/workflows/build-package.yml/badge.svg)](https://github.com/DolbyIO/dolbyio-rest-apis-client-python/actions/workflows/build-package.yml)
 [![Publish Package](https://github.com/DolbyIO/dolbyio-rest-apis-client-python/actions/workflows/publish-package-to-pypi.yml/badge.svg)](https://github.com/DolbyIO/dolbyio-rest-apis-client-python/actions/workflows/publish-package-to-pypi.yml)
-![PyPI](https://img.shields.io/pypi/v/dolbyio-rest-apis)
+[![PyPI](https://img.shields.io/pypi/v/dolbyio-rest-apis)](https://pypi.org/project/dolbyio-rest-apis/)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/dolbyio-rest-apis)
 [![License](https://img.shields.io/github/license/DolbyIO/dolbyio-rest-apis-client-python)](LICENSE)
 
