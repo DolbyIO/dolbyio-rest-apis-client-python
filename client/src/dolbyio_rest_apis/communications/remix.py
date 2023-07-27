@@ -14,27 +14,39 @@ async def start(
         access_token: str,
         conference_id: str,
         layout_url: str=None,
-        layout_name: str=None,
+        width: int=-1,
+        height: int=-1,
+        mix_id: str=None,
     ) -> RemixStatus:
     r"""
     Remix a conference.
 
-    Use this API to trigger a remix and regenerate a recording of a previously recorded conference using
-    the current mixer layout. The `Recording.MP4.Available` event is sent if the customer has configured
-    the webhook in the developer portal.
+    Triggers a remix and regenerates a recording of a previously recorded conference
+    using a [mixer layout](https://docs.dolby.io/communications-apis/docs/guides-mixer-layout).
+    You can remix only one conference at a time.
+    The `Recordings.Available` event is sent if the customer has configured the webhook in the developer portal.
+    For more information, see the [Recording Conferences](https://docs.dolby.io/communications-apis/docs/guides-recording-conferences)
+    and [Multiple Layout Mixes](https://docs.dolby.io/communications-apis/docs/guides-multiple-layout-mixes) documents.
+    
+    You can also specify the resolution of the remix.
+    The default mixer layout application supports both 1920x1080 (16:9 aspect ratio) and 1080x1920 (9:16 aspect ratio).
+    If the `width` and `height` parameters are not specified, then the system defaults to 1920x1080.
 
     See: https://docs.dolby.io/communications-apis/reference/start-conference-remix
 
     Args:
         access_token: Access token to use for authentication.
         conference_id: Identifier of the conference.
-        layout_url: Overwrites the layout URL configuration:
+        layout_url: (Optional) Overwrites the layout URL configuration:
             null: uses the layout URL configured in the dashboard
                 (if no URL is set in the dashboard, then uses the Dolby.io default)
             default: uses the Dolby.io default layout
             URL string: uses this layout URL
-        layout_name: Defines a name for the given layout URL, which makes layout identification
-            easier for customers especially when the layout URL is not explicit.
+        width: (Optional) The frame width can range between 390 and 1920 pixels and is set to 1920 by default.
+        height: (Optional) The frame height can range between 390 and 1920 pixels and is set to 1080 by default.
+        mix_id: (Optional) A unique identifier for you to identify individual mixes.
+            You may only start one streaming per mixId.
+            Not providing its value results in setting the `default` value.
 
     Returns:
         A :class:`RemixStatus` object that represents the status of the remix.
@@ -47,7 +59,11 @@ async def start(
 
     payload = {}
     add_if_not_none(payload, 'layoutUrl', layout_url)
-    add_if_not_none(payload, 'layoutName', layout_name)
+    if width > 0:
+        payload['width'] = width
+    if height > 0:
+        payload['height'] = height
+    add_if_not_none(payload, 'mixId', mix_id)
 
     async with CommunicationsHttpContext() as http_context:
         json_response = await http_context.requests_post(

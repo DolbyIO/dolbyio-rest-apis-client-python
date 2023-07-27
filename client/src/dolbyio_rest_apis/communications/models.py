@@ -135,6 +135,17 @@ class RemixStatus(dict):
         self.region = get_value_or_default(self, 'region', None)
         self.alias = get_value_or_default(self, 'alias', None)
 
+class RtsStream(dict):
+    """Representation of an RTS Stream start response."""
+
+    def __init__(self, dictionary: dict):
+        dict.__init__(self, dictionary)
+
+        self.stream_name = get_value_or_default(self, 'streamName', None)
+        self.subscribe_token = get_value_or_default(self, 'subscribeToken', None)
+        self.stream_account_id = get_value_or_default(self, 'streamAccountID', None)
+        self.viewer_url = get_value_or_default(self, 'viewerURL', None)
+
 @dataclass
 class Coordinates:
     """Representation of a Coordinate object."""

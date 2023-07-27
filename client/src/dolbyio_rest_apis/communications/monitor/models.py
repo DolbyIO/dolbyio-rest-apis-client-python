@@ -23,7 +23,7 @@ class ConferenceOwner(dict):
     def __init__(self, dictionary: dict):
         dict.__init__(self, dictionary)
 
-        self.user_id = get_value_or_default(self, 'userID', None)
+        self.user_id = get_value_or_default(self, 'userId', None)
 
         if in_and_not_none(self, 'metadata'):
             self.metadata = UserMetadata(self['metadata'])
@@ -194,71 +194,48 @@ class UserMetadata(dict):
         self.external_photo_url = get_value_or_default(self, 'externalPhotoUrl', None)
         self.ip_address = get_value_or_default(self, 'ipAddress', None)
 
-class RecordingSplit(dict):
-    """Representation of a Recording Split."""
+class ConferenceRecordingMix(dict):
+    """Representation of a Conference Recording Mix."""
 
     def __init__(self, dictionary: dict):
         dict.__init__(self, dictionary)
 
-        self.start_time = get_value_or_default(self, 'startTime', 0)
-        self.duration = get_value_or_default(self, 'duration', 0)
-        self.size = get_value_or_default(self, 'size', 0)
-        self.file_name = get_value_or_default(self, 'fileName', None)
-        self.url = get_value_or_default(self, 'url', None)
+        self.mix_id = get_value_or_default(self, 'mixId', None)
+        self.width = get_value_or_default(self, 'width', -1)
+        self.height = get_value_or_default(self, 'height', -1)
+        self.layout_url = get_value_or_default(self, 'layoutUrl', None)
 
-        if in_and_not_none(self, 'metadata'):
-            self.metadata = UserMetadata(self['metadata'])
-
-class RecordingRecord(dict):
-    """Representation of a Recording Record."""
-
-    def __init__(self, dictionary: dict):
-        dict.__init__(self, dictionary)
-
-        self.start_time = get_value_or_default(self, 'startTime', 0)
-        self.duration = get_value_or_default(self, 'duration', 0)
-        self.size = get_value_or_default(self, 'size', 0)
-        self.file_name = get_value_or_default(self, 'fileName', None)
-        self.url = get_value_or_default(self, 'url', None)
-
-        self.splits = []
-        if in_and_not_none(self, 'splits'):
-            for split in self['splits']:
-                self.splits.append(RecordingSplit(split))
-
-class RecordingAudio(dict):
-    """Representation of a Recording Audio."""
-
-    def __init__(self, dictionary: dict):
-        dict.__init__(self, dictionary)
-
-        self.region = get_value_or_default(self, 'region', None)
-
-        if in_and_not_none(self, 'mix'):
-            self.mix = RecordingMix(self['mix'])
-
-        self.records = []
-        if in_and_not_none(self, 'records'):
-            for record in self['records']:
-                self.records.append(RecordingRecord(record))
-
-class Recording(dict):
-    """Representation of a Recording."""
+class Conference(dict):
+    """Representation of a Conference."""
 
     def __init__(self, dictionary: dict):
         dict.__init__(self, dictionary)
 
         self.conf_id = get_value_or_default(self, 'confId', None)
-        self.alias = get_value_or_default(self, 'alias', None)
-        self.duration = get_value_or_default(self, 'duration', 0)
-        self.ts = get_value_or_default(self, 'ts', 0)
+        self.conf_alias = get_value_or_default(self, 'confAlias', None)
+
+class ConferenceRecording(dict):
+    """Representation of a Conference Recording."""
+
+    def __init__(self, dictionary: dict):
+        dict.__init__(self, dictionary)
+
+        if in_and_not_none(self, 'conference'):
+            self.conference = Conference(self['conference'])
+
+        self.region = get_value_or_default(self, 'region', None)
+        self.url = get_value_or_default(self, 'url', None)
+        self.created_at = get_value_or_default(self, 'createdAt', None)
+        self.recording_type = get_value_or_default(self, 'recordingType', None)
+        self.duration = get_value_or_default(self, 'duration', -1)
+        self.filename = get_value_or_default(self, 'filename', None)
+        self.size = get_value_or_default(self, 'size', -1)
+        self.start_time = get_value_or_default(self, 'startTime', 0)
+        self.media_type = get_value_or_default(self, 'mediaType', None)
         self.region = get_value_or_default(self, 'region', None)
 
         if in_and_not_none(self, 'mix'):
-            self.mix = RecordingMix(self['mix'])
-
-        if in_and_not_none(self, 'audio'):
-            self.audio = RecordingAudio(self['audio'])
+            self.mix = ConferenceRecordingMix(self['mix'])
 
 class GetRecordingsResponse(PagedResponse):
     """Representation of a Recordings response."""
@@ -269,25 +246,23 @@ class GetRecordingsResponse(PagedResponse):
         self.recordings = []
         if in_and_not_none(self, 'recordings'):
             for recording in self['recordings']:
-                self.recordings.append(Recording(recording))
+                self.recordings.append(ConferenceRecording(recording))
 
-class DolbyVoiceRecording(dict):
-    """Representation of a Dolby Voice Recording."""
+class GetConferenceRecordingsResponse(GetRecordingsResponse):
+    """Representation of a Conference Recordings response."""
 
     def __init__(self, dictionary: dict):
-        dict.__init__(self, dictionary)
+        GetRecordingsResponse.__init__(self, dictionary)
 
-        self.region = get_value_or_default(self, 'region', None)
-        self.conf_id = None
-        self.conf_alias = None
         if in_and_not_none(self, 'conference'):
-            self.conf_id = get_value_or_default(self, 'confId', None)
-            self.conf_alias = get_value_or_default(self, 'confAlias', None)
+            self.conference = Conference(self['conference'])
 
-        self.records = []
-        if in_and_not_none(self, 'records'):
-            for record in self['records']:
-                self.records.append(RecordingRecord(record))
+        self.live_conference = get_value_or_default(self, 'liveConference', False)
+
+        self.recordings = []
+        if in_and_not_none(self, 'recordings'):
+            for recording in self['recordings']:
+                self.recordings.append(ConferenceRecording(recording))
 
 class WebHookResponse(dict):
     """Representation of a WebHook event response."""
