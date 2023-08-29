@@ -7,7 +7,7 @@ This module contains the functions to work with the streaming API.
 
 from dolbyio_rest_apis.communications.internal.http_context import CommunicationsHttpContext
 from dolbyio_rest_apis.core.helpers import add_if_not_none
-from dolbyio_rest_apis.core.urls import get_comms_url_v2
+from dolbyio_rest_apis.core.urls import get_comms_url_v2, get_comms_url_v3
 from .models import RtsStream
 
 async def start_rtmp(
@@ -143,7 +143,7 @@ async def start_rts(
     async with CommunicationsHttpContext() as http_context:
         await http_context.requests_post(
             access_token=access_token,
-            url=f'{get_comms_url_v2()}/conferences/mix/{conference_id}/rts/start',
+            url=f'{get_comms_url_v3()}/conferences/mix/{conference_id}/rts/start',
             payload=payload,
         )
 
@@ -168,5 +168,5 @@ async def stop_rts(
     async with CommunicationsHttpContext() as http_context:
         await http_context.requests_post(
             access_token=access_token,
-            url=f'{get_comms_url_v2()}/conferences/mix/{conference_id}/rts/stop'
+            url=f'{get_comms_url_v3()}/conferences/mix/{conference_id}/rts/stop'
         )

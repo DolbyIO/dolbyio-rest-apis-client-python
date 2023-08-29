@@ -21,6 +21,9 @@ def get_comms_url_v2(region: str = None) -> str:
         return f'https://{COMMS_URL}/v2'
     return f'https://{region}.{COMMS_URL}/v2'
 
+def get_comms_url_v3() -> str:
+    return f'https://{COMMS_URL}/v3'
+
 def get_comms_monitor_url_v1() -> str:
     return f'{get_comms_url_v1()}/monitor'
 
