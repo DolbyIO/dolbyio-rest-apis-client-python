@@ -24,7 +24,7 @@ setuptools.setup(
     license='MIT',
     url='https://github.com/dolbyio/dolbyio-rest-apis-client-python',
     project_urls={
-        'Documentation': 'https://docs.dolby.io/communications-apis/reference',
+        'Documentation': 'https://docs.dolby.io/streaming-apis/reference',
         'Source': 'https://github.com/dolbyio/dolbyio-rest-apis-client-python',
         'Bug Tracker': 'https://github.com/dolbyio/dolbyio-rest-apis-client-python/issues',
     },

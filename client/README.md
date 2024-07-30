@@ -1,6 +1,6 @@
 # Dolby.io REST APIs Client for Python
 
-Python wrapper for the dolby.io REST [Communications](https://docs.dolby.io/communications-apis/reference/authentication-api), [Streaming](https://docs.dolby.io/streaming-apis/reference) and [Media](https://docs.dolby.io/media-processing/reference/media-enhance-overview) APIs.
+Python wrapper for the [Dolby Millicast](https://docs.dolby.io/streaming-apis/reference) and [Media](https://docs.dolby.io/media-processing/reference/media-enhance-overview) APIs.
 
 ## Install this project
 
@@ -14,135 +14,6 @@ Upgrade your package to the latest version:
 
 ```bash
 python3 -m pip install --upgrade dolbyio-rest-apis
-```
-
-## Logging
-
-You can change the log level by using the Python [logging](https://docs.python.org/3/library/logging.html) library.
-
-```python
-import logging
-
-logging.basicConfig(level='DEBUG')
-```
-
-## Authentication
-
-In order to make API calls for most operations of the **Communications APIs** and **Media APIs**, you must get an access token using this API:
-
-```python
-import asyncio
-from dolbyio_rest_apis import authentication
-
-APP_KEY = 'YOUR_APP_KEY'
-APP_SECRET = 'YOUR_APP_SECRET'
-
-loop = asyncio.get_event_loop()
-
-task = authentication.get_api_token(APP_KEY, APP_SECRET)
-at = loop.run_until_complete(task)
-
-print(f'API Token: {at.access_token}')
-```
-
-To request a particular scope for this access token:
-
-```python
-task = authentication.get_api_token(APP_KEY, APP_SECRET, scope=['comms:*'])
-at = loop.run_until_complete(task)
-
-print(f'API Token: {at.access_token}')
-print(f'Scope: {at.scope}')
-```
-
-## Communications Examples
-
-### Get a client access token
-
-To get an access token that will be used by the client SDK for an end user to open a session against dolby.io, use the following code:
-
-```python
-import asyncio
-from dolbyio_rest_apis import authentication as auth
-from dolbyio_rest_apis.communications import authentication
-
-APP_KEY = 'YOUR_APP_KEY'
-APP_SECRET = 'YOUR_APP_SECRET'
-
-loop = asyncio.get_event_loop()
-
-# Request an API Token
-task = auth.get_api_token(APP_KEY, APP_SECRET, scope=['comms:client_access_token:create'])
-api_token = loop.run_until_complete(task)
-
-print(f'API Token: {api_token.access_token}')
-
-# Request the Client Access Token
-task = authentication.get_client_access_token_v2(api_token.access_token, ['*'])
-cat = loop.run_until_complete(task)
-
-print(f'Client Access Token: {cat.access_token}')
-```
-
-Because most of the APIs are asynchronous, you can write an async function like that:
-
-```python
-from dolbyio_rest_apis import authentication as auth
-from dolbyio_rest_apis.communications import authentication
-
-APP_KEY = 'YOUR_APP_KEY'
-APP_SECRET = 'YOUR_APP_SECRET'
-
-async def get_client_access_token():
-    # Request an API Token
-    api_token = await auth.get_api_token(APP_KEY, APP_SECRET, scope=['comms:client_access_token:create'])
-
-    # Request the Client Access Token
-    cat = await authentication.get_client_access_token_v2(api_token.access_token, ['*'])
-    print(f'Client Access Token: {cat.access_token}')
-    
-    return cat.access_token
-
-```
-
-### Create a conference
-
-To create a Dolby Voice conference, you first must retrieve an API Access Token, then use the following code to create the conference.
-
-```python
-import asyncio
-from dolbyio_rest_apis import authentication
-from dolbyio_rest_apis.communications import conference
-from dolbyio_rest_apis.communications.models import Participant, Permission, VideoCodec
-
-APP_KEY = 'YOUR_APP_KEY'
-APP_SECRET = 'YOUR_APP_SECRET'
-
-owner_id = '' # Identifier of the owner of the conference
-alias = '' # Conference alias
-
-participants = [
-    Participant('hostA', [Permission.JOIN, Permission.SEND_AUDIO, Permission.SEND_VIDEO], notify=True),
-    Participant('listener1', [Permission.JOIN], notify=False),
-]
-
-loop = asyncio.get_event_loop()
-
-# Request an API token
-task = authentication.get_api_token(APP_KEY, APP_SECRET, scope=['comms:conf:create'])
-at = loop.run_until_complete(task)
-
-# Create the conference
-task = conference.create_conference(
-    at.access_token,
-    owner_id,
-    alias,
-    video_codec=VideoCodec.VP8,
-    participants=participants
-)
-conf = loop.run_until_complete(task)
-
-print(f'Conference created: {conf.id}')
 ```
 
 ## Real-time Streaming Examples
@@ -197,7 +68,7 @@ Get the App Key and Secret from the Dolby.io dashboard and use the following cod
 
 ```python
 import asyncio
-from dolbyio_rest_apis import authentication
+from dolbyio_rest_apis.media import authentication
 
 APP_KEY = 'YOUR_APP_KEY'
 APP_SECRET = 'YOUR_APP_SECRET'
@@ -319,4 +190,14 @@ task = io.download_file(
     file_path=OUT_FILE_PATH,
 )
 loop.run_until_complete(task)
+```
+
+## Logging
+
+You can change the log level by using the Python [logging](https://docs.python.org/3/library/logging.html) library.
+
+```python
+import logging
+
+logging.basicConfig(level='DEBUG')
 ```
