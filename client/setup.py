@@ -30,7 +30,7 @@ setuptools.setup(
     },
     package_dir={'': os.path.join(current_path, 'src')},
     packages=setuptools.find_packages(where=os.path.join(current_path, 'src')),
-    python_requires='>=3.7',
+    python_requires='>=3.10',
     use_scm_version= {
         'local_scheme': 'no-local-version',
         'version_scheme': 'release-branch-semver',
