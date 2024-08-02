@@ -5,7 +5,6 @@ dolbyio_rest_apis.streaming.publish_token
 This module contains the functions to work with the Publish Token APIs.
 """
 
-from typing import List
 from dolbyio_rest_apis.core.helpers import add_if_not_none
 from dolbyio_rest_apis.core.urls import get_rts_url
 from dolbyio_rest_apis.streaming.internal.http_context import StreamingHttpContext
@@ -16,12 +15,12 @@ async def read(
         token_id: int,
     ) -> PublishToken:
     async with StreamingHttpContext() as http_context:
-        json_response = await http_context.requests_get(
+        dict_data = await http_context.requests_get(
             api_secret=api_secret,
             url=f'{get_rts_url()}/api/publish_token/{token_id}',
         )
 
-    return PublishToken(json_response)
+    return PublishToken.from_dict(dict_data)
 
 async def delete(
         api_secret: str,
@@ -67,23 +66,40 @@ async def update(
     add_if_not_none(payload, 'subscribeRequiresAuth', token.subscribe_requires_auth)
     add_if_not_none(payload, 'record', token.record)
     add_if_not_none(payload, 'multisource', token.multisource)
+    add_if_not_none(payload, 'enableThumbnails', token.enable_thumbnails)
+    add_if_not_none(payload, 'displaySrtPassphrase', token.display_srt_passphrase)
+    add_if_not_none(payload, 'lowLatencyRtmp', token.low_latency_rtmp)
+    add_if_not_none(payload, 'clip', token.clip)
+    if token.update_geo_cascade is not None:
+        payload['updateGeoCascade'] = {
+            'isEnabled': token.update_geo_cascade.is_enabled,
+            'clusters': token.update_geo_cascade.clusters,
+        }
+    if token.update_restream is not None:
+        payload['updateRestream'] = []
+        for restream in token.update_restream:
+            restream_obj = {
+                'url': restream.url,
+                'key': restream.key,
+            }
+            payload['updateRestream'].append(restream_obj)
 
     async with StreamingHttpContext() as http_context:
-        json_response = await http_context.requests_put(
+        dict_data = await http_context.requests_put(
             api_secret=api_secret,
             url=f'{get_rts_url()}/api/publish_token/{token_id}',
             payload=payload,
         )
 
-    return PublishToken(json_response)
+    return PublishToken.from_dict(dict_data)
 
 async def list_tokens(
         api_secret: str,
         sort_by: str,
         page: int,
         items_on_page: int,
-        is_descending: bool,
-    ) -> List[PublishToken]:
+        is_descending: bool = False,
+    ) -> list[PublishToken]:
     params = {
         'sortBy': sort_by,
         'page': str(page),
@@ -92,16 +108,16 @@ async def list_tokens(
     }
 
     async with StreamingHttpContext() as http_context:
-        json_response = await http_context.requests_get(
+        dict_data = await http_context.requests_get(
             api_secret=api_secret,
             url=f'{get_rts_url()}/api/publish_token/list',
             params=params,
         )
 
-    publish_tokens = []
-    for token in json_response:
-        publish_tokens.append(PublishToken(token))
-    return publish_tokens
+    tokens = []
+    for token in dict_data:
+        tokens.append(PublishToken.from_dict(token))
+    return tokens
 
 async def create(
         api_secret: str,
@@ -113,6 +129,11 @@ async def create(
         'subscribeRequiresAuth': token.subscribe_requires_auth,
         'record': token.record,
         'multisource': token.multisource,
+        'enableThumbnails': token.enable_thumbnails,
+        'displaySrtPassphrase': token.display_srt_passphrase,
+        'lowLatencyRtmp': token.low_latency_rtmp,
+        'clip': token.clip,
+        'restream': [],
     }
     add_if_not_none(payload, 'expiresOn', token.expires_on)
     for stream in token.streams:
@@ -127,56 +148,65 @@ async def create(
     add_if_not_none(payload, 'allowedCountries', token.allowed_countries)
     add_if_not_none(payload, 'deniedCountries', token.denied_countries)
     add_if_not_none(payload, 'originCluster', token.origin_cluster)
+    if not token.geo_cascade is None:
+        payload['geoCascade'] = {
+            'isEnabled': token.geo_cascade.is_enabled,
+            'clusters': token.geo_cascade.clusters,
+        }
+    for restream in token.restream:
+        payload['restream'] = {
+            'url': restream.url,
+            'key': restream.key,
+        }
 
     async with StreamingHttpContext() as http_context:
-        json_response = await http_context.requests_post(
+        dict_data = await http_context.requests_post(
             api_secret=api_secret,
             url=f'{get_rts_url()}/api/publish_token',
             payload=payload,
         )
 
-    return PublishToken(json_response)
+    return PublishToken.from_dict(dict_data)
 
 async def get_active_publish_token_id(
         api_secret: str,
-        account_id: str,
-        stream_name: str,
+        stream_id: str,
     ) -> ActivePublishToken:
     params = {
-        'streamId': f'{account_id}/{stream_name}',
+        'streamId': stream_id,
     }
     async with StreamingHttpContext() as http_context:
-        json_response = await http_context.requests_get(
+        dict_data = await http_context.requests_get(
             api_secret=api_secret,
             url=f'{get_rts_url()}/api/publish_token/active',
             params=params,
         )
 
-    return ActivePublishToken(json_response)
+    return ActivePublishToken.from_dict(dict_data)
 
 async def get_all_active_publish_token_id(
         api_secret: str,
     ) -> ActivePublishToken:
     async with StreamingHttpContext() as http_context:
-        json_response = await http_context.requests_get(
+        dict_data = await http_context.requests_get(
             api_secret=api_secret,
             url=f'{get_rts_url()}/api/publish_token/active/all',
         )
 
-    return ActivePublishToken(json_response)
+    return ActivePublishToken.from_dict(dict_data)
 
 async def disable(
         api_secret: str,
-        token_ids: List[int],
+        token_ids: list[int],
     ) -> DisablePublishTokenResponse:
     payload = {
         'tokenIds': token_ids,
     }
     async with StreamingHttpContext() as http_context:
-        json_response = await http_context.requests_patch(
+        dict_data = await http_context.requests_patch(
             api_secret=api_secret,
             url=f'{get_rts_url()}/api/publish_token/disable',
             payload=payload,
         )
 
-    return DisablePublishTokenResponse(json_response)
+    return DisablePublishTokenResponse.from_dict(dict_data)

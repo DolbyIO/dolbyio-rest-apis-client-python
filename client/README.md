@@ -23,12 +23,12 @@ python3 -m pip install --upgrade dolbyio-rest-apis
 ```python
 import asyncio
 from dolbyio_rest_apis.streaming import publish_token
-from dolbyio_rest_apis.streaming.models.publish_token import CreatePublishToken, CreateUpdatePublishTokenStream
+from dolbyio_rest_apis.streaming.models.publish_token import CreatePublishToken, TokenStreamName
 
 API_SECRET = '' # Retrieve your API Secret from the dashboard
 
 create_token = CreatePublishToken('my_token')
-create_token.streams.append(CreateUpdatePublishTokenStream('feed1', False))
+create_token.streams.append(TokenStreamName('feed1', False))
 
 loop = asyncio.get_event_loop()
 
@@ -43,12 +43,13 @@ print(token)
 ```python
 import asyncio
 from dolbyio_rest_apis.streaming import subscribe_token
-from dolbyio_rest_apis.streaming.models.subscribe_token import CreateSubscribeToken, CreateUpdateSubscribeTokenStream
+from dolbyio_rest_apis.streaming.models.publish_token import TokenStreamName
+from dolbyio_rest_apis.streaming.models.subscribe_token import CreateSubscribeToken
 
 API_SECRET = '' # Retrieve your API Secret from the dashboard
 
 create_token = CreateSubscribeToken('my_token')
-create_token.streams.append(CreateUpdateSubscribeTokenStream('feed1', False))
+create_token.streams.append(TokenStreamName('feed1', False))
 
 loop = asyncio.get_event_loop()
 
