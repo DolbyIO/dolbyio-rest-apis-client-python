@@ -17,6 +17,12 @@ class ClusterLocation:
     country: str | None = None
 
 @dataclass
+class ClusterFeatures:
+    """The :class:`ClusterFeatures` object, which represents the available features of a cluster."""
+
+    transcoding: bool = False
+
+@dataclass
 class Cluster:
     """The :class:`Cluster` object, which represents a cluster."""
 
@@ -25,6 +31,7 @@ class Cluster:
     rtmp: str
     srt: str
     location: ClusterLocation
+    features: ClusterFeatures
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass

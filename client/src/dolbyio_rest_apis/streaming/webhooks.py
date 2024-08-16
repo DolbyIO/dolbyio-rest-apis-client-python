@@ -39,6 +39,7 @@ async def update(
     ) -> Webhook:
     payload = {}
     add_if_not_none(payload, 'url', webhook.url)
+    add_if_not_none(payload, 'refreshSecret', webhook.refresh_secret)
     add_if_not_none(payload, 'isFeedHooks', webhook.is_feed_hooks)
     add_if_not_none(payload, 'isRecordingHooks', webhook.is_recording_hooks)
     add_if_not_none(payload, 'isThumbnailHooks', webhook.is_thumbnail_hooks)

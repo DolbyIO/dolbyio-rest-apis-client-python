@@ -11,6 +11,13 @@ from dolbyio_rest_apis.streaming.models.publish_token import TokenEffectiveSetti
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
+class SubscribeTokenTracking:
+    """The :class:`SubscribeTokenTracking` object, the definition of the tracking info of a subscribe token."""
+
+    tracking_id: bool = False
+
+@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass
 class SubscribeToken:
     """The :class:`SubscribeToken` object, which represents a Subscribe Token."""
 
@@ -28,6 +35,7 @@ class SubscribeToken:
     denied_countries: list[str] = field(default_factory=lambda: [])
     origin_cluster: str | None = None
     effective_settings: TokenEffectiveSettings | None = None
+    tracking: SubscribeTokenTracking | None = None
 
 class UpdateSubscribeToken:
     """The :class:`UpdateSubscribeToken` object, which represents an Update Subscribe Token request."""

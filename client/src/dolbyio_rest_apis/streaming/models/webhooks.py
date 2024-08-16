@@ -27,6 +27,7 @@ class UpdateWebhook:
 
     def __init__(self):
         self.url: str | None = None
+        self.refresh_secret: bool | None = None
         self.is_feed_hooks: bool | None = None
         self.is_recording_hooks: bool | None = None
         self.is_thumbnail_hooks: bool | None = None
