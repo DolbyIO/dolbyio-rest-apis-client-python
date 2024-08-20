@@ -146,7 +146,7 @@ class HttpContext:
             params: Mapping[str, str]=None,
             auth: BasicAuth=None,
             data: Any=None,
-        ) -> Any or None:
+        ) -> Any | None:
         if params is None:
             self._logger.debug('%s %s', method, url)
         else:

@@ -5,7 +5,6 @@ dolbyio_rest_apis.streaming.subscribe_token
 This module contains the functions to work with the Subscribe Token APIs.
 """
 
-from typing import List
 from dolbyio_rest_apis.core.helpers import add_if_not_none
 from dolbyio_rest_apis.core.urls import get_rts_url
 from dolbyio_rest_apis.streaming.internal.http_context import StreamingHttpContext
@@ -16,12 +15,12 @@ async def read(
         token_id: int,
     ) -> SubscribeToken:
     async with StreamingHttpContext() as http_context:
-        json_response = await http_context.requests_get(
+        dict_data = await http_context.requests_get(
             api_secret=api_secret,
             url=f'{get_rts_url()}/api/subscribe_token/{token_id}',
         )
 
-    return SubscribeToken(json_response)
+    return SubscribeToken.from_dict(dict_data)
 
 async def delete(
         api_secret: str,
@@ -64,22 +63,23 @@ async def update(
     add_if_not_none(payload, 'updateAllowedCountries', token.update_allowed_countries)
     add_if_not_none(payload, 'updateDeniedCountries', token.update_denied_countries)
     add_if_not_none(payload, 'updateOriginCluster', token.update_origin_cluster)
+
     async with StreamingHttpContext() as http_context:
-        json_response = await http_context.requests_put(
+        dict_data = await http_context.requests_put(
             api_secret=api_secret,
             url=f'{get_rts_url()}/api/subscribe_token/{token_id}',
             payload=payload,
         )
 
-    return SubscribeToken(json_response)
+    return SubscribeToken.from_dict(dict_data)
 
 async def list_tokens(
         api_secret: str,
         sort_by: str,
         page: int,
         items_on_page: int,
-        is_descending: bool,
-    ) -> List[SubscribeToken]:
+        is_descending: bool = False,
+    ) -> list[SubscribeToken]:
     params = {
         'sortBy': sort_by,
         'page': str(page),
@@ -88,16 +88,16 @@ async def list_tokens(
     }
 
     async with StreamingHttpContext() as http_context:
-        json_response = await http_context.requests_get(
+        dict_data = await http_context.requests_get(
             api_secret=api_secret,
             url=f'{get_rts_url()}/api/subscribe_token/list',
             params=params,
         )
 
-    publish_tokens = []
-    for token in json_response:
-        publish_tokens.append(SubscribeToken(token))
-    return publish_tokens
+    tokens = []
+    for token in dict_data:
+        tokens.append(SubscribeToken.from_dict(token))
+    return tokens
 
 async def create(
         api_secret: str,
@@ -120,12 +120,16 @@ async def create(
     add_if_not_none(payload, 'allowedCountries', token.allowed_countries)
     add_if_not_none(payload, 'deniedCountries', token.denied_countries)
     add_if_not_none(payload, 'originCluster', token.origin_cluster)
+    if not token.tracking_id is None:
+        payload['tracking'] = {
+            'trackingId': token.tracking_id,
+        }
 
     async with StreamingHttpContext() as http_context:
-        json_response = await http_context.requests_post(
+        dict_data = await http_context.requests_post(
             api_secret=api_secret,
             url=f'{get_rts_url()}/api/subscribe_token',
-            payload=token,
+            payload=payload,
         )
 
-    return SubscribeToken(json_response)
+    return SubscribeToken.from_dict(dict_data)

@@ -2,64 +2,55 @@
 dolbyio_rest_apis.streaming.models.subscribe_token
 ~~~~~~~~~~~~~~~
 
-This module contains the models used by the Subscribe Token models.
+This module contains the models used by the Subscribe Token module.
 """
 
-from typing import List
-from dolbyio_rest_apis.core.helpers import get_value_or_default
+from dataclasses import dataclass, field
+from dataclasses_json import LetterCase, dataclass_json
+from dolbyio_rest_apis.streaming.models.publish_token import TokenEffectiveSettings, TokenStreamName
 
-class SubscribeTokenStream(dict):
-    """The :class:`SubscribeTokenStream` object, which represents a Subscribe Token Stream."""
+@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass
+class SubscribeTokenTracking:
+    """The :class:`SubscribeTokenTracking` object, the definition of the tracking info of a subscribe token."""
 
-    def __init__(self, dictionary: dict):
-        dict.__init__(self, dictionary)
+    tracking_id: bool = False
 
-        self.stream_name = get_value_or_default(self, 'streamName', None)
-        self.is_regex = get_value_or_default(self, 'isRegex', False)
-
-class SubscribeToken(dict):
+@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass
+class SubscribeToken:
     """The :class:`SubscribeToken` object, which represents a Subscribe Token."""
 
-    def __init__(self, dictionary: dict):
-        dict.__init__(self, dictionary)
+    id: int | None = None
+    label: str | None = None
+    token: str | None = None
+    added_on: str | None = None
+    expires_on: str | None = None
+    is_active: bool | None = None
+    streams: list[TokenStreamName] = field(default_factory=lambda: [])
+    allowed_origins: list[str] = field(default_factory=lambda: [])
+    allowed_ip_addresses: list[str] = field(default_factory=lambda: [])
+    bind_ips_on_usage: int | None = None
+    allowed_countries: list[str] = field(default_factory=lambda: [])
+    denied_countries: list[str] = field(default_factory=lambda: [])
+    origin_cluster: str | None = None
+    effective_settings: TokenEffectiveSettings | None = None
+    tracking: SubscribeTokenTracking | None = None
 
-        self.id = get_value_or_default(self, 'id', None)
-        self.label = get_value_or_default(self, 'label', None)
-        self.token = get_value_or_default(self, 'token', None)
-        self.added_on = get_value_or_default(self, 'addedOn', None)
-        self.expires_on = get_value_or_default(self, 'expiresOn', None)
-        self.is_active = get_value_or_default(self, 'isActive', None)
-        self.streams = []
-        for stream in self['streams']:
-            self.streams.append(SubscribeTokenStream(stream))
-        self.allowed_origins = get_value_or_default(self, 'allowedOrigins', None)
-        self.allowed_ip_addresses = get_value_or_default(self, 'allowedIpAddresses', None)
-        self.bind_ips_on_usage = get_value_or_default(self, 'bindIpsOnUsage', None)
-        self.allowed_countries = get_value_or_default(self, 'allowedCountries', None)
-        self.denied_countries = get_value_or_default(self, 'deniedCountries', None)
-        self.origin_cluster = get_value_or_default(self, 'originCluster', None)
-
-class CreateUpdateSubscribeTokenStream():
-    """The :class:`UpdateSubscribeTokenStream` object, which represents an update Subscribe Token Stream."""
-
-    def __init__(self, stream_name: str, is_regex: bool):
-        self.stream_name = stream_name
-        self.is_regex = is_regex
-
-class UpdateSubscribeToken():
+class UpdateSubscribeToken:
     """The :class:`UpdateSubscribeToken` object, which represents an Update Subscribe Token request."""
 
     def __init__(self):
         self.label: str | None = None
         self.refresh_token: bool | None = None
         self.is_active: bool | None = None
-        self.add_token_streams: List[CreateUpdateSubscribeTokenStream] | None = None
-        self.remove_token_streams: List[CreateUpdateSubscribeTokenStream] | None = None
-        self.update_allowed_origins: List[str] | None = None
-        self.update_allowed_ip_addresses: List[str] | None = None
+        self.add_token_streams: list[TokenStreamName] | None = None
+        self.remove_token_streams: list[TokenStreamName] | None = None
+        self.update_allowed_origins: list[str] | None = None
+        self.update_allowed_ip_addresses: list[str] | None = None
         self.update_bind_ips_on_usage: int | None = None
-        self.update_allowed_countries: List[str] | None = None
-        self.update_denied_countries: List[str] | None = None
+        self.update_allowed_countries: list[str] | None = None
+        self.update_denied_countries: list[str] | None = None
         self.update_origin_cluster: str | None = None
 
 class CreateSubscribeToken():
@@ -68,10 +59,11 @@ class CreateSubscribeToken():
     def __init__(self, label: str):
         self.label = label
         self.expires_on: str | None = None
-        self.streams: List[CreateUpdateSubscribeTokenStream] = []
-        self.allowed_origins: List[str] | None = None
-        self.allowed_ip_addresses: List[str] | None = None
+        self.streams: list[TokenStreamName] = []
+        self.allowed_origins: list[str] | None = None
+        self.allowed_ip_addresses: list[str] | None = None
         self.bind_ips_on_usage: int | None = None
-        self.allowed_countries: List[str] | None = None
-        self.denied_countries: List[str] | None = None
+        self.allowed_countries: list[str] | None = None
+        self.denied_countries: list[str] | None = None
         self.origin_cluster: str | None = None
+        self.tracking_id: str | None = None

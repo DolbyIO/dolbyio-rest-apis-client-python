@@ -22,11 +22,6 @@ async def start(
 
     See: https://docs.dolby.io/media-apis/reference/media-analyze-music-post
 
-    Beta API
-    This API is being made available as an early preview.
-    If you have feedback on how you'd like to use the API please reach out to share your feedback with our team.
-    https://dolby.io/contact
-
     Args:
         access_token: Access token to use for authentication.
         job_content: Content of the job description as a JSON payload.
@@ -39,11 +34,6 @@ async def start(
         HttpRequestError: If a client error one occurred.
         HTTPError: If one occurred.
     """
-    print('''Beta API
-    This API is being made available as an early preview.
-    If you have feedback on how you\'d like to use the API please reach out to share your feedback with our team.
-    https://dolby.io/contact''')
-
     async with MediaHttpContext() as http_context:
         json_response = await http_context.requests_post(
             access_token=access_token,

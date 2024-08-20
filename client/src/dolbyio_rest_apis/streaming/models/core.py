@@ -3,17 +3,16 @@ dolbyio_rest_apis.streaming.models.core
 ~~~~~~~~~~~~~~~
 """
 
-from dolbyio_rest_apis.core.helpers import get_value_or_default
+from dataclasses import dataclass
+from dataclasses_json import dataclass_json
 
-class BaseResponse(dict):
-    def __init__(self, dictionary: dict):
-        dict.__init__(self, dictionary)
+@dataclass_json
+@dataclass
+class BaseResponse():
+    status: str
+    data: dict | list[dict]
 
-        self.status = get_value_or_default(self, 'status', None)
-        self.data = get_value_or_default(self, 'data', None)
-
-class Error(dict):
-    def __init__(self, dictionary: dict):
-        dict.__init__(self, dictionary)
-
-        self.message = get_value_or_default(self, 'message', None)
+@dataclass_json
+@dataclass
+class Error:
+    message: str

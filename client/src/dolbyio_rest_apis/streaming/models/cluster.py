@@ -2,28 +2,41 @@
 dolbyio_rest_apis.streaming.models.cluster
 ~~~~~~~~~~~~~~~
 
-This module contains the models used by the Cluster model.
+This module contains the models used by the Cluster module.
 """
 
-from dolbyio_rest_apis.core.helpers import get_value_or_default
+from dataclasses import dataclass
+from dataclasses_json import LetterCase, dataclass_json
 
-class Cluster(dict):
+@dataclass
+class ClusterLocation:
+    """The :class:`ClusterLocation` object, which represents the location of a cluster."""
+
+    city: str | None = None
+    region: str | None = None
+    country: str | None = None
+
+@dataclass
+class ClusterFeatures:
+    """The :class:`ClusterFeatures` object, which represents the available features of a cluster."""
+
+    transcoding: bool = False
+
+@dataclass
+class Cluster:
     """The :class:`Cluster` object, which represents a cluster."""
 
-    def __init__(self, dictionary: dict):
-        dict.__init__(self, dictionary)
+    id: str
+    name: str
+    rtmp: str
+    srt: str
+    location: ClusterLocation
+    features: ClusterFeatures
 
-        self.id = get_value_or_default(self, 'id', None)
-        self.name = get_value_or_default(self, 'name', None)
-        self.rtmp = get_value_or_default(self, 'rtmp', None)
-
-class ClusterResponse(dict):
+@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass
+class ClusterResponse:
     """The :class:`ClusterResponse` object, which represents a cluster response."""
 
-    def __init__(self, dictionary: dict):
-        dict.__init__(self, dictionary)
-
-        self.default_cluster = get_value_or_default(self, 'defaultCluster', None)
-        self.available_clusters = []
-        for cluster in self['availableClusters']:
-            self.available_clusters.append(Cluster(cluster))
+    default_cluster: str
+    available_clusters: list[Cluster]

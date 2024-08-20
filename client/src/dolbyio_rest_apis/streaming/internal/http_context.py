@@ -14,14 +14,14 @@ import logging
 from typing import Any, Mapping
 
 class StreamingHttpContext(HttpContext):
-    """HTTP Context class for Real-time Streaming APIs"""
+    """HTTP Context class for Dolby Millicast APIs"""
 
     def __init__(self):
         super().__init__()
 
         self._logger = logging.getLogger(StreamingHttpContext.__name__)
 
-    async def _requests_post_put(
+    async def _requests_with_payload(
             self,
             api_secret: str,
             url: str,
@@ -30,12 +30,12 @@ class StreamingHttpContext(HttpContext):
             params: Mapping[str, str]=None,
         ) -> dict:
         r"""
-        Sends a POST or PUT request.
+        Sends a request with a payload.
 
         Args:
             api_secret: API secret to use for authentication.
             url: Where to send the request to.
-            method: HTTP method, POST or PUT.
+            method: HTTP method, POST, PUT or PATCH.
             payload: (Optional) Content of the request.
             params: (Optional) URL query parameters.
 
@@ -64,8 +64,7 @@ class StreamingHttpContext(HttpContext):
             data=payload,
         )
 
-        base = BaseResponse(json_response)
-        return base.data
+        return BaseResponse.from_dict(json_response).data
 
     async def requests_post(
             self,
@@ -91,7 +90,7 @@ class StreamingHttpContext(HttpContext):
             HTTPError: If one occurred.
         """
 
-        return await self._requests_post_put(
+        return await self._requests_with_payload(
             api_secret=api_secret,
             url=url,
             method='POST',
@@ -123,10 +122,42 @@ class StreamingHttpContext(HttpContext):
             HTTPError: If one occurred.
         """
 
-        return await self._requests_post_put(
+        return await self._requests_with_payload(
             api_secret=api_secret,
             url=url,
             method='PUT',
+            payload=payload,
+            params=params,
+        )
+
+    async def requests_patch(
+            self,
+            api_secret: str,
+            url: str,
+            payload: Any=None,
+            params: Mapping[str, str]=None,
+        ) -> dict:
+        r"""
+        Sends a PATCH request.
+
+        Args:
+            api_secret: API secret to use for authentication.
+            url: Where to send the request to.
+            payload: (Optional) Content of the request.
+            params: (Optional) URL query parameters.
+
+        Returns:
+            The JSON response.
+
+        Raises:
+            HttpRequestError: If a client error one occurred.
+            HTTPError: If one occurred.
+        """
+
+        return await self._requests_with_payload(
+            api_secret=api_secret,
+            url=url,
+            method='PATCH',
             payload=payload,
             params=params,
         )
@@ -165,15 +196,14 @@ class StreamingHttpContext(HttpContext):
             headers=headers,
         )
 
-        base = BaseResponse(json_response)
-        return base.data
+        return BaseResponse.from_dict(json_response).data
 
     async def requests_delete(
             self,
-            access_token: str,
+            api_secret: str,
             url: str,
             params: Mapping[str, str]=None,
-        ) -> None:
+        ) -> dict:
         r"""
         Sends a DELETE request.
 
@@ -189,15 +219,17 @@ class StreamingHttpContext(HttpContext):
 
         headers = {
             'Accept': 'application/json',
-            'Authorization': f'Bearer {access_token}',
+            'Authorization': f'Bearer {api_secret}',
         }
 
-        return await self._send_request(
+        json_response = await self._send_request(
             method='DELETE',
             url=url,
             params=params,
             headers=headers,
         )
+
+        return BaseResponse.from_dict(json_response).data
 
     async def _raise_for_status(self, http_response: ClientResponse):
         r"""Raises :class:`HttpRequestError` or :class:`ClientResponseError`, if one occurred."""
@@ -212,8 +244,8 @@ class StreamingHttpContext(HttpContext):
 
             try:
                 json_response = await http_response.json()
-                base_response = BaseResponse(json_response)
-                err = Error(base_response.data)
+                base_response = BaseResponse.from_dict(json_response)
+                err = Error.from_dict(base_response.data)
 
                 raise HttpRequestError(http_response, '', http_response.status, base_response.status, err.message)
             except (ValueError, ContentTypeError): # If the response body does not contain valid json.

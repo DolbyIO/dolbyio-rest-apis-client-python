@@ -13,12 +13,12 @@ async def read(
         api_secret: str,
     ) -> ClusterResponse:
     async with StreamingHttpContext() as http_context:
-        json_response = await http_context.requests_get(
+        dict_data = await http_context.requests_get(
             api_secret=api_secret,
             url=f'{get_rts_url()}/api/cluster',
         )
 
-    return ClusterResponse(json_response)
+    return ClusterResponse.from_dict(dict_data)
 
 async def update(
         api_secret: str,
@@ -29,10 +29,10 @@ async def update(
     }
 
     async with StreamingHttpContext() as http_context:
-        json_response = await http_context.requests_put(
+        dict_data = await http_context.requests_put(
             api_secret=api_secret,
             url=f'{get_rts_url()}/api/cluster',
             payload=payload,
         )
 
-    return ClusterResponse(json_response)
+    return ClusterResponse.from_dict(dict_data)

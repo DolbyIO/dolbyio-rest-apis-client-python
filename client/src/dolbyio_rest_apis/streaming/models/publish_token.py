@@ -2,115 +2,143 @@
 dolbyio_rest_apis.streaming.models.publish_token
 ~~~~~~~~~~~~~~~
 
-This module contains the models used by the Publish Token models.
+This module contains the models used by the Publish Token module.
 """
 
-from typing import List
-from dolbyio_rest_apis.core.helpers import get_value_or_default
+from dataclasses import dataclass, field
+from dataclasses_json import LetterCase, dataclass_json
 
-class PublishTokenStream(dict):
-    """The :class:`PublishTokenStream` object, which represents a Publish Token Stream."""
+@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass
+class TokenGeoCascade:
+    """The :class:`TokenGeoCascade` object, the definition of the geo cascading rules for a publish token."""
 
-    def __init__(self, dictionary: dict):
-        dict.__init__(self, dictionary)
+    is_enabled: bool = False
+    clusters: list[str] = field(default_factory=lambda: [])
 
-        self.stream_name = get_value_or_default(self, 'streamName', None)
-        self.is_regex = get_value_or_default(self, 'isRegex', False)
+@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass
+class TokenStreamName:
+    """The :class:`TokenStreamName` object, which represents a token stream name."""
 
-class PublishToken(dict):
-    """The :class:`PublishToken` object, which represents a Publish Token."""
+    stream_name: str
+    is_regex: bool = False
 
-    def __init__(self, dictionary: dict):
-        dict.__init__(self, dictionary)
+@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass
+class PublishTokenRestream:
+    """The :class:`PublishTokenRestream` object, the definition of a restream endpoint."""
 
-        self.id = get_value_or_default(self, 'id', None)
-        self.label = get_value_or_default(self, 'label', None)
-        self.token = get_value_or_default(self, 'token', None)
-        self.added_on = get_value_or_default(self, 'addedOn', None)
-        self.expires_on = get_value_or_default(self, 'expiresOn', None)
-        self.is_active = get_value_or_default(self, 'isActive', None)
-        self.streams = []
-        for stream in self['streams']:
-            self.streams.append(PublishTokenStream(stream))
-        self.allowed_origins = get_value_or_default(self, 'allowedOrigins', None)
-        self.allowed_ip_addresses = get_value_or_default(self, 'allowedIpAddresses', None)
-        self.bind_ips_on_usage = get_value_or_default(self, 'bindIpsOnUsage', None)
-        self.allowed_countries = get_value_or_default(self, 'allowedCountries', None)
-        self.denied_countries = get_value_or_default(self, 'deniedCountries', None)
-        self.origin_cluster = get_value_or_default(self, 'originCluster', None)
-        self.subscribe_requires_auth = get_value_or_default(self, 'subscribeRequiresAuth', False)
-        self.record = get_value_or_default(self, 'record', False)
-        self.multisource = get_value_or_default(self, 'multisource', False)
+    url: str
+    key: str
 
-class CreateUpdatePublishTokenStream():
-    """The :class:`CreateUpdatePublishTokenStream` object, which represents a Publish Token Stream."""
+@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass
+class TokenEffectiveSettings:
+    """The :class:`TokenEffectiveSettings` object, which represents the effective settings for a publish token."""
 
-    def __init__(self, stream_name: str, is_regex: bool):
-        self.stream_name = stream_name
-        self.is_regex = is_regex
+    origin_cluster: str | None = None
+    allowed_countries: list[str] = field(default_factory=lambda: [])
+    denied_countries: list[str] = field(default_factory=lambda: [])
+    geo_cascade: TokenGeoCascade | None = None
 
-class UpdatePublishToken():
+@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass
+class PublishToken:
+    """The :class:`PublishToken` object, which represents a publish token."""
+
+    id: int | None = None
+    label: str | None = None
+    token: str | None = None
+    added_on: str | None = None
+    expires_on: str | None = None
+    is_active: bool | None = None
+    streams: list[TokenStreamName] = field(default_factory=lambda: [])
+    allowed_origins: list[str] = field(default_factory=lambda: [])
+    allowed_ip_addresses: list[str] = field(default_factory=lambda: [])
+    bind_ips_on_usage: int | None = None
+    allowed_countries: list[str] = field(default_factory=lambda: [])
+    denied_countries: list[str] = field(default_factory=lambda: [])
+    origin_cluster: str | None = None
+    subscribe_requires_auth: bool = False
+    record: bool = False
+    clip: bool = False
+    multisource: bool = False
+    low_latency_rtmp: bool = False
+    enable_thumbnails: bool = False
+    display_srt_passphrase: bool = False
+    srt_passphrase: bool = False
+    geo_cascade: TokenGeoCascade | None = None
+    restream: list[PublishTokenRestream] = field(default_factory=lambda: [])
+    effective_settings: TokenEffectiveSettings | None = None
+
+class UpdatePublishToken:
     """The :class:`UpdatePublishToken` object, which represents an Update Publish Token request."""
 
     def __init__(self):
         self.label: str | None = None
         self.refresh_token: bool | None = None
         self.is_active: bool | None = None
-        self.add_token_streams: List[CreateUpdatePublishTokenStream] | None = None
-        self.remove_token_streams: List[CreateUpdatePublishTokenStream] | None = None
-        self.update_allowed_origins: List[str] | None = None
-        self.update_allowed_ip_addresses: List[str] | None = None
+        self.add_token_streams: list[TokenStreamName] | None = None
+        self.remove_token_streams: list[TokenStreamName] | None = None
+        self.update_allowed_origins: list[str] | None = None
+        self.update_allowed_ip_addresses: list[str] | None = None
         self.update_bind_ips_on_usage: int | None = None
-        self.update_allowed_countries: List[str] | None = None
-        self.update_denied_countries: List[str] | None = None
+        self.update_allowed_countries: list[str] | None = None
+        self.update_denied_countries: list[str] | None = None
         self.update_origin_cluster: str | None = None
         self.subscribe_requires_auth: bool | None = None
         self.record: bool | None = None
         self.multisource: bool | None = None
+        self.enable_thumbnails: bool | None = None
+        self.display_srt_passphrase: bool | None = None
+        self.low_latency_rtmp: bool | None = None
+        self.clip: bool = False
+        self.update_geo_cascade: TokenGeoCascade | None = None
+        self.update_restream: list[PublishTokenRestream] | None = None
 
-class CreatePublishToken():
+class CreatePublishToken:
     """The :class:`CreatePublishToken` object, which represents a Create Publish Token request."""
 
     def __init__(self, label: str):
         self.label = label
         self.expires_on: str | None = None
-        self.streams: List[CreateUpdatePublishTokenStream] = []
-        self.allowed_origins: List[str] | None = None
-        self.allowed_ip_addresses: List[str] | None = None
+        self.streams: list[TokenStreamName] = []
+        self.allowed_origins: list[str] | None = None
+        self.allowed_ip_addresses: list[str] | None = None
         self.bind_ips_on_usage: int | None = None
-        self.allowed_countries: List[str] | None = None
-        self.denied_countries: List[str] | None = None
+        self.allowed_countries: list[str] | None = None
+        self.denied_countries: list[str] | None = None
         self.origin_cluster: str | None = None
         self.subscribe_requires_auth: bool = False
         self.record: bool = False
         self.multisource: bool = False
+        self.enable_thumbnails: bool = False
+        self.display_srt_passphrase: bool = False
+        self.low_latency_rtmp: bool = True
+        self.geo_cascade: TokenGeoCascade | None = None
+        self.clip: bool = False
+        self.restream: list[PublishTokenRestream] = []
 
-class ActivePublishToken(dict):
+@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass
+class ActivePublishToken:
     """The :class:`ActivePublishToken` object."""
 
-    def __init__(self, dictionary: dict):
-        dict.__init__(self, dictionary)
+    token_ids: list[int]
 
-        self.token_ids: List[int] = []
-        for tid in self['tokenIds']:
-            self.token_ids.append(tid)
-
-class FailedToken(dict):
+@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass
+class FailedToken:
     """The :class:`FailedToken` object, which represents a Failed Token."""
 
-    def __init__(self, dictionary: dict):
-        dict.__init__(self, dictionary)
+    token_id: str | None = None
+    error_message: str | None = None
 
-        self.token_id = get_value_or_default(self, 'tokenId', None)
-        self.error_message = get_value_or_default(self, 'errorMessage', None)
-
-class DisablePublishTokenResponse(dict):
+@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass
+class DisablePublishTokenResponse:
     """The :class:`DisablePublishTokenResponse` object, which represents a the response to the disable publish token."""
 
-    def __init__(self, dictionary: dict):
-        dict.__init__(self, dictionary)
-
-        self.successful_tokens = get_value_or_default(self, 'successfulTokens', None)
-        self.failed_tokens: List[int] = []
-        for ft in self['failedTokens']:
-            self.failed_tokens.append(FailedToken(ft))
+    successful_tokens: list[int]
+    failed_tokens: list[FailedToken]
