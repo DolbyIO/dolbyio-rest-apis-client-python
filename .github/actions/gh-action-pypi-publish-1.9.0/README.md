@@ -18,14 +18,22 @@ comments in the corresponding [per-release announcement discussions].
 
 The `master` branch version has been sunset. Please, change the GitHub
 Action version you use from `master` to `release/v1` or use an exact
-tag, or a full Git commit SHA.
+tag, or opt-in to [use a full Git commit SHA] and Dependabot.
 
 
 ## Usage
 
 ### Trusted publishing
 
-> **NOTE**: Trusted publishing is sometimes referred to by its
+> [!NOTE]
+> Trusted publishing cannot be used from within a reusable workflow at this
+> time. It is recommended to instead create a non-reusable workflow that contains a
+> job calling your reusable workflow, and then do the trusted publishing step from
+> a separate job within that non-reusable workflow. Alternatively, you can still
+> use a username/token inside the reusable workflow.
+
+> [!NOTE]
+> Trusted publishing is sometimes referred to by its
 > underlying technology -- OpenID Connect, or OIDC for short.
 > If you see references to "OIDC publishing" in the context of PyPI,
 > this is what they're referring to.
@@ -38,7 +46,7 @@ This action supports PyPI's [trusted publishing]
 implementation, which allows authentication to PyPI without a manually
 configured API token or username/password combination. To perform
 [trusted publishing] with this action, your project's
-publisher must already be configured on PyPI.
+publisher must already be [configured on PyPI].
 
 To enter the trusted publishing flow, configure this action's job with the
 `id-token: write` permission and **without** an explicit username or password:
@@ -61,10 +69,11 @@ jobs:
       uses: pypa/gh-action-pypi-publish@release/v1
 ```
 
-> **Pro tip**: instead of using branch pointers, like `unstable/v1`, pin
-versions of Actions that you use to tagged versions or sha1 commit identifiers.
-This will make your workflows more secure and better reproducible, saving you
-from sudden and unpleasant surprises.
+> [!NOTE]
+> Pro tip: instead of using branch pointers, like `unstable/v1`, pin versions of
+> Actions that you use to tagged versions or sha1 commit identifiers.
+> This will make your workflows more secure and better reproducible, saving you
+> from sudden and unpleasant surprises.
 
 Other indices that support trusted publishing can also be used, like TestPyPI:
 
@@ -76,7 +85,8 @@ Other indices that support trusted publishing can also be used, like TestPyPI:
 ```
 _(don't forget to update the environment name to `testpypi` or similar!)_
 
-> **Pro tip**: only set the `id-token: write` permission in the job that does
+> [!NOTE]
+> Pro tip: only set the `id-token: write` permission in the job that does
 > publishing, not globally. Also, try to separate building from publishing
 > — this makes sure that any scripts maliciously injected into the build
 > or test environment won't be able to elevate privileges while flying under
@@ -96,7 +106,8 @@ This GitHub Action [has nothing to do with _building package
 distributions_]. Users are responsible for preparing dists for upload
 by putting them into the `dist/` folder prior to running this Action.
 
-> **IMPORTANT**: Since this GitHub Action is docker-based, it can only
+> [!IMPORTANT]
+> Since this GitHub Action is docker-based, it can only
 > be used from within GNU/Linux based jobs in GitHub Actions CI/CD
 > workflows. This is by design and is unlikely to change due to a number
 > of considerations we rely on.
@@ -187,9 +198,10 @@ default) setting as follows:
      skip-existing: true
 ```
 
-> **Pro tip**: try to avoid enabling this setting where possible. If you
-have steps for publishing to both PyPI and TestPyPI, consider only using
-it for the latter, having the former fail loudly on duplicates.
+> [!NOTE]
+> Pro tip: try to avoid enabling this setting where possible. If you
+> have steps for publishing to both PyPI and TestPyPI, consider only using
+> it for the latter, having the former fail loudly on duplicates.
 
 ### For Debugging
 
@@ -250,6 +262,9 @@ https://results.pre-commit.ci/latest/github/pypa/gh-action-pypi-publish/unstable
 [pre-commit.ci status badge]:
 https://results.pre-commit.ci/badge/github/pypa/gh-action-pypi-publish/unstable/v1.svg
 
+[use a full Git commit SHA]:
+https://julienrenaux.fr/2019/12/20/github-actions-security-risk/
+
 [per-release announcement discussions]:
 https://github.com/pypa/gh-action-pypi-publish/discussions/categories/announcements
 
@@ -269,5 +284,6 @@ https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md
 
 [warehouse#12965]: https://github.com/pypi/warehouse/issues/12965
 [trusted publishing]: https://docs.pypi.org/trusted-publishers/
+[configured on PyPI]: https://docs.pypi.org/trusted-publishers/adding-a-publisher/
 
 [how to specify username and password]: #specifying-a-different-username

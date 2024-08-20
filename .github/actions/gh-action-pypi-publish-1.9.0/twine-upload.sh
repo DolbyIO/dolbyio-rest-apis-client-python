@@ -40,23 +40,42 @@ INPUT_VERIFY_METADATA="$(get-normalized-input 'verify-metadata')"
 INPUT_SKIP_EXISTING="$(get-normalized-input 'skip-existing')"
 INPUT_PRINT_HASH="$(get-normalized-input 'print-hash')"
 
+PASSWORD_DEPRECATION_NUDGE="::error title=Password-based uploads disabled::\
+As of 2024, PyPI requires all users to enable Two-Factor \
+Authentication. This consequently requires all users to switch \
+to either Trusted Publishers (preferred) or API tokens for package \
+uploads. Read more: \
+https://blog.pypi.org/posts/2023-05-25-securing-pypi-with-2fa/"
+
+TRUSTED_PUBLISHING_NUDGE="::warning title=Upgrade to Trusted Publishing::\
+Trusted Publishers allows publishing packages to PyPI from automated \
+environments like GitHub Actions without needing to use username/password \
+combinations or API tokens to authenticate with PyPI. Read more: \
+https://docs.pypi.org/trusted-publishers"
+
 if [[ "${INPUT_USER}" == "__token__" && -z "${INPUT_PASSWORD}" ]] ; then
     # No password supplied by the user implies that we're in the OIDC flow;
     # retrieve the OIDC credential and exchange it for a PyPI API token.
-    echo \
-        '::notice::Attempting to perform trusted publishing exchange' \
-        'to retrieve a temporary short-lived API token for authentication' \
-        "against ${INPUT_REPOSITORY_URL} due to __token__ username with no" \
-        'supplied password field'
+    echo "::debug::Authenticating to ${INPUT_REPOSITORY_URL} via Trusted Publishing"
     INPUT_PASSWORD="$(python /app/oidc-exchange.py)"
 elif [[ "${INPUT_USER}" == '__token__' ]]; then
     echo \
-        '::notice::Using a user-provided API token for authentication' \
+        '::debug::Using a user-provided API token for authentication' \
         "against ${INPUT_REPOSITORY_URL}"
+
+    if [[ "${INPUT_REPOSITORY_URL}" =~ pypi\.org ]]; then
+        echo "${TRUSTED_PUBLISHING_NUDGE}"
+    fi
 else
     echo \
-        '::notice::Using a username + password pair for authentication' \
-        "against ${INPUT_REPOSITORY_URL}}"
+        '::debug::Using a username + password pair for authentication' \
+        "against ${INPUT_REPOSITORY_URL}"
+
+    if [[ "${INPUT_REPOSITORY_URL}" =~ pypi\.org ]]; then
+        echo "${PASSWORD_DEPRECATION_NUDGE}"
+        echo "${TRUSTED_PUBLISHING_NUDGE}"
+        exit 1
+    fi
 fi
 
 if [[
@@ -102,9 +121,9 @@ if [[ ${INPUT_VERIFY_METADATA,,} != "false" ]] ; then
     twine check ${INPUT_PACKAGES_DIR%%/}/*
 fi
 
-TWINE_EXTRA_ARGS=
+TWINE_EXTRA_ARGS=--disable-progress-bar
 if [[ ${INPUT_SKIP_EXISTING,,} != "false" ]] ; then
-    TWINE_EXTRA_ARGS=--skip-existing
+    TWINE_EXTRA_ARGS="${TWINE_EXTRA_ARGS} --skip-existing"
 fi
 
 if [[ ${INPUT_VERBOSE,,} != "false" ]] ; then

@@ -1,0 +1,9 @@
+twine
+
+# NOTE: Used to detect an ambient OIDC credential for OIDC publishing.
+id ~= 1.0
+
+# NOTE: This is pulled in transitively through `twine`, but we also declare
+# NOTE: it explicitly here because `oidc-exchange.py` uses it.
+# Ref: https://github.com/di/id
+requests
